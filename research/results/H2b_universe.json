@@ -1,0 +1,166 @@
+{
+ "family": "H2b",
+ "market": "universe_top50(273)",
+ "data": "b12fa24250ece412",
+ "variants": {
+  "h2b_reversal(lookback=1)": {
+   "sharpe": -3.2258002205836296,
+   "cagr": -0.39646339616446014,
+   "max_drawdown": -0.9394119911764689,
+   "n_trades": 20459,
+   "win_rate": 0.5106798963781221,
+   "profit_factor": 0.8454557838099513,
+   "exposure": 0.9307381193124368,
+   "turnover_per_year": 96.7278668323262,
+   "costs_paid": 0.7461467593218827,
+   "funding_paid": 0.007150507956050692
+  },
+  "h2b_reversal(lookback=3)": {
+   "sharpe": -2.1745688414620776,
+   "cagr": -0.28715434133916207,
+   "max_drawdown": -0.8475613454527802,
+   "n_trades": 11700,
+   "win_rate": 0.5241025641025641,
+   "profit_factor": 0.8102482267889093,
+   "exposure": 0.9307381193124368,
+   "turnover_per_year": 56.53435263494877,
+   "costs_paid": 0.4377073418732984,
+   "funding_paid": 0.008774796175684408
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -1.9010830960238452,
+   "sortino": -2.4573622688774384,
+   "cagr": -0.25713719526817114,
+   "max_drawdown": -0.6503465812870723,
+   "calmar": -0.3953848650350129,
+   "total_return": -0.6377843285406632
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -4.004097361794268,
+   "sortino": -4.77865479467485,
+   "cagr": -0.4603249174483366,
+   "max_drawdown": -0.8779272005337907,
+   "calmar": -0.5243315358818513,
+   "total_return": -0.8784243100277567
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "h2b_reversal(lookback=1)",
+    "train_sharpe": -2.907737649436004
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "h2b_reversal(lookback=1)",
+    "train_sharpe": -3.2540647846626833
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -3.0511926858211575
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.1511994148660007
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -1.5620182272061687
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -1.8030359001439555
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.3172774516225254
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.15748372516995
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -1.8227969701929594
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.169205474846766
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.4310638285303754
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.5646074678199304
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -2.0067419489253324
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "h2b_reversal(lookback=3)",
+    "train_sharpe": -1.5275918926270793
+   }
+  ]
+ },
+ "pbo": 0.02268842268842269,
+ "deflated_sharpe": 9.8431646088667e-06,
+ "n_trials_family": 2,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": -2.758141536876302,
+   "total_return": -0.38285506838553207
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -1.477552232499243,
+   "total_return": -0.11467819653921651
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -1.47768960296079,
+   "total_return": -0.33705284729597584
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": -1.2669287833504308,
+   "total_return": -0.031075712116864218
+  }
+ }
+}

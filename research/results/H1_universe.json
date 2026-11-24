@@ -1,0 +1,262 @@
+{
+ "family": "H1",
+ "market": "universe_top50(273)",
+ "data": "b12fa24250ece412",
+ "variants": {
+  "h1_tsmom(lookback=20, long_only=False)": {
+   "sharpe": 0.5903674824709472,
+   "cagr": 0.0614051936651554,
+   "max_drawdown": -0.10481793099859482,
+   "n_trades": 842,
+   "win_rate": 0.32304038004750596,
+   "profit_factor": 1.4298375705296014,
+   "exposure": 0.9539939332659252,
+   "turnover_per_year": 8.558317738274068,
+   "costs_paid": 0.05798104161382792,
+   "funding_paid": 0.09708222811647377
+  },
+  "h1_tsmom(lookback=20, long_only=True)": {
+   "sharpe": 0.6697532273313859,
+   "cagr": 0.1382354093982736,
+   "max_drawdown": -0.3383322988823507,
+   "n_trades": 654,
+   "win_rate": 0.39755351681957185,
+   "profit_factor": 1.4952679472836556,
+   "exposure": 0.9529828109201214,
+   "turnover_per_year": 21.37406984672275,
+   "costs_paid": 0.17344190752787603,
+   "funding_paid": 0.12080867211979267
+  },
+  "h1_tsmom(lookback=40, long_only=False)": {
+   "sharpe": 0.4624940702515726,
+   "cagr": 0.05076794496762882,
+   "max_drawdown": -0.23849456597289198,
+   "n_trades": 615,
+   "win_rate": 0.36910569105691055,
+   "profit_factor": 1.4717521568086238,
+   "exposure": 0.9539939332659252,
+   "turnover_per_year": 5.261778773144606,
+   "costs_paid": 0.03651580058005459,
+   "funding_paid": 0.10471175959887043
+  },
+  "h1_tsmom(lookback=40, long_only=True)": {
+   "sharpe": 0.6117764657800837,
+   "cagr": 0.11150562268528708,
+   "max_drawdown": -0.3238895335914642,
+   "n_trades": 514,
+   "win_rate": 0.3754863813229572,
+   "profit_factor": 1.5169179615745525,
+   "exposure": 0.9428715874620829,
+   "turnover_per_year": 13.646537224148132,
+   "costs_paid": 0.11411643205526512,
+   "funding_paid": 0.09212703918603453
+  },
+  "h1_tsmom(lookback=60, long_only=False)": {
+   "sharpe": 0.45415261491948034,
+   "cagr": 0.05446274809900209,
+   "max_drawdown": -0.2675538684054096,
+   "n_trades": 584,
+   "win_rate": 0.3886986301369863,
+   "profit_factor": 1.4102548701935838,
+   "exposure": 0.9539939332659252,
+   "turnover_per_year": 5.396517908040163,
+   "costs_paid": 0.03808096895766219,
+   "funding_paid": 0.09958986052235945
+  },
+  "h1_tsmom(lookback=60, long_only=True)": {
+   "sharpe": 0.7851909410942206,
+   "cagr": 0.13674431298411616,
+   "max_drawdown": -0.2960597405991867,
+   "n_trades": 395,
+   "win_rate": 0.39746835443037976,
+   "profit_factor": 1.845072993278197,
+   "exposure": 0.9383215369059656,
+   "turnover_per_year": 13.23520015734749,
+   "costs_paid": 0.10623709191359687,
+   "funding_paid": 0.1031799275846975
+  },
+  "h1_tsmom(lookback=90, long_only=False)": {
+   "sharpe": 0.12458651763358193,
+   "cagr": 0.006978881360742983,
+   "max_drawdown": -0.2589288349557771,
+   "n_trades": 608,
+   "win_rate": 0.32730263157894735,
+   "profit_factor": 1.040951220373208,
+   "exposure": 0.9534883720930233,
+   "turnover_per_year": 5.541819978849984,
+   "costs_paid": 0.0392076883751972,
+   "funding_paid": 0.12977694932398992
+  },
+  "h1_tsmom(lookback=90, long_only=True)": {
+   "sharpe": 0.7686277517485037,
+   "cagr": 0.12418141266559868,
+   "max_drawdown": -0.24589170263724203,
+   "n_trades": 392,
+   "win_rate": 0.4362244897959184,
+   "profit_factor": 1.7058493907515067,
+   "exposure": 0.9448938321536906,
+   "turnover_per_year": 12.038146394832927,
+   "costs_paid": 0.09567192530864665,
+   "funding_paid": 0.05325859441435852
+  },
+  "h1_tsmom(lookback=120, long_only=False)": {
+   "sharpe": 0.7659723958606173,
+   "cagr": 0.09683094541128012,
+   "max_drawdown": -0.15524913297939802,
+   "n_trades": 560,
+   "win_rate": 0.32321428571428573,
+   "profit_factor": 1.6962436269286312,
+   "exposure": 0.9383215369059656,
+   "turnover_per_year": 8.735836150695787,
+   "costs_paid": 0.06352513269275631,
+   "funding_paid": 0.20646233511219234
+  },
+  "h1_tsmom(lookback=120, long_only=True)": {
+   "sharpe": 0.7995728308583943,
+   "cagr": 0.12315256711588685,
+   "max_drawdown": -0.30136870702040064,
+   "n_trades": 301,
+   "win_rate": 0.4485049833887043,
+   "profit_factor": 2.1943106816645623,
+   "exposure": 0.9383215369059656,
+   "turnover_per_year": 9.394906374937385,
+   "costs_paid": 0.07119772098329348,
+   "funding_paid": 0.005629712341345788
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -0.6127326452284294,
+   "sortino": -0.7921893757253943,
+   "cagr": -0.07039678969427099,
+   "max_drawdown": -0.3129660687283846,
+   "calmar": -0.22493425558975402,
+   "total_return": -0.22072497924456302
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -0.7023603759539025,
+   "sortino": -0.9039043549805623,
+   "cagr": -0.0797272864472971,
+   "max_drawdown": -0.32383389548072294,
+   "calmar": -0.24619808969948628,
+   "total_return": -0.24712461016962917
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "h1_tsmom(lookback=40, long_only=True)",
+    "train_sharpe": 2.2163152849695833
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "h1_tsmom(lookback=90, long_only=True)",
+    "train_sharpe": 1.7539073417593178
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "h1_tsmom(lookback=120, long_only=False)",
+    "train_sharpe": 1.4691726026227545
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "h1_tsmom(lookback=120, long_only=False)",
+    "train_sharpe": 1.2086165527022028
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "h1_tsmom(lookback=120, long_only=False)",
+    "train_sharpe": 1.097261053048194
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "h1_tsmom(lookback=90, long_only=False)",
+    "train_sharpe": 0.21427422266593774
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 0.359232057951785
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "h1_tsmom(lookback=20, long_only=False)",
+    "train_sharpe": 0.41906709899007055
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 1.2115324026226935
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 1.415415401093113
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 1.1691383530958759
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 1.1612738368814697
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "h1_tsmom(lookback=120, long_only=True)",
+    "train_sharpe": 1.4619337444619065
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "h1_tsmom(lookback=40, long_only=False)",
+    "train_sharpe": 1.4669765261271033
+   }
+  ]
+ },
+ "pbo": 0.966977466977467,
+ "deflated_sharpe": 0.01846322074920166,
+ "n_trials_family": 20,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": 0.55706587445056,
+   "total_return": 0.05497492266973247
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -1.9548965769022988,
+   "total_return": -0.2108056622411758
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -0.5457703940640273,
+   "total_return": -0.06402411734450408
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": 1.4067353684065078,
+   "total_return": 0.051346189149207744
+  }
+ }
+}

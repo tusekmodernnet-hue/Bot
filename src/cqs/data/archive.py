@@ -26,12 +26,12 @@ class ArchiveError(RuntimeError):
     pass
 
 
-def _http_get(url: str, timeout: float = 60.0, retries: int = 4) -> bytes:
+def _http_get(url: str, timeout: float = 60.0, retries: int = 4, user_agent: str = USER_AGENT) -> bytes:
     """GET with exponential backoff. Raises FileNotFoundError on 404."""
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            req = urllib.request.Request(url, headers={"User-Agent": user_agent})
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return resp.read()
         except urllib.error.HTTPError as e:

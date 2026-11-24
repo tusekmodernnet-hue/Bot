@@ -1,0 +1,262 @@
+{
+ "family": "H2a",
+ "market": "universe_top50(273)",
+ "data": "b12fa24250ece412",
+ "variants": {
+  "h2a_xsmom(lookback=7, beta_neutral=False)": {
+   "sharpe": 0.40077598139169684,
+   "cagr": 0.05341265206938517,
+   "max_drawdown": -0.27017985505305864,
+   "n_trades": 2935,
+   "win_rate": 0.4630323679727428,
+   "profit_factor": 1.0435825545718918,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 48.499141644321774,
+   "costs_paid": 0.3862433733415535,
+   "funding_paid": -0.11374426498861882
+  },
+  "h2a_xsmom(lookback=7, beta_neutral=True)": {
+   "sharpe": 0.3576326991255131,
+   "cagr": 0.046773659018283675,
+   "max_drawdown": -0.34607290565395477,
+   "n_trades": 3065,
+   "win_rate": 0.46460032626427405,
+   "profit_factor": 1.0341873022143353,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 54.500513006752364,
+   "costs_paid": 0.41485055550179384,
+   "funding_paid": -0.10615758818198
+  },
+  "h2a_xsmom(lookback=14, beta_neutral=False)": {
+   "sharpe": 0.7146420305195255,
+   "cagr": 0.10437887427585024,
+   "max_drawdown": -0.23441933187316089,
+   "n_trades": 2076,
+   "win_rate": 0.44508670520231214,
+   "profit_factor": 1.0965993330521075,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 41.116399710632955,
+   "costs_paid": 0.33255780410053865,
+   "funding_paid": -0.20260140887222836
+  },
+  "h2a_xsmom(lookback=14, beta_neutral=True)": {
+   "sharpe": 0.5384033992835904,
+   "cagr": 0.07558568700450619,
+   "max_drawdown": -0.25014630443146235,
+   "n_trades": 2161,
+   "win_rate": 0.4474780194354466,
+   "profit_factor": 1.0614699379056893,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 44.72651403672298,
+   "costs_paid": 0.34455424325967543,
+   "funding_paid": -0.20225208772367897
+  },
+  "h2a_xsmom(lookback=30, beta_neutral=False)": {
+   "sharpe": 0.868462481535573,
+   "cagr": 0.14460934105880052,
+   "max_drawdown": -0.17993228865288147,
+   "n_trades": 1450,
+   "win_rate": 0.4482758620689655,
+   "profit_factor": 1.1420285759018698,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 37.02841057020411,
+   "costs_paid": 0.30303056021176517,
+   "funding_paid": -0.25952255027077986
+  },
+  "h2a_xsmom(lookback=30, beta_neutral=True)": {
+   "sharpe": 0.4463759737863257,
+   "cagr": 0.06464970439759377,
+   "max_drawdown": -0.23255754545842744,
+   "n_trades": 1506,
+   "win_rate": 0.448871181938911,
+   "profit_factor": 1.058592020613484,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 34.49206537443465,
+   "costs_paid": 0.26747651365270203,
+   "funding_paid": -0.22056440826493232
+  },
+  "h2a_xsmom(lookback=60, beta_neutral=False)": {
+   "sharpe": 0.49755315713823595,
+   "cagr": 0.07055924406379188,
+   "max_drawdown": -0.319274132829935,
+   "n_trades": 1207,
+   "win_rate": 0.44407622203811103,
+   "profit_factor": 1.0770193354481594,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 25.55660227003344,
+   "costs_paid": 0.2112548699997606,
+   "funding_paid": -0.1928310251010509
+  },
+  "h2a_xsmom(lookback=60, beta_neutral=True)": {
+   "sharpe": 0.3107260681791538,
+   "cagr": 0.03850886847267998,
+   "max_drawdown": -0.3165050291720646,
+   "n_trades": 1264,
+   "win_rate": 0.44699367088607594,
+   "profit_factor": 1.0367900080821866,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 27.8929977387243,
+   "costs_paid": 0.21867068969288542,
+   "funding_paid": -0.21266572568268458
+  },
+  "h2a_xsmom(lookback=90, beta_neutral=False)": {
+   "sharpe": 0.6957425188187322,
+   "cagr": 0.1091316860004623,
+   "max_drawdown": -0.229038161142734,
+   "n_trades": 1046,
+   "win_rate": 0.44263862332695986,
+   "profit_factor": 1.1100888698365983,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 28.07932784542932,
+   "costs_paid": 0.23240797896949644,
+   "funding_paid": -0.2135387227204575
+  },
+  "h2a_xsmom(lookback=90, beta_neutral=True)": {
+   "sharpe": 0.40987005129671616,
+   "cagr": 0.05664247755173002,
+   "max_drawdown": -0.3135488778947543,
+   "n_trades": 1084,
+   "win_rate": 0.4446494464944649,
+   "profit_factor": 1.0505449192185201,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 29.294381234807776,
+   "costs_paid": 0.23131238979554988,
+   "funding_paid": -0.21312062148444544
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.09216742281042144,
+   "sortino": 0.13353194063378496,
+   "cagr": 0.002727394895023494,
+   "max_drawdown": -0.20628260948819865,
+   "calmar": 0.013221642395305877,
+   "total_return": 0.009348721525785697
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -0.2416261622006906,
+   "sortino": -0.34418588518692733,
+   "cagr": -0.04597900124008747,
+   "max_drawdown": -0.23007143771990335,
+   "calmar": -0.1998466289242902,
+   "total_return": -0.1485464872278497
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "h2a_xsmom(lookback=30, beta_neutral=False)",
+    "train_sharpe": 2.030991172190502
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "h2a_xsmom(lookback=90, beta_neutral=True)",
+    "train_sharpe": 1.702420301010602
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "h2a_xsmom(lookback=30, beta_neutral=False)",
+    "train_sharpe": 1.3250745533387034
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 1.0707146242971046
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.743992858175321
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.7483016435749417
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.6454628086269112
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.7930048376680862
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.6592615482002627
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.8020787995095938
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.7053664511287681
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.6678429637167194
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=False)",
+    "train_sharpe": 0.9589725128114336
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "h2a_xsmom(lookback=14, beta_neutral=True)",
+    "train_sharpe": 1.0482998686089642
+   }
+  ]
+ },
+ "pbo": 0.6264957264957265,
+ "deflated_sharpe": 0.36145083243702947,
+ "n_trials_family": 10,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": 1.0912679767887214,
+   "total_return": 0.1742909641012449
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -1.4799540381849074,
+   "total_return": -0.1159478106593218
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -0.028866859452667048,
+   "total_return": -0.02772836879388707
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": -0.09028527673106672,
+   "total_return": -0.004011312589152105
+  }
+ }
+}

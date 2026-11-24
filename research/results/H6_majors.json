@@ -1,0 +1,214 @@
+{
+ "family": "H6",
+ "market": "BTCUSDT+ETHUSDT",
+ "data": "725155ddf2ced6f8",
+ "variants": {
+  "h6_false_breakout(n=24, m=1)": {
+   "sharpe": -3.2518271597704587,
+   "cagr": -0.6265768737536386,
+   "max_drawdown": -0.9952249996261595,
+   "n_trades": 5290,
+   "win_rate": 0.289413988657845,
+   "profit_factor": 0.71561210767974,
+   "exposure": 0.49382794068082236,
+   "turnover_per_year": 200.70174783974142,
+   "costs_paid": 0.760809818639084,
+   "funding_paid": -0.0276478286446844
+  },
+  "h6_false_breakout(n=24, m=3)": {
+   "sharpe": -3.0277579944527235,
+   "cagr": -0.5687435764620392,
+   "max_drawdown": -0.9895921980762493,
+   "n_trades": 5081,
+   "win_rate": 0.32159023814209803,
+   "profit_factor": 0.7314052806837931,
+   "exposure": 0.5351154364678126,
+   "turnover_per_year": 210.33807439200743,
+   "costs_paid": 0.7973387075774709,
+   "funding_paid": -0.03156188509077006
+  },
+  "h6_false_breakout(n=72, m=1)": {
+   "sharpe": -1.573914085410844,
+   "cagr": -0.3550906005214792,
+   "max_drawdown": -0.9163454984213562,
+   "n_trades": 2797,
+   "win_rate": 0.25634608509116913,
+   "profit_factor": 0.8024761682752303,
+   "exposure": 0.3727881698685541,
+   "turnover_per_year": 244.592360545352,
+   "costs_paid": 0.9271880861526217,
+   "funding_paid": -0.05673575304748404
+  },
+  "h6_false_breakout(n=72, m=3)": {
+   "sharpe": -1.553233677032875,
+   "cagr": -0.31765465955373007,
+   "max_drawdown": -0.8981444648977925,
+   "n_trades": 2629,
+   "win_rate": 0.28680106504374286,
+   "profit_factor": 0.7874839292596006,
+   "exposure": 0.38770222446916075,
+   "turnover_per_year": 211.21410618746194,
+   "costs_paid": 0.8006595236570235,
+   "funding_paid": -0.06040747712654918
+  },
+  "h6_false_breakout(n=168, m=1)": {
+   "sharpe": -0.7116626270408091,
+   "cagr": -0.16325873309563843,
+   "max_drawdown": -0.6635280878135118,
+   "n_trades": 1650,
+   "win_rate": 0.25696969696969696,
+   "profit_factor": 0.8839462305646976,
+   "exposure": 0.2639239973036737,
+   "turnover_per_year": 277.9313320851868,
+   "costs_paid": 1.0535677373706507,
+   "funding_paid": -0.07926711624980738
+  },
+  "h6_false_breakout(n=168, m=3)": {
+   "sharpe": -1.0611794409527573,
+   "cagr": -0.1907864813252349,
+   "max_drawdown": -0.6912899476567036,
+   "n_trades": 1532,
+   "win_rate": 0.2839425587467363,
+   "profit_factor": 0.8323838930313096,
+   "exposure": 0.27352965958881026,
+   "turnover_per_year": 203.7914428823398,
+   "costs_paid": 0.7725220750110966,
+   "funding_paid": -0.07468737187117014
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -1.105285862852888,
+   "sortino": -1.6874030449445843,
+   "cagr": -0.2289707560101386,
+   "max_drawdown": -0.6672850428693408,
+   "calmar": -0.3431378515927154,
+   "total_return": -0.5886755533390667
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -2.1633238509501087,
+   "sortino": -3.0143804036075164,
+   "cagr": -0.3986348241228821,
+   "max_drawdown": -0.839362665696335,
+   "calmar": -0.4749256077433165,
+   "total_return": -0.8240296361993227
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": -0.12036102048631414
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.32780218729082833
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.3659301908241454
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.5505048909444801
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.6155221333275278
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.04513545868090461
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "h6_false_breakout(n=72, m=1)",
+    "train_sharpe": 0.025988421145139738
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": -0.00048213047294765494
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": 0.04705161338057437
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": -0.5326815409008087
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "h6_false_breakout(n=168, m=1)",
+    "train_sharpe": -0.8545633049037799
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "h6_false_breakout(n=168, m=3)",
+    "train_sharpe": -1.7816286349864445
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "h6_false_breakout(n=168, m=3)",
+    "train_sharpe": -2.2628767162793606
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "h6_false_breakout(n=168, m=3)",
+    "train_sharpe": -2.047387818786647
+   }
+  ]
+ },
+ "pbo": 0.0651903651903652,
+ "deflated_sharpe": 1.1076346445598448e-05,
+ "n_trials_family": 6,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": -2.496059115992486,
+   "total_return": -0.42288197004241945
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": 1.0720421302014262,
+   "total_return": 0.18170102084187234
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -1.4951807941364932,
+   "total_return": -0.3968681419543755
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": 0.6181830317235462,
+   "total_return": 0.036495255987305075
+  }
+ }
+}
