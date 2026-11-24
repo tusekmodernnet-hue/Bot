@@ -109,13 +109,62 @@ def evaluate_h6(symbols: list[str], log: bool = True) -> dict:
     return evaluate_runs("H6", runs, (o, h, l, c), funding, daily_btc, "+".join(symbols), fp, log)
 
 
+def h6_entry_gate(index: pd.DatetimeIndex, top_n: int) -> pd.DataFrame:
+    """Bool frame (hourly bars x contracts ever in the point-in-time top N): True where a new trade may open.
+
+    Membership at the close of day d allows entries from day d+1 on, so the gate uses no future data.
+    """
+    from cqs.data.universe import UniverseRules, daily_panel, eligible
+    syms = open(config.DATA_DIR / "universe_ever_top50.txt").read().split()
+    el = eligible(daily_panel(syms), UniverseRules(top_n=top_n))
+    el = el.loc[:, el.any()]
+    el.index = pd.DatetimeIndex(el.index).as_unit("ns") + pd.Timedelta(days=1)
+    gate = el.reindex(pd.DatetimeIndex(index.normalize()).as_unit("ns")).fillna(False).astype(bool)
+    gate.index = index
+    return gate
+
+
+def evaluate_h6_top(top_n: int = 20, log: bool = True) -> dict:
+    """H6 on the point-in-time top-N universe, with the common position caps and the 2x gross cap."""
+    from cqs.research.benchmarks import load_panel
+    from cqs.strategies import breakouts
+    from cqs.data.universe import UniverseRules, daily_panel, eligible
+    all_syms = open(config.DATA_DIR / "universe_ever_top50.txt").read().split()
+    el = eligible(daily_panel(all_syms), UniverseRules(top_n=top_n))
+    symbols = sorted(el.columns[el.any()])
+    o, h, l, c, funding = load_panel(symbols, "1h")
+    missing = sorted(set(c.columns) - set(funding.columns))
+    if missing:  # funding is a real cost; never run without it
+        raise SystemExit(f"funding data missing for {len(missing)} symbols, e.g. {missing[:5]}")
+    gate = h6_entry_gate(c.index, top_n).reindex(columns=c.columns, fill_value=False)
+    caps = {s: (1.0 if s in ("BTCUSDT", "ETHUSDT") else 0.25) for s in c.columns}
+    runs = []
+    for params in breakouts.GRID:
+        w, st = breakouts.h6_weights(o, h, l, c, **params, can_enter=gate, max_weight=caps, max_gross=2.0)
+        runs.append((f"h6_false_breakout(n={params['n']}, m={params['m']}, universe=top{top_n})",
+                     params | {"universe": f"top{top_n}"}, w, st))
+    daily_btc = c["BTCUSDT"].groupby(c.index.normalize()).last()
+    fp = store.data_fingerprint([store.parquet_path("futures/um", store.KLINES, s, "1h") for s in symbols]
+                                + [store.parquet_path("futures/um", store.FUNDING, s) for s in symbols])
+    return evaluate_runs("H6", runs, (o, h, l, c), funding, daily_btc, f"universe_top{top_n}({len(symbols)})",
+                         fp, log)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("family", choices=list(families.GRIDS) + ["H6"])
     ap.add_argument("--symbols-file", default=str(config.DATA_DIR / "universe_ever_top50.txt"))
     ap.add_argument("--majors-only", action="store_true", help="BTC and ETH only")
+    ap.add_argument("--top", type=int, default=None, help="H6 only: point-in-time top-N universe")
     a = ap.parse_args(argv)
     t = time.time()
+    if a.family == "H6" and a.top:
+        out = evaluate_h6_top(a.top)
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+        path = RESULTS_DIR / f"H6_top{a.top}.json"
+        path.write_text(json.dumps(registry._clean(out), indent=1, ensure_ascii=False))
+        print(path, f"{time.time() - t:.0f}s")
+        return 0
     if a.family == "H6":
         syms = ["BTCUSDT", "ETHUSDT"] if a.majors_only else open(a.symbols_file).read().split()
         out = evaluate_h6(syms)

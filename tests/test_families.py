@@ -74,3 +74,50 @@ def test_h6_no_lookahead_and_stop_levels():
     for ts, wt in entries.items():  # short stops sit above the close, long stops below
         assert (s1[ts] > c[ts]) if wt < 0 else (s1[ts] < c[ts])
         assert abs(wt) <= 1.0
+
+
+def _hourly_assets(k=6, bars=2000, seed=11):
+    rng = np.random.default_rng(seed)
+    idx = pd.date_range("2021-01-01", periods=bars, freq="1h", tz="UTC")
+    cols = ["BTCUSDT"] + [f"A{i}USDT" for i in range(k - 1)]
+    c = pd.DataFrame(100 * np.exp(np.cumsum(rng.normal(0, 0.006, (bars, k)), axis=0)), index=idx, columns=cols)
+    o = c.shift(1).fillna(c)
+    h = np.maximum(o, c) * (1 + np.abs(rng.normal(0, 0.003, (bars, k))))
+    l = np.minimum(o, c) * (1 - np.abs(rng.normal(0, 0.003, (bars, k))))
+    return o, h, l, c
+
+
+def test_h6_entry_gate_blocks_new_trades_only():
+    from cqs.strategies.breakouts import h6_weights
+    o, h, l, c = _hourly_assets()
+    w_all, _ = h6_weights(o, h, l, c, 24, 3)
+    gate = pd.DataFrame(True, index=c.index, columns=c.columns)
+    gate.iloc[1000:] = False
+    w_gated, _ = h6_weights(o, h, l, c, 24, 3, can_enter=gate)
+    entries = lambda w: w.notna() & (w != 0)  # noqa: E731
+    assert not entries(w_gated).iloc[1000:].any().any()  # no new trade where the gate is closed
+    pd.testing.assert_frame_equal(w_gated.iloc[:1000], w_all.iloc[:1000])  # identical while it is open
+    # a trade opened just before the gate closed still gets its exit
+    last_entry = entries(w_gated).iloc[:1000].stack()
+    last_entry = last_entry[last_entry].index[-1]
+    after = w_gated.loc[last_entry[0]:, last_entry[1]].iloc[1:]
+    assert ((after == 0).any()) or after.notna().sum() == 0  # exit order, or a stop handled by the engine
+
+
+def test_h6_per_asset_and_gross_caps():
+    from cqs.strategies import breakouts
+    o, h, l, c = _hourly_assets(k=12)
+    caps = {s: (1.0 if s == "BTCUSDT" else 0.25) for s in c.columns}
+    w, _ = breakouts.h6_weights(o, h, l, c, 24, 1, max_weight=caps, max_gross=0.6)
+    for s in c.columns:
+        assert w[s].abs().max() <= caps[s] + 1e-12
+    # rebuild the open-trade weights after the cap and check the portfolio never exceeds it
+    held, w_raw = {}, {}
+    for s in c.columns:
+        w_raw[s], _, held[s] = breakouts._false_breakout(h[s], l[s], c[s], 24, 1, None, caps[s])
+    raw, w_raw = pd.DataFrame(held, index=c.index), pd.DataFrame(w_raw, index=c.index)
+    entry = w_raw.notna() & (w_raw != 0)  # entries before the cap (a capped entry may become 0)
+    scale = (w / w_raw).where(entry).ffill().where(raw != 0).fillna(0)
+    gross = (raw * scale).abs().sum(axis=1)
+    assert gross.max() <= 0.6 + 1e-9
+    assert (w.where(entry).abs() < w_raw.where(entry).abs() - 1e-12).any().any()  # the cap binds here
