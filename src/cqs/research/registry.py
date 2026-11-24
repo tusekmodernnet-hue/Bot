@@ -26,7 +26,9 @@ def _git(*args: str) -> str:
 
 
 def _code_version() -> dict:
-    return {"commit": _git("rev-parse", "HEAD") or "uncommitted", "dirty": bool(_git("status", "--porcelain"))}
+    # the registry file itself is excluded: appending to it must not mark the code as modified
+    dirty = _git("status", "--porcelain", "--", ".", ":(exclude)research/registry.jsonl")
+    return {"commit": _git("rev-parse", "HEAD") or "uncommitted", "dirty": bool(dirty)}
 
 
 def _clean(x: Any) -> Any:
