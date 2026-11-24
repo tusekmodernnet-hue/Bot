@@ -38,15 +38,15 @@ def evaluate(family: str, p: panel_mod.Panel, market_label: str, fingerprint: st
 
 
 def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fingerprint, log=True,
-                  rebalance_band=0.0) -> dict:
+                  rebalance_band=0.0, costs: CostModel = COSTS) -> dict:
     o, h, l, c = bars
     period = (str(c.index[0].date()), str(c.index[-1].date()))
     daily, daily_x2, per_variant = {}, {}, {}
     variants = runs
     for name, params, w, stops in runs:
         try:
-            res = engine.run(o, h, l, c, w, COSTS, stops=stops, funding=funding, rebalance_band=rebalance_band)
-            res2 = engine.run(o, h, l, c, w, COSTS.scaled(2), stops=stops, funding=funding,
+            res = engine.run(o, h, l, c, w, costs, stops=stops, funding=funding, rebalance_band=rebalance_band)
+            res2 = engine.run(o, h, l, c, w, costs.scaled(2), stops=stops, funding=funding,
                               rebalance_band=rebalance_band)
         except RuntimeError as e:  # ruin is a result, not an error to hide
             m = {"ruined": str(e)}

@@ -81,3 +81,11 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
     w porównaniu z dziennym rebalansem, ale go odnotowuję.
   - Reżimy rynku wyznacza BTC: hossa przy zwrocie z 90 dni > +20%, bessa przy < −20%, w pozostałych
     przypadkach konsolidacja. Wysoka zmienność to zrealizowana zmienność 30-dniowa BTC > 80% rocznie.
+- **2026-11-24, przed testami H3b–H7: doprecyzowanie bez strojenia.**
+  - H4: wielkość 1× brutto na parę spot/perp, dzielona równo między BTC i ETH. Prowizja spot jest wyższa niż
+    na futures, więc noga spot ma +5 pb poślizgu (łącznie ok. 0,12% za stronę).
+  - H5: wariant „bez nakładki” to cała siatka rodziny bazowej z wyłączonym celowaniem zmienności portfela
+    (stała ekspozycja brutto 1×). Rodziny bazowe: H1 (BTC+ETH), H2a i H3a.
+  - H7: bramka zeruje ekspozycję w dniu aktywnym. Nakładam ją na każdy z 10 wariantów H1 (BTC+ETH), czyli
+    rodziny o najlepszym wyniku OOS z H1–H6, i ponownie przeprowadzam walk-forward. To 30 prób.
+

@@ -13,7 +13,7 @@ MIN_CROSS_SECTION = 10
 
 
 def finalize(signal: pd.DataFrame, panel: Panel, rebalance_every: int = 1, legs_neutral: bool = False,
-             beta_neutral: bool = False) -> pd.DataFrame:
+             beta_neutral: bool = False, vol_overlay: bool = True) -> pd.DataFrame:
     """Signal (+1/-1/0, NaN = no view) -> sized, capped weights on the rebalance schedule."""
     r = panel.returns
     sig = signal.where(panel.universe, 0.0).fillna(0.0)
@@ -32,7 +32,8 @@ def finalize(signal: pd.DataFrame, panel: Panel, rebalance_every: int = 1, legs_
         port_beta = (w * beta.fillna(1.0)).sum(axis=1)
         if "BTCUSDT" in panel.universe:
             w["BTCUSDT"] = w["BTCUSDT"] - port_beta.where(panel.universe["BTCUSDT"], 0.0)
-    w = sizing.vol_target(w, r)
+    if vol_overlay:  # H5: without it the book stays at gross 1x
+        w = sizing.vol_target(w, r)
     w = sizing.cap_positions(w).fillna(0.0)
     # never hold a weight on a day without data
     w = w.where(panel.close.notna(), 0.0)
@@ -56,18 +57,19 @@ def _xs(score: pd.DataFrame, panel: Panel, q: float = 0.2, contrarian: bool = Fa
 
 
 # H1 — time-series momentum
-def h1_tsmom(panel: Panel, lookback: int, long_only: bool) -> pd.DataFrame:
+def h1_tsmom(panel: Panel, lookback: int, long_only: bool, vol_overlay: bool = True) -> pd.DataFrame:
     ret = panel.close / panel.close.shift(lookback) - 1.0
     sig = np.sign(ret)
     if long_only:
         sig = sig.clip(lower=0)
-    return finalize(sig, panel)
+    return finalize(sig, panel, vol_overlay=vol_overlay)
 
 
 # H2a — cross-sectional momentum, skipping the last day
-def h2a_xsmom(panel: Panel, lookback: int, beta_neutral: bool) -> pd.DataFrame:
+def h2a_xsmom(panel: Panel, lookback: int, beta_neutral: bool, vol_overlay: bool = True) -> pd.DataFrame:
     score = panel.close.shift(1) / panel.close.shift(lookback + 1) - 1.0
-    return finalize(_xs(score, panel), panel, rebalance_every=7, legs_neutral=True, beta_neutral=beta_neutral)
+    return finalize(_xs(score, panel), panel, rebalance_every=7, legs_neutral=True, beta_neutral=beta_neutral,
+                    vol_overlay=vol_overlay)
 
 
 # H2b — short-term cross-sectional reversal
@@ -77,9 +79,9 @@ def h2b_reversal(panel: Panel, lookback: int) -> pd.DataFrame:
 
 
 # H3a — cross-sectional funding crowding: long the cheapest-to-hold longs, short the most crowded
-def h3a_funding_xs(panel: Panel, window_days: int) -> pd.DataFrame:
+def h3a_funding_xs(panel: Panel, window_days: int, vol_overlay: bool = True) -> pd.DataFrame:
     f = panel.daily_funding().rolling(window_days, min_periods=window_days).mean()
-    return finalize(_xs(f, panel, contrarian=True), panel, legs_neutral=True)
+    return finalize(_xs(f, panel, contrarian=True), panel, legs_neutral=True, vol_overlay=vol_overlay)
 
 
 GRIDS = {
