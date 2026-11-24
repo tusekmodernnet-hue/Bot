@@ -53,3 +53,24 @@ def test_family_weights_respect_caps_and_data(family):
         assert (w[alts].fillna(0).abs() <= 0.25 + 1e-12).all().all()
         assert (w.fillna(0).where(p.close.isna(), 0.0) == 0).all().all()
         assert w.fillna(0).abs().sum().sum() > 0  # the variant actually trades
+
+
+def test_h6_no_lookahead_and_stop_levels():
+    from cqs.strategies.breakouts import false_breakout
+    rng = np.random.default_rng(5)
+    idx = pd.date_range("2021-01-01", periods=2000, freq="1h", tz="UTC")
+    c = pd.Series(100 * np.exp(np.cumsum(rng.normal(0, 0.006, 2000))), index=idx)
+    o = c.shift(1).fillna(c)
+    h = np.maximum(o, c) * (1 + np.abs(rng.normal(0, 0.003, 2000)))
+    l = np.minimum(o, c) * (1 - np.abs(rng.normal(0, 0.003, 2000)))
+    w1, s1 = false_breakout(o, h, l, c, 24, 3)
+    t = 1500
+    c2, h2, l2 = c.copy(), h.copy(), l.copy()
+    c2.iloc[t + 1:] *= 1.5; h2.iloc[t + 1:] *= 1.5; l2.iloc[t + 1:] *= 1.5
+    w2, s2 = false_breakout(o, h2, l2, c2, 24, 3)
+    pd.testing.assert_series_equal(w1.iloc[:t + 1], w2.iloc[:t + 1])
+    entries = w1[w1.notna() & (w1 != 0)]
+    assert len(entries) > 10
+    for ts, wt in entries.items():  # short stops sit above the close, long stops below
+        assert (s1[ts] > c[ts]) if wt < 0 else (s1[ts] < c[ts])
+        assert abs(wt) <= 1.0
