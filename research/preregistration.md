@@ -72,4 +72,12 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
 
 ## Zmiany
 
-(brak)
+- **2026-11-24, przed pierwszym testem: szczegóły wykonania, które nie są strojone.**
+  - Strategie dzienne mają pasmo rebalansu 2% kapitału, żeby nie płacić za mikrokorekty wynikające z dryfu wag.
+  - Strategie przekrojowe wymagają co najmniej 10 kontraktów z sygnałem. Przy mniejszej liczbie pozycji nie ma.
+  - Strategie dzienne symuluję na świecach dziennych: decyzja na zamknięciu dnia UTC, wykonanie na otwarciu
+    następnego.
+  - Walk-forward pomija koszt przełączenia między wariantami przy zmianie wyboru. Ten koszt jest mały
+    w porównaniu z dziennym rebalansem, ale go odnotowuję.
+  - Reżimy rynku wyznacza BTC: hossa przy zwrocie z 90 dni > +20%, bessa przy < −20%, w pozostałych
+    przypadkach konsolidacja. Wysoka zmienność to zrealizowana zmienność 30-dniowa BTC > 80% rocznie.
