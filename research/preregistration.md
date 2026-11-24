@@ -120,3 +120,6 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
     kierunku dla BTC i ETH, więc są tylko cechami modelu.
   - Rodzina „ML”, 2 próby. DSR liczę z liczbą wszystkich prób w rejestrze, bo model korzysta z całego programu
     badań. Model zostaje tylko wtedy, gdy spełni kryteria akceptacji i pobije punkt odniesienia out-of-sample.
+  - Doprecyzowanie przed uruchomieniem: cel zmienności portfela potrzebuje 60 dni własnych pozycji strategii.
+    Dlatego model i punkt odniesienia dostają sygnały od początku pierwszego okna testowego, przez pierwsze 60 dni
+    są płaskie, a wynik OOS obu liczę od 61. dnia. Obie strategie mają identyczne okno oceny.

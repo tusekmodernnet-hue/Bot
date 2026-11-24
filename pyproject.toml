@@ -17,6 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+ml = ["lightgbm>=4.3"]
 
 [project.scripts]
 cqs = "cqs.cli:main"

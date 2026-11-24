@@ -121,3 +121,34 @@ def test_h6_per_asset_and_gross_caps():
     gross = (raw * scale).abs().sum(axis=1)
     assert gross.max() <= 0.6 + 1e-9
     assert (w.where(entry).abs() < w_raw.where(entry).abs() - 1e-12).any().any()  # the cap binds here
+
+
+def test_ml_features_use_no_future_data_and_training_is_purged():
+    from cqs.research import ml_meta
+    p = synthetic_panel()
+    pm = Panel(p.open[["BTCUSDT", "ETHUSDT"]], p.high[["BTCUSDT", "ETHUSDT"]], p.low[["BTCUSDT", "ETHUSDT"]],
+               p.close[["BTCUSDT", "ETHUSDT"]], p.quote_volume[["BTCUSDT", "ETHUSDT"]],
+               p.funding[["BTCUSDT", "ETHUSDT"]], p.close[["BTCUSDT", "ETHUSDT"]].notna())
+    t = p.close.index[300]
+    f1 = ml_meta.features(pm, p)
+    p2 = cut_future(p, t)
+    pm2 = Panel(p2.open[["BTCUSDT", "ETHUSDT"]], p2.high[["BTCUSDT", "ETHUSDT"]], p2.low[["BTCUSDT", "ETHUSDT"]],
+                p2.close[["BTCUSDT", "ETHUSDT"]], p2.quote_volume[["BTCUSDT", "ETHUSDT"]],
+                p2.funding[["BTCUSDT", "ETHUSDT"]], p2.close[["BTCUSDT", "ETHUSDT"]].notna())
+    f2 = ml_meta.features(pm2, p2)
+    for k in f1:
+        pd.testing.assert_frame_equal(f1[k].loc[:t], f2[k].loc[:t], check_names=False)
+        assert f1[k].loc[:t].notna().any().any(), k
+    # the label of day d uses opens d+1..d+6 only: changing opens after t leaves labels up to t-6 intact
+    o3 = pm.open.copy()
+    o3.loc[o3.index > t] *= np.linspace(0.5, 2.0, int((o3.index > t).sum()))[:, None]
+    pm3 = Panel(o3, pm.high, pm.low, pm.close, pm.quote_volume, pm.funding, pm.universe)
+    y1, y3 = ml_meta.labels(pm), ml_meta.labels(pm3)
+    cut = t - pd.Timedelta(days=ml_meta.HORIZON + 1)
+    pd.testing.assert_frame_equal(y1.loc[:cut], y3.loc[:cut])
+    assert not y1.loc[cut + pd.Timedelta(days=1):t].equals(y3.loc[cut + pd.Timedelta(days=1):t])
+    # purging + embargo: the last training day is 11 days before the test starts
+    days = p.close.index
+    te0 = days[200]
+    keep = ml_meta.train_mask(days, days[0], te0)
+    assert days[keep].max() == te0 - pd.Timedelta(days=ml_meta.HORIZON + 1 + ml_meta.EMBARGO_DAYS)
