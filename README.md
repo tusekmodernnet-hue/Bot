@@ -9,8 +9,8 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 34 testy przechodzą |
-| 3. Odkrywanie i walidacja strategii (H1–H7) | Następny krok |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 46 testów przechodzi |
+| 3. Odkrywanie i walidacja strategii (H1–H7, ML) | Runda 1 wykonana: 111 prób, brak kandydata |
 | 4. Paper trading i raport końcowy | Po kroku 3, tylko jeśli powstanie kandydat |
 
 ## Szybki start
@@ -41,6 +41,9 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.research.stats` | Probabilistic i Deflated Sharpe Ratio, PBO metodą CSCV |
 | `cqs.research.registry` | Rejestr eksperymentów `research/registry.jsonl`, w tym nieudanych |
 | `cqs.research.benchmarks` | Benchmarki, które musi pobić każda strategia |
+| `cqs.research.run_family`, `run_ext` | Pełna ocena rodziny: warianty, walk-forward, PBO, DSR, reżimy, koszty ×2 |
+| `cqs.research.ml_meta` | Meta-model LightGBM z purgingiem i embargo oraz jego punkt odniesienia |
+| `cqs.strategies` | Prerejestrowane rodziny H1–H7 |
 
 ## Zasady czasu (brak look-ahead)
 
