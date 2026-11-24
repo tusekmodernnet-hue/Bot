@@ -97,3 +97,26 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
     biegnie do swojego wyjścia, także gdy kontrakt wypadnie z top 20.
   - Limity pozycji jak we wspólnych zasadach: 1× na BTC i ETH, 0,25× na pozostałe kontrakty. Limit brutto 2×:
     nowe wejścia są proporcjonalnie zmniejszane w chwili otwarcia, otwartych transakcji nie tnę.
+- **2026-11-24, przed testem meta-modelu ML: pełna specyfikacja, bez strojenia.** Wyniki H1–H7 są znane; model
+  ma stałe hiperparametry i jedną wersję, więc nie ma czego dopasować do tych wyników.
+  - Rynek: BTC i ETH, jeden model dla obu kontraktów. Decyzja na zamknięciu dnia, wykonanie na otwarciu następnego.
+  - Cechy, wszystkie znane na zamknięciu dnia t: zwroty z L ∈ {1, 3, 20, 40, 60, 90, 120} dni (H1, H2b);
+    percentyl zwrotu z 30 dni z pominięciem ostatniego dnia w przekroju uniwersum top 50 (H2a); suma fundingu
+    z W ∈ {1, 3, 7, 14} dni i jego z-score z 30 dni (H3, H4); percentyl 14-dniowego fundingu w przekroju (H3a);
+    zmiana OI z 3 dni z opóźnieniem 5 minut (H3b); zmienność zrealizowana z 30 dni (H5); suma kierunków wejść H6
+    (N = 24, M = 1) z godzin dnia t (H6); Fear & Greed, MVRV i VIX z opóźnieniem 1 dnia (H7).
+  - Etykieta: 1, gdy zwrot od otwarcia t+1 do otwarcia t+6 jest dodatni, w przeciwnym razie 0.
+  - Model: LightGBM (binary) ze stałymi parametrami: 200 drzew, learning rate 0,05, 15 liści, minimum 50
+    obserwacji w liściu, bagging 0,8 co iterację, feature fraction 0,8, seed 0.
+  - Walk-forward: te same okna co rodziny (24 miesiące treningu, 3 miesiące testu, pierwszy test od 01.2022).
+    Purging: w treningu zostają tylko dni, których etykieta jest znana przed początkiem testu (t + 6 ≤ start).
+    Embargo: dodatkowe 5 dni przerwy przed testem.
+  - Pozycja: long przy p > 0,5, w przeciwnym razie short, z tym samym rozmiarem co H1 (cel zmienności 15%,
+    limit 1× na pozycję i 2× brutto) i pasmem rebalansu 2%.
+  - Punkt odniesienia, czyli równoważona kombinacja sygnałów: znak średniej z sześciu kierunków o równej wadze:
+    H1 (średnia znaków zwrotów z 20, 40, 60, 90 i 120 dni), H2a (+1 w górnym kwintylu momentum, −1 w dolnym),
+    H2b (minus znak zwrotu z 3 dni), H3a (−1 w górnym kwintylu fundingu, +1 w dolnym), H3b (minus znak z-score
+    fundingu, gdy |z| > 1,5) i H6 (znak sumy wejść z dnia). Rozmiar pozycji jak w modelu. H4 i H7 nie dają
+    kierunku dla BTC i ETH, więc są tylko cechami modelu.
+  - Rodzina „ML”, 2 próby. DSR liczę z liczbą wszystkich prób w rejestrze, bo model korzysta z całego programu
+    badań. Model zostaje tylko wtedy, gdy spełni kryteria akceptacji i pobije punkt odniesienia out-of-sample.
