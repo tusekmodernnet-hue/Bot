@@ -89,3 +89,11 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
   - H7: bramka zeruje ekspozycję w dniu aktywnym. Nakładam ją na każdy z 10 wariantów H1 (BTC+ETH), czyli
     rodziny o najlepszym wyniku OOS z H1–H6, i ponownie przeprowadzam walk-forward. To 30 prób.
 
+- **2026-11-24, przed testem H6 na top 20: szczegóły wykonania, bez zmiany siatki.**
+  - Wynik H6 na BTC+ETH jest już znany (Sharpe OOS −1,11). Ten test wykonuję, bo był prerejestrowany. Jego 6 prób
+    dopisuję do rodziny H6 (razem 12), więc DSR liczy obie części.
+  - Uniwersum: point-in-time top 20 według średniego obrotu z 30 dni (`UniverseRules(top_n=20)`), z kontraktami
+    zdjętymi z giełdy. Przynależność z zamknięcia dnia d pozwala otwierać transakcje od dnia d+1. Otwarta transakcja
+    biegnie do swojego wyjścia, także gdy kontrakt wypadnie z top 20.
+  - Limity pozycji jak we wspólnych zasadach: 1× na BTC i ETH, 0,25× na pozostałe kontrakty. Limit brutto 2×:
+    nowe wejścia są proporcjonalnie zmniejszane w chwili otwarcia, otwartych transakcji nie tnę.
