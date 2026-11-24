@@ -1,0 +1,11 @@
+# data is downloaded and rebuilt, never committed
+/data/
+*.parquet
+*.zip
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+.env
+*.key
+secrets*
