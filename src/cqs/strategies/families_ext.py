@@ -13,7 +13,8 @@ from cqs.strategies.families import finalize
 def daily_oi(symbol: str, days: pd.DatetimeIndex) -> pd.Series:
     """Open interest known at each day's close (00:00 UTC of the next day), using available_time."""
     m = store.load_metrics(symbol)[["available_time", "sum_open_interest"]].dropna().sort_values("available_time")
-    closes = pd.DataFrame({"t": days + pd.Timedelta(days=1)})
+    m["available_time"] = pd.to_datetime(m["available_time"], utc=True).astype("datetime64[us, UTC]")
+    closes = pd.DataFrame({"t": (days + pd.Timedelta(days=1)).astype("datetime64[us, UTC]")})
     j = pd.merge_asof(closes, m, left_on="t", right_on="available_time", direction="backward")
     return pd.Series(j["sum_open_interest"].to_numpy(), index=days)
 
