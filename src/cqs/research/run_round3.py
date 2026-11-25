@@ -213,7 +213,8 @@ def run_r3x(d: Data | None = None, log: bool = True) -> dict:
                 res = engine.run(*d.bars, W, COSTS.scaled(2), stops=S, funding=d.funding, reenter_after_stop=True)
                 cache[v] = metrics.daily_returns(res.equity)
             r = cache[v]
-            t0, t1 = pd.Timestamp(ch["test_start"]), pd.Timestamp(ch["test_end"])
+            t0, t1 = (pd.Timestamp(ch[k]) for k in ("test_start", "test_end"))
+            t0, t1 = (t if t.tzinfo else t.tz_localize("UTC") for t in (t0, t1))
             parts.append(r[(r.index >= t0) & (r.index < t1)])
         oos2[f] = pd.concat(parts)
     X = pd.DataFrame(oos).sort_index().fillna(0.0).mean(axis=1)
