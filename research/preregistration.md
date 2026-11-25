@@ -261,3 +261,53 @@ Ustalone przy pisaniu kodu, przed jakimkolwiek wynikiem. Nie zmieniają siatki p
   miało tę samą wielkość co zatrzymana pozycja. Dodałem do silnika opcję `reenter_after_stop` (domyślnie wyłączoną,
   więc rundy 1–2 się nie zmieniają) i używam jej w rundzie 3. Po teście nie zmieniłem żadnej definicji ani
   parametru. Wyniki tego testu (2021, bez kosztów ×2 i bez walk-forward) nie są wynikami rundy.
+
+### R3X — połączenie rodzin rundy 3 (dopisane 2026-11-25 w trakcie obliczeń rundy 3, przed obejrzeniem jakiegokolwiek wyniku)
+- Portfel: średnia z równymi wagami dziennych zwrotów OOS ośmiu rodzin R3A–R3H, każda z wariantem wybranym przez
+  jej własny walk-forward. Bez dodatkowych parametrów i bez wyboru rodzin po wynikach. **1 próba.**
+- Kryteria jak dla rodzin, z wyjątkiem PBO, którego nie da się policzyć dla jednej strategii: podaję PBO składników.
+
+## Runda 4 — scalping na zleceniach limit (prerejestracja 2026-11-25, przed jakimkolwiek testem tej rundy)
+
+Scalping na zleceniach rynkowych kosztuje ok. 0,14% za pełną transakcję, więc testuję go tylko z wejściem
+zleceniem limit (prowizja maker 0,02%). Dane: świece 5m (sygnały) i 1m (symulacja wypełnień) z archiwum Binance,
+BTCUSDT i ETHUSDT perpetual, 2020-01 do 2025-05. Holdout bez zmian.
+
+### Symulacja wypełnień (konserwatywna)
+- Zlecenie limit wystawiam na zamknięciu świecy 5m z sygnałem; jest aktywne przez podany czas na świecach 1m.
+- Kupno limit wypełnia się tylko wtedy, gdy low świecy 1m jest **niżej** niż cena zlecenia (cena przeszła przez
+  poziom, samo dotknięcie nie wystarcza); sprzedaż lustrzanie. Wypełnienie po cenie zlecenia, prowizja maker
+  0,02%, bez poślizgu. Zlecenia, które w chwili wystawienia byłyby od razu wykonalne, nie są wystawiane.
+- Take profit: zlecenie limit (maker, ta sama reguła przejścia ceny), aktywne od świecy 1m po wejściu.
+- Stop loss: stop rynkowy, uruchomiony, gdy low ≤ stop (long); wypełnienie po stopie albo po gorszym otwarciu
+  przy luce, plus poślizg 2 pb i prowizja taker 0,05%. Wyjście czasowe: na otwarciu następnej świecy 1m, taker
+  0,05% + 2 pb.
+- Gdy w jednej świecy 1m mieszczą się i take profit, i stop, zakładam stop. W świecy wejścia stop może zadziałać,
+  take profit nie.
+- Rozmiar: ryzyko 0,5% kapitału do stopu, najwyżej 1× na kontrakt. Jedna pozycja albo jeden zestaw zleceń na
+  kontrakt naraz. Funding rzeczywisty za pozycje trzymane w chwili rozliczenia.
+- Koszty ×2: maker 0,04%, taker 0,10%, poślizg 4 pb.
+
+### S1 — powrót do VWAP z wejściem limit (5m)
+- VWAP od 00:00 UTC z ceny typowej świec 5m. d = close/VWAP − 1; σ = odchylenie standardowe d z poprzednich
+  30 dni (świece 5m).
+- Na każdym zamknięciu 5m między 02:00 a 22:00 UTC, bez pozycji: kupno limit po VWAP·(1 − K·σ) i sprzedaż limit
+  po VWAP·(1 + K·σ), ważne 5 minut. Po wypełnieniu jednej strony druga jest anulowana.
+- Take profit: VWAP z chwili wystawienia. Stop: w tej samej odległości od wejścia co take profit, po przeciwnej
+  stronie (1:1). Wyjście czasowe po 60 minutach.
+- Filtr trendu: brak albo tylko w kierunku trendu 1h (long, gdy ostatnie zamknięte 1h > EMA(50) z 1h; short,
+  gdy poniżej).
+- K ∈ {2, 3}, filtr ∈ {brak, trend 1h}. **4 warianty.**
+
+### S2 — wejście limit za krawędzią zakresu azjatyckiego w killzone Londynu (Judas swing)
+- Zakres azjatycki: high i low świec 00:00–06:00 UTC. A = ATR(14) z świec 1h, znany o 07:00 UTC.
+- O 07:00 UTC: sprzedaż limit po high zakresu + x·A i kupno limit po low zakresu − x·A, ważne do 10:00 UTC.
+  Najwyżej jedna transakcja dziennie na kontrakt; po wypełnieniu jednej strony druga jest anulowana.
+- Take profit: środek zakresu azjatyckiego. Stop: 1·A za ceną wejścia. Wyjście najpóźniej o 16:00 UTC.
+- x ∈ {0, 0,5}. **2 warianty.**
+
+### Ocena rundy 4
+- Jak w rundzie 3 (walk-forward 24/3, PBO, koszty ×2, reżimy z Sharpe ≥ 0, benchmarki, DD ≤ 25%, Sharpe OOS ≥ 1).
+- DSR: N = wszystkie próby w rejestrze; wariancja Sharpe z prób rund 3 i 4 (przestrzeń strategii śróddziennych).
+- Kandydat musi dodatkowo przejść paper trading na żywym rynku, bo symulacja na świecach 1m nie oddaje kolejki
+  zleceń ani pełnego ryzyka niekorzystnej selekcji wypełnień.
