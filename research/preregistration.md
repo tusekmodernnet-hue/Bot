@@ -311,3 +311,64 @@ BTCUSDT i ETHUSDT perpetual, 2020-01 do 2025-05. Holdout bez zmian.
 - DSR: N = wszystkie próby w rejestrze; wariancja Sharpe z prób rund 3 i 4 (przestrzeń strategii śróddziennych).
 - Kandydat musi dodatkowo przejść paper trading na żywym rynku, bo symulacja na świecach 1m nie oddaje kolejki
   zleceń ani pełnego ryzyka niekorzystnej selekcji wypełnień.
+
+## Runda 5 — przepływ zleceń, likwidacje i otwarcie sesji w Nowym Jorku (prerejestracja 2026-11-25, przed testem)
+
+Właściciel polecił szukać dalej. Rundy 1–4 (164 próby) nie dały kandydata. Runda 5 wykorzystuje informacje, których
+dotąd nie testowałem: wolumen kupującego agresora ze świec Binance (`taker_buy_volume`) i open interest co 5 minut
+(dostępny 5 minut po znaczniku czasu, BTC od 09.2020, ETH od 12.2021). Dwie rodziny (R5C, R5D) wynikają z diagnostyki
+rundy 3 bez kosztów na danych badawczych, więc oznaczam je jako **hipotezy inspirowane danymi**. Holdout tych
+obserwacji nie widział i rozstrzyga o każdym kandydacie.
+
+### Wspólne zasady rundy 5
+- Rynki BTCUSDT i ETHUSDT perpetual, dane badawcze 2020-01 do 2025-05. Koszty: taker 0,05% + poślizg 2 pb na stronę,
+  maker 0,02% (wypełnienia limit według reguł rundy 4), funding rzeczywisty. Ryzyko 0,5% kapitału do stopu, najwyżej
+  1× na kontrakt. Decyzja na zamknięciu świecy, wejście rynkowe na otwarciu następnej (jak w rundzie 3).
+- Przepływ agresora świecy: I = (2·taker_buy_volume − volume) / volume ∈ [−1, 1]; dla kilku świec sumy w liczniku
+  i mianowniku.
+- Stop ochronny 3× ATR(14) ze świec 1h, znany na zamknięciu świecy decyzji (jak w rundzie 3).
+- Ocena jak w rundzie 3: walk-forward 24/3, PBO, koszty ×2, reżimy (Sharpe ≥ 0 w hossie, bessie i konsolidacji),
+  obsunięcie ≤ 25%, Sharpe OOS ≥ 1, lepszy niż benchmarki w tym samym oknie.
+- **Zmiana metody DSR (od tej rundy):** SR0 = √(1/T)·[(1−γ)·Φ⁻¹(1−1/N) + γ·Φ⁻¹(1−1/(N·e))], gdzie T to liczba dni,
+  na których szacuję Sharpe prób (cały okres badawczy), a N to wszystkie próby w rejestrze poza benchmarkami.
+  Uzasadnienie: w rundach 3–4 wariancja Sharpe między próbami (zawyżona przez warianty z Sharpe −10, zdominowane przez
+  koszty) dawała oczekiwany najlepszy wynik przypadkowej strategii 6 rocznie, czego nie da się osiągnąć. DSR modeluje
+  szczęście strategii bez przewagi, a jego wariancja to wariancja estymatora Sharpe, ok. 1/T (Lo 2002). Próg zostaje
+  0,95; dla N ≈ 174 oznacza to Sharpe OOS ok. 2 rocznie. Podaję też DSR z wariancją między próbami. Zmiana nie wpływa
+  na werdykty rund 1–4: żadna rodzina nie spełniła tam progu Sharpe OOS ≥ 1.
+
+### R5A — kontynuacja przepływu agresora, świece 1h
+- F_L = przepływ agresora z ostatnich L świec 1h; z = (F_L − średnia) / odchylenie standardowe F_L z poprzednich
+  30 dni (bez bieżącej świecy).
+- Bez pozycji: z > 2 → long, z < −2 → short. Wyjście po 4 świecach 1h albo na stopie ochronnym.
+- L ∈ {1, 4}. **2 warianty.** Uzasadnienie: poinformowani uczestnicy częściej używają zleceń rynkowych, więc
+  nierównowaga agresywnych zleceń może zapowiadać krótkotrwałą kontynuację.
+
+### R5B — odbicie po wymuszonych likwidacjach, świece 15m + OI
+- Zwrot świecy r = close/open − 1; σ = odchylenie standardowe zwrotów 15m z poprzednich 30 dni. ΔOI = zmiana OI między
+  ostatnimi odczytami dostępnymi na zamknięciu tej i poprzedniej świecy.
+- Long (likwidacja longów): r < −k·σ, ΔOI < −1% i I < −0,2. Short (likwidacja shortów): r > k·σ, ΔOI < −1% i I > 0,2.
+- Wyjście po 4 godzinach albo na stopie ochronnym. k ∈ {3, 4}. **2 warianty.** Uzasadnienie: wymuszone zamknięcia
+  pozycji nie niosą informacji, więc ich wpływ na cenę powinien częściowo się cofnąć.
+
+### R5C — sweep z absorpcją agresora (ICT + przepływ zleceń), 15m, inspirowana danymi
+- Sweep jak w R3A z M = 4, bez filtra killzones, cel: środek zakresu poprzedniego dnia, najwyżej jedna transakcja na
+  stronę dziennie, wyjście najpóźniej na koniec dnia UTC.
+- Dodatkowy warunek: przepływ agresora na świecach sweepu (od pierwszego przebicia do świecy powrotu) po stronie
+  przebicia. Short po sweepie PDH tylko, gdy I > θ (agresywni kupujący przebili poziom, ale cena wróciła pod niego);
+  long po sweepie PDL tylko, gdy I < −θ.
+- θ ∈ {0, 0,1}. **2 warianty.** Inspiracja: R3A (M = 4, bez killzones) miała bez kosztów Sharpe ok. 1,0.
+
+### R5D — wybicie zakresu otwarcia sesji NY z tańszym wykonaniem i filtrem zmienności, inspirowana danymi
+- Sesja i zakres jak w R3E (dni robocze, od 09:30 czasu nowojorskiego, pierwsze N minut), jedna transakcja na sesję,
+  stop na przeciwnej krawędzi zakresu, wyjście o 16:00 czasu nowojorskiego.
+- Filtr: sesję handluję tylko wtedy, gdy ATR(14) ze świec 1h podzielony przez cenę, znany o 09:30, jest nie niższy niż
+  mediana z poprzednich 60 sesji (większy oczekiwany ruch przy stałym koszcie w punktach bazowych).
+- Wykonanie: rynkowe (jak R3E) albo limit: po pierwszym zamknięciu świecy 15m za zakresem zlecenie limit na krawędzi
+  zakresu (kupno na górnej, sprzedaż na dolnej), ważne do 12:00 czasu nowojorskiego, symulowane na świecach 1m
+  według reguł rundy 4; stop i wyjście o 16:00 po cenie rynkowej.
+- N ∈ {15, 30}, wykonanie ∈ {rynkowe, limit}. **4 warianty.** Inspiracja: ORB sesji NY w R3E miał bez kosztów
+  Sharpe 1,5–1,9, a po kosztach 0,0–0,3.
+
+Razem 10 prób (N w programie wzrośnie do ok. 174). Jeśli runda 5 nie da kandydata, kończę reguły na świecach z
+archiwum Binance i rekomenduję nowe źródło danych (płatna księga zleceń) albo inny rynek.
