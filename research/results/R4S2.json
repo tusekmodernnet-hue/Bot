@@ -1,0 +1,220 @@
+{
+ "family": "R4S2",
+ "market": "BTC+ETH 1m limit",
+ "data": "a61b03c2b7eae9cc59c10bee8a1ea4f0725155ddf2ced6f8",
+ "variants": {
+  "s2_asia_limit(x=0.0)": {
+   "sharpe": -3.445994582617545,
+   "cagr": -0.31773119934404703,
+   "max_drawdown": -0.8783291477158616,
+   "n_trades": 1976,
+   "trades_per_day": 0.9989888776541962,
+   "win_rate": 0.4230769230769231,
+   "profit_factor": 0.6520510020005958,
+   "avg_trade_return_on_equity": -0.0010316411347217741,
+   "exit_reasons": {
+    "stop": 1072,
+    "target": 769,
+    "time": 135
+   }
+  },
+  "s2_asia_limit(x=0.5)": {
+   "sharpe": -1.474628040469826,
+   "cagr": -0.15439234395785084,
+   "max_drawdown": -0.6282374787140672,
+   "n_trades": 1485,
+   "trades_per_day": 0.7507583417593529,
+   "win_rate": 0.402020202020202,
+   "profit_factor": 0.8084825225028653,
+   "avg_trade_return_on_equity": -0.0005899340233902998,
+   "exit_reasons": {
+    "stop": 841,
+    "target": 481,
+    "time": 163
+   }
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -1.3085448881625552,
+   "sortino": -1.7915016696582011,
+   "cagr": -0.13401796734749505,
+   "max_drawdown": -0.4273533186476761,
+   "calmar": -0.31359992189035457,
+   "total_return": -0.38835004872871826
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -2.483601052669729,
+   "sortino": -3.147853143893702,
+   "cagr": -0.2434536001392832,
+   "max_drawdown": -0.6357171076639474,
+   "calmar": -0.3829590193567318,
+   "total_return": -0.6144779786427879
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.737090051384928
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.8053366798323358
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.4568938109000757
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.2271884515660332
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.142552073962184
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -0.6815952932445308
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.1149677489644638
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.4657595881430048
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.2919927544911214
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.1216406154742464
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.2744087824280732
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.3272889418288458
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.4504525551292347
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "s2_asia_limit(x=0.5)",
+    "train_sharpe": -1.8799398362228807
+   }
+  ]
+ },
+ "pbo": 0.0,
+ "deflated_sharpe": 0.0001020052506469058,
+ "deflated_sharpe_program": 3.577633738562883e-38,
+ "n_trials_program": 164,
+ "n_trials_family": 2,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": -0.7628909902400496,
+   "total_return": -0.09240446681154513
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -0.9811479427626054,
+   "total_return": -0.06274457208266371
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -1.7820102993957487,
+   "total_return": -0.2809606942033228
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": 0.21251713918744805,
+   "total_return": 0.004006508993171565
+  }
+ },
+ "benchmarks_same_window": {
+  "BTCUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.571577391939223,
+   "sortino": 0.8418997137568539,
+   "cagr": 0.17693809347662848,
+   "max_drawdown": -0.6812659366305567,
+   "calmar": 0.2597195661238236,
+   "total_return": 0.7447185566817172
+  },
+  "BTCUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.9145860702292894,
+   "sortino": 1.4563999109469283,
+   "cagr": 0.30951008164586624,
+   "max_drawdown": -0.325409618659281,
+   "calmar": 0.9511399291793452,
+   "total_return": 1.5124368489150952
+  },
+  "BTCUSDT+ETHUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.311232459025787,
+   "sortino": 0.44940459030876795,
+   "cagr": 0.007877663840527571,
+   "max_drawdown": -0.6902472655681413,
+   "calmar": 0.011412814267425572,
+   "total_return": 0.027170668156070166
+  },
+  "BTCUSDT+ETHUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.7280025863369605,
+   "sortino": 1.1311347039540787,
+   "cagr": 0.21504481950494014,
+   "max_drawdown": -0.3022513552910251,
+   "calmar": 0.7114767750102644,
+   "total_return": 0.9453796649081758
+  }
+ }
+}

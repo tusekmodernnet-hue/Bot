@@ -1,0 +1,317 @@
+{
+ "r3a_pdh_sweep(M=1, target=2R, killzones=False)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.1907440207576206,
+  "gross_sharpe_2022_2025": 0.27735413406906734,
+  "n_trades": 2652,
+  "turnover_per_year": 855.1598785006411,
+  "gross_profit_factor": 1.0148194912196484,
+  "gross_total_return_2022_2025": 0.10480491872593034
+ },
+ "r3a_pdh_sweep(M=1, target=2R, killzones=True)": {
+  "family": "R3A",
+  "gross_sharpe_full": -0.14851393797945098,
+  "gross_sharpe_2022_2025": 0.24308775457672643,
+  "n_trades": 1171,
+  "turnover_per_year": 345.73749287776195,
+  "gross_profit_factor": 0.9627806319561176,
+  "gross_total_return_2022_2025": 0.06261404811983917
+ },
+ "r3a_pdh_sweep(M=1, target=mid, killzones=False)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.4337839531741462,
+  "gross_sharpe_2022_2025": 0.6392101915556733,
+  "n_trades": 2662,
+  "turnover_per_year": 999.792138085865,
+  "gross_profit_factor": 1.0549738419283246,
+  "gross_total_return_2022_2025": 0.41005383624958935
+ },
+ "r3a_pdh_sweep(M=1, target=mid, killzones=True)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.055553933544364935,
+  "gross_sharpe_2022_2025": 0.07630995623346838,
+  "n_trades": 1166,
+  "turnover_per_year": 383.6177454076005,
+  "gross_profit_factor": 0.9975254173106557,
+  "gross_total_return_2022_2025": 0.008332540006672051
+ },
+ "r3a_pdh_sweep(M=4, target=2R, killzones=False)": {
+  "family": "R3A",
+  "gross_sharpe_full": 1.0111248514659767,
+  "gross_sharpe_2022_2025": 1.0842715633392157,
+  "n_trades": 2911,
+  "turnover_per_year": 1313.1426196626699,
+  "gross_profit_factor": 1.1111506681215622,
+  "gross_total_return_2022_2025": 0.7245037282919802
+ },
+ "r3a_pdh_sweep(M=4, target=2R, killzones=True)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.2991061082746533,
+  "gross_sharpe_2022_2025": 0.4519200810441803,
+  "n_trades": 1370,
+  "turnover_per_year": 443.10583568178714,
+  "gross_profit_factor": 1.0424332870914061,
+  "gross_total_return_2022_2025": 0.14992301918261486
+ },
+ "r3a_pdh_sweep(M=4, target=mid, killzones=False)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.8464228568342023,
+  "gross_sharpe_2022_2025": 1.067433369046728,
+  "n_trades": 2928,
+  "turnover_per_year": 1340.7154279565818,
+  "gross_profit_factor": 1.1069712713518776,
+  "gross_total_return_2022_2025": 0.9184430104994976
+ },
+ "r3a_pdh_sweep(M=4, target=mid, killzones=True)": {
+  "family": "R3A",
+  "gross_sharpe_full": 0.20725710879123693,
+  "gross_sharpe_2022_2025": 0.1785566214441967,
+  "n_trades": 1368,
+  "turnover_per_year": 461.75501372617134,
+  "gross_profit_factor": 1.0290821296325816,
+  "gross_total_return_2022_2025": 0.05166962678349529
+ },
+ "r3b_asia_sweep(M=1, target=opposite)": {
+  "family": "R3B",
+  "gross_sharpe_full": -0.9717414729821838,
+  "gross_sharpe_2022_2025": -0.6388112704171272,
+  "n_trades": 1462,
+  "turnover_per_year": 336.21570771143274,
+  "gross_profit_factor": 0.7909026023647174,
+  "gross_total_return_2022_2025": -0.24045521847073292
+ },
+ "r3b_asia_sweep(M=1, target=2R)": {
+  "family": "R3B",
+  "gross_sharpe_full": -1.4809970706974394,
+  "gross_sharpe_2022_2025": -0.9321406256680527,
+  "n_trades": 1463,
+  "turnover_per_year": 331.80281428448484,
+  "gross_profit_factor": 0.7672733725303591,
+  "gross_total_return_2022_2025": -0.2261634583409481
+ },
+ "r3b_asia_sweep(M=2, target=opposite)": {
+  "family": "R3B",
+  "gross_sharpe_full": -0.7666104207342419,
+  "gross_sharpe_2022_2025": -0.44227633523084314,
+  "n_trades": 1675,
+  "turnover_per_year": 379.8607630761128,
+  "gross_profit_factor": 0.8389932493835064,
+  "gross_total_return_2022_2025": -0.20092422924825848
+ },
+ "r3b_asia_sweep(M=2, target=2R)": {
+  "family": "R3B",
+  "gross_sharpe_full": -1.1544307421015665,
+  "gross_sharpe_2022_2025": -0.5356413188651781,
+  "n_trades": 1676,
+  "turnover_per_year": 371.5464036342214,
+  "gross_profit_factor": 0.8164539305982248,
+  "gross_total_return_2022_2025": -0.17032043097911442
+ },
+ "r3c_fvg(interval=15m, trend_filter=False)": {
+  "family": "R3C",
+  "gross_sharpe_full": -0.036885189381462305,
+  "gross_sharpe_2022_2025": -0.402597582315516,
+  "n_trades": 15707,
+  "turnover_per_year": 4359.3722010498095,
+  "gross_profit_factor": 0.9901742951574405,
+  "gross_total_return_2022_2025": -0.456719041004086
+ },
+ "r3c_fvg(interval=15m, trend_filter=True)": {
+  "family": "R3C",
+  "gross_sharpe_full": 0.2493031282652973,
+  "gross_sharpe_2022_2025": 0.1697623915657962,
+  "n_trades": 8284,
+  "turnover_per_year": 2449.0065126954364,
+  "gross_profit_factor": 1.0108183258264554,
+  "gross_total_return_2022_2025": 0.04280761201812666
+ },
+ "r3c_fvg(interval=1h, trend_filter=False)": {
+  "family": "R3C",
+  "gross_sharpe_full": 0.17520871051191358,
+  "gross_sharpe_2022_2025": 0.31493629384789046,
+  "n_trades": 3992,
+  "turnover_per_year": 844.7367239612782,
+  "gross_profit_factor": 1.0077188223837392,
+  "gross_total_return_2022_2025": 0.16640206133773394
+ },
+ "r3c_fvg(interval=1h, trend_filter=True)": {
+  "family": "R3C",
+  "gross_sharpe_full": 0.4627556758148933,
+  "gross_sharpe_2022_2025": 0.5086808430178377,
+  "n_trades": 2158,
+  "turnover_per_year": 545.7337562761669,
+  "gross_profit_factor": 1.0612695765724174,
+  "gross_total_return_2022_2025": 0.2785664280464031
+ },
+ "r3d_structure(k=3, interval=1h)": {
+  "family": "R3D",
+  "gross_sharpe_full": 0.7827570710665361,
+  "gross_sharpe_2022_2025": 1.0100037498749828,
+  "n_trades": 3441,
+  "turnover_per_year": 562.8736749862521,
+  "gross_profit_factor": 1.1214160535168953,
+  "gross_total_return_2022_2025": 1.2478716368494602
+ },
+ "r3d_structure(k=3, interval=4h)": {
+  "family": "R3D",
+  "gross_sharpe_full": 1.0936736035889174,
+  "gross_sharpe_2022_2025": 1.175109708203252,
+  "n_trades": 841,
+  "turnover_per_year": 56.99769327832564,
+  "gross_profit_factor": 1.4050239122750872,
+  "gross_total_return_2022_2025": 0.65003093653767
+ },
+ "r3d_structure(k=5, interval=1h)": {
+  "family": "R3D",
+  "gross_sharpe_full": 0.7125392977059464,
+  "gross_sharpe_2022_2025": 0.5168479223345959,
+  "n_trades": 2326,
+  "turnover_per_year": 314.96095737481295,
+  "gross_profit_factor": 1.117175789411,
+  "gross_total_return_2022_2025": 0.3720720634937218
+ },
+ "r3d_structure(k=5, interval=4h)": {
+  "family": "R3D",
+  "gross_sharpe_full": 1.1238039025084867,
+  "gross_sharpe_2022_2025": 1.1801495505316058,
+  "n_trades": 578,
+  "turnover_per_year": 27.024481686744707,
+  "gross_profit_factor": 1.5274657801382858,
+  "gross_total_return_2022_2025": 0.5051424664572921
+ },
+ "r3e_orb(session=utc, minutes=15)": {
+  "family": "R3E",
+  "gross_sharpe_full": 0.3332004123623235,
+  "gross_sharpe_2022_2025": -0.48455248055505074,
+  "n_trades": 3955,
+  "turnover_per_year": 2548.777835566134,
+  "gross_profit_factor": 1.0102833466560177,
+  "gross_total_return_2022_2025": -0.5617121863811311
+ },
+ "r3e_orb(session=utc, minutes=30)": {
+  "family": "R3E",
+  "gross_sharpe_full": 0.4047225012862034,
+  "gross_sharpe_2022_2025": -0.4122329000712087,
+  "n_trades": 3949,
+  "turnover_per_year": 2280.979605649296,
+  "gross_profit_factor": 1.01671694703327,
+  "gross_total_return_2022_2025": -0.5040419626956816
+ },
+ "r3e_orb(session=utc, minutes=60)": {
+  "family": "R3E",
+  "gross_sharpe_full": 1.1361371948261583,
+  "gross_sharpe_2022_2025": 0.5473343611625874,
+  "n_trades": 3938,
+  "turnover_per_year": 3391.469872093916,
+  "gross_profit_factor": 1.0976107276858975,
+  "gross_total_return_2022_2025": 0.5643515111932391
+ },
+ "r3e_orb(session=ny, minutes=15)": {
+  "family": "R3E",
+  "gross_sharpe_full": 1.7266668556335254,
+  "gross_sharpe_2022_2025": 1.992740608187241,
+  "n_trades": 2802,
+  "turnover_per_year": 2334.057459465857,
+  "gross_profit_factor": 1.2543263249669754,
+  "gross_total_return_2022_2025": 3.547293861585908
+ },
+ "r3e_orb(session=ny, minutes=30)": {
+  "family": "R3E",
+  "gross_sharpe_full": 1.9170871589865919,
+  "gross_sharpe_2022_2025": 2.345141921692161,
+  "n_trades": 2739,
+  "turnover_per_year": 1586.1822110079995,
+  "gross_profit_factor": 1.3425625925307245,
+  "gross_total_return_2022_2025": 3.6417245873426696
+ },
+ "r3e_orb(session=ny, minutes=60)": {
+  "family": "R3E",
+  "gross_sharpe_full": 1.5393669404308095,
+  "gross_sharpe_2022_2025": 1.9840306904778404,
+  "n_trades": 2542,
+  "turnover_per_year": 620.536459846459,
+  "gross_profit_factor": 1.322585748912696,
+  "gross_total_return_2022_2025": 1.6745250088722763
+ },
+ "r3f_intraday_momentum(hour=12)": {
+  "family": "R3F",
+  "gross_sharpe_full": 0.7779431905099615,
+  "gross_sharpe_2022_2025": 0.3369281235604101,
+  "n_trades": 3954,
+  "turnover_per_year": 554.3476083451009,
+  "gross_profit_factor": 1.078862351916649,
+  "gross_total_return_2022_2025": 0.15776396490726396
+ },
+ "r3f_intraday_momentum(hour=16)": {
+  "family": "R3F",
+  "gross_sharpe_full": 1.0883769157983274,
+  "gross_sharpe_2022_2025": 0.8381378145355339,
+  "n_trades": 3955,
+  "turnover_per_year": 508.7151361586283,
+  "gross_profit_factor": 1.1341202542299302,
+  "gross_total_return_2022_2025": 0.40967289849728594
+ },
+ "r3f_intraday_momentum(hour=20)": {
+  "family": "R3F",
+  "gross_sharpe_full": 0.9624986697913203,
+  "gross_sharpe_2022_2025": 0.7466119054538762,
+  "n_trades": 3956,
+  "turnover_per_year": 410.73430152059774,
+  "gross_profit_factor": 1.1257255368416397,
+  "gross_total_return_2022_2025": 0.2200583008919641
+ },
+ "r3g_vwap(K=2.0)": {
+  "family": "R3G",
+  "gross_sharpe_full": -1.6308777442586397,
+  "gross_sharpe_2022_2025": -1.537563272591071,
+  "n_trades": 2458,
+  "turnover_per_year": 97.6994640679524,
+  "gross_profit_factor": 0.7799385985378404,
+  "gross_total_return_2022_2025": -0.3823175341143228
+ },
+ "r3g_vwap(K=3.0)": {
+  "family": "R3G",
+  "gross_sharpe_full": -0.7619018925027513,
+  "gross_sharpe_2022_2025": -1.0161261314627745,
+  "n_trades": 953,
+  "turnover_per_year": 45.69944410397029,
+  "gross_profit_factor": 0.8407228400523638,
+  "gross_total_return_2022_2025": -0.17569086395069344
+ },
+ "r3h_pullback(T=5, S=50)": {
+  "family": "R3H",
+  "gross_sharpe_full": -0.1743925065408527,
+  "gross_sharpe_2022_2025": -0.27686970145759043,
+  "n_trades": 689,
+  "turnover_per_year": 25.232026091163515,
+  "gross_profit_factor": 0.943768603203427,
+  "gross_total_return_2022_2025": -0.04290448164793015
+ },
+ "r3h_pullback(T=5, S=200)": {
+  "family": "R3H",
+  "gross_sharpe_full": -0.20165095869534233,
+  "gross_sharpe_2022_2025": -0.4178239347437375,
+  "n_trades": 669,
+  "turnover_per_year": 25.70843040846874,
+  "gross_profit_factor": 0.9368530035267016,
+  "gross_total_return_2022_2025": -0.06635413863392248
+ },
+ "r3h_pullback(T=10, S=50)": {
+  "family": "R3H",
+  "gross_sharpe_full": -0.21554074964246062,
+  "gross_sharpe_2022_2025": -0.3529562233136663,
+  "n_trades": 1208,
+  "turnover_per_year": 42.73487884318502,
+  "gross_profit_factor": 0.9454940970970482,
+  "gross_total_return_2022_2025": -0.06889855833971414
+ },
+ "r3h_pullback(T=10, S=200)": {
+  "family": "R3H",
+  "gross_sharpe_full": -0.24469588104421647,
+  "gross_sharpe_2022_2025": -0.4353416954812746,
+  "n_trades": 1134,
+  "turnover_per_year": 42.048516497753674,
+  "gross_profit_factor": 0.9390985627726793,
+  "gross_total_return_2022_2025": -0.08489175794833159
+ }
+}

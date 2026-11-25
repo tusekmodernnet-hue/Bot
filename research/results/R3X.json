@@ -1,0 +1,126 @@
+{
+ "family": "R3X",
+ "components": [
+  "R3A",
+  "R3B",
+  "R3C",
+  "R3D",
+  "R3E",
+  "R3F",
+  "R3G",
+  "R3H"
+ ],
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -2.784105807721637,
+   "sortino": -4.233415508282824,
+   "cagr": -0.15544534878743743,
+   "max_drawdown": -0.43803795838482285,
+   "calmar": -0.35486730273470135,
+   "total_return": -0.43852779961623156
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -7.004920849320722,
+   "sortino": -8.522308469150909,
+   "cagr": -0.3487166957301139,
+   "max_drawdown": -0.7686547895502662,
+   "calmar": -0.4536714016107871,
+   "total_return": -0.7689231187328673
+  }
+ },
+ "component_pbo": {
+  "R3A": 0.2687645687645688,
+  "R3B": 0.0,
+  "R3C": 0.0,
+  "R3D": 0.07459207459207459,
+  "R3E": 0.3742035742035742,
+  "R3F": 0.8896658896658897,
+  "R3G": 0.0,
+  "R3H": 0.5623931623931624
+ },
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": -1.99013263552431,
+   "total_return": -0.1184401799552508
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -2.0237068099545463,
+   "total_return": -0.07987413800155918
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -3.5944105943487377,
+   "total_return": -0.3078037643344925
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": -2.828231455726332,
+   "total_return": -0.039242759528988036
+  }
+ },
+ "benchmarks_same_window": {
+  "BTCUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.571577391939223,
+   "sortino": 0.8418997137568539,
+   "cagr": 0.17693809347662848,
+   "max_drawdown": -0.6812659366305567,
+   "calmar": 0.2597195661238236,
+   "total_return": 0.7447185566817172
+  },
+  "BTCUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.9145860702292894,
+   "sortino": 1.4563999109469283,
+   "cagr": 0.30951008164586624,
+   "max_drawdown": -0.325409618659281,
+   "calmar": 0.9511399291793452,
+   "total_return": 1.5124368489150952
+  },
+  "BTCUSDT+ETHUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.311232459025787,
+   "sortino": 0.44940459030876795,
+   "cagr": 0.007877663840527571,
+   "max_drawdown": -0.6902472655681413,
+   "calmar": 0.011412814267425572,
+   "total_return": 0.027170668156070166
+  },
+  "BTCUSDT+ETHUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.7280025863369605,
+   "sortino": 1.1311347039540787,
+   "cagr": 0.21504481950494014,
+   "max_drawdown": -0.3022513552910251,
+   "calmar": 0.7114767750102644,
+   "total_return": 0.9453796649081758
+  }
+ },
+ "dsr_program_round3_variance": 1.6316082136281991e-46,
+ "n_trials_program": 158,
+ "checks": {
+  "oos_sharpe_ge_1": false,
+  "dsr_ge_0_95": false,
+  "max_dd_within_25pct": false,
+  "positive_at_costs_x2": false,
+  "sharpe_ge_0_bull_bear_range": false,
+  "beats_benchmarks": false
+ },
+ "candidate": false
+}
