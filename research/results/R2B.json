@@ -1,0 +1,192 @@
+{
+ "family": "R2B",
+ "market": "universe_top50(273)",
+ "data": "b12fa24250ece412",
+ "variants": {
+  "h3a_funding_xs(window_days=7, rebalance_every=7)": {
+   "sharpe": 1.1799744010470716,
+   "cagr": 0.19607894837805873,
+   "max_drawdown": -0.22012125502188817,
+   "n_trades": 1994,
+   "win_rate": 0.5175526579739218,
+   "profit_factor": 1.1269516735315714,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 74.25183130834628,
+   "costs_paid": 0.599976099530472,
+   "funding_paid": -1.2701445133877896
+  },
+  "h3a_funding_xs(window_days=7, rebalance_every=14)": {
+   "sharpe": 0.7882002956106446,
+   "cagr": 0.1269409835372075,
+   "max_drawdown": -0.24862245592447052,
+   "n_trades": 1191,
+   "win_rate": 0.5037783375314862,
+   "profit_factor": 1.1159263765259368,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 33.44183693430558,
+   "costs_paid": 0.27419165802166595,
+   "funding_paid": -0.856607484723517
+  },
+  "h3a_funding_xs(window_days=14, rebalance_every=7)": {
+   "sharpe": 1.2104532834865458,
+   "cagr": 0.21150005820713758,
+   "max_drawdown": -0.2595760709687136,
+   "n_trades": 1544,
+   "win_rate": 0.5038860103626943,
+   "profit_factor": 1.1622046519428162,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 55.98590320204124,
+   "costs_paid": 0.4562735974939232,
+   "funding_paid": -1.2518856591761287
+  },
+  "h3a_funding_xs(window_days=14, rebalance_every=14)": {
+   "sharpe": 0.6475488076915764,
+   "cagr": 0.10660017191647309,
+   "max_drawdown": -0.3983295425540566,
+   "n_trades": 1150,
+   "win_rate": 0.5026086956521739,
+   "profit_factor": 1.0928261817049694,
+   "exposure": 0.9287158746208292,
+   "turnover_per_year": 31.929001344709583,
+   "costs_paid": 0.2654656496998219,
+   "funding_paid": -0.8451471890202753
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.43966871016554276,
+   "sortino": 0.6321220385393509,
+   "cagr": 0.059960175154416984,
+   "max_drawdown": -0.2595760709687127,
+   "calmar": 0.2309926910082714,
+   "total_return": 0.2201133601758687
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.12790376049062688,
+   "sortino": 0.18141090607728078,
+   "cagr": 0.007581061105568443,
+   "max_drawdown": -0.2832355255771183,
+   "calmar": 0.02676592595551472,
+   "total_return": 0.02613831306204828
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "h3a_funding_xs(window_days=7, rebalance_every=7)",
+    "train_sharpe": 2.939479302594319
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "h3a_funding_xs(window_days=7, rebalance_every=7)",
+    "train_sharpe": 2.6070223652526727
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 2.974890826760416
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 1.9985787252048446
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 1.3666724406691508
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 1.1161130633101806
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.5233164718390689
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.9257715011692071
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.8097147736279093
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.7355686837563773
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.2905752856796916
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 0.23941218208373619
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "h3a_funding_xs(window_days=14, rebalance_every=7)",
+    "train_sharpe": 1.0879745527319367
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "h3a_funding_xs(window_days=7, rebalance_every=7)",
+    "train_sharpe": 1.3396175938463382
+   }
+  ]
+ },
+ "pbo": 0.34933954933954936,
+ "deflated_sharpe": 0.6041260527294269,
+ "deflated_sharpe_program": 1.1517657377951857e-14,
+ "n_trials_program": 118,
+ "n_trials_family": 4,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": 1.3827159542714467,
+   "total_return": 0.2701771217476061
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -0.44140676108629345,
+   "total_return": -0.03974575078076181
+  },
+  "range": {
+   "days": 636,
+   "sharpe": 0.08460608587954652,
+   "total_return": 0.0003446619469844592
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": -0.6216044107646205,
+   "total_return": -0.015794661715595404
+  }
+ }
+}

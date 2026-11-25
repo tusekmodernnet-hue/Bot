@@ -1,0 +1,181 @@
+{
+ "family": "R2A",
+ "market": "BTC+ETH spot/perp, excess over T-bills",
+ "data": "684a793d325b9ee83a94a51d85d72d77",
+ "variants": {
+  "r2a_carry_rf(margin=0.025)": {
+   "sharpe": 5.315392884654966,
+   "cagr": 0.10064769936570372,
+   "max_drawdown": -0.07789213745419232,
+   "n_trades": 234,
+   "win_rate": 0.48717948717948717,
+   "profit_factor": 1.0671954043053655,
+   "exposure": 0.7588473205257836,
+   "turnover_per_year": 78.65307770417849,
+   "costs_paid": 0.4044236750650233,
+   "funding_paid": -1.0805774745303596
+  },
+  "r2a_carry_rf(margin=0.05)": {
+   "sharpe": 5.831786584852363,
+   "cagr": 0.10806551786924423,
+   "max_drawdown": -0.05196356716743067,
+   "n_trades": 174,
+   "win_rate": 0.4827586206896552,
+   "profit_factor": 1.0885637253571994,
+   "exposure": 0.666835187057634,
+   "turnover_per_year": 60.85086062340457,
+   "costs_paid": 0.31288785366520083,
+   "funding_paid": -1.045934068163775
+  },
+  "r2a_carry_rf(margin=0.1)": {
+   "sharpe": 6.492126870771901,
+   "cagr": 0.11398404668253104,
+   "max_drawdown": -0.022148703176930518,
+   "n_trades": 74,
+   "win_rate": 0.5135135135135135,
+   "profit_factor": 1.1775602204467226,
+   "exposure": 0.47017189079878663,
+   "turnover_per_year": 28.97167178186131,
+   "costs_paid": 0.1489988968213864,
+   "funding_paid": -0.9310301386038304
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 3.039747854227433,
+   "sortino": 5.234363486485292,
+   "cagr": 0.017479956669838037,
+   "max_drawdown": -0.010067484408252114,
+   "calmar": 1.7362784943088732,
+   "total_return": 0.06099086914823415
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.7826348065940414,
+   "sortino": 0.9519057044467315,
+   "cagr": 0.006218723221097733,
+   "max_drawdown": -0.02896206246250088,
+   "calmar": 0.21471962603317804,
+   "total_return": 0.021405986214136696
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 10.08626167629035
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 9.945768920748518
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 9.794984638729323
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 8.678650099596263
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 7.684530272378137
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 5.316740284438332
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 4.063607519301836
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 3.207237907726835
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 0.8966491032962915
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 4.049460603649223
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 4.183246430072411
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 4.183246430072411
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 4.717417156232916
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "r2a_carry_rf(margin=0.1)",
+    "train_sharpe": 5.059276623105012
+   }
+  ]
+ },
+ "pbo": 0.0009324009324009324,
+ "deflated_sharpe": 0.9999885777354689,
+ "deflated_sharpe_program": 0.001956164491357641,
+ "n_trials_program": 114,
+ "n_trials_family": 3,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": 6.455818385143358,
+   "total_return": 0.06302245640392523
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -3.052982188939326,
+   "total_return": -0.006063729712736721
+  },
+  "range": {
+   "days": 636,
+   "sharpe": 0.7791384502133692,
+   "total_return": 0.00417792112816362
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": 1.6326142996887185,
+   "total_return": 0.0018972777023986698
+  }
+ },
+ "tbill_mean_oos": 0.0403738572574178
+}

@@ -9,9 +9,9 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 46 testów przechodzi |
-| 3. Odkrywanie i walidacja strategii (H1–H7, ML) | Runda 1 wykonana: 111 prób, brak kandydata |
-| 4. Paper trading i raport końcowy | Po kroku 3, tylko jeśli powstanie kandydat |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 48 testów przechodzi |
+| 3. Odkrywanie i walidacja strategii (H1–H7, ML, runda 2) | Zakończone: 122 próby w dwóch rundach, brak kandydata |
+| 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
 ## Szybki start
 
