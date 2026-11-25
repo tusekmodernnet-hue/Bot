@@ -160,3 +160,85 @@ danych. Wspólne zasady (koszty, rozmiar pozycji, walk-forward 24/3, PBO, reżim
   około 23 miesięcy. Benchmarki porównuję w tym samym oknie.
 
 Razem 11 prób (rodziny R2A, R2B, R2C).
+
+## Runda 3 (prerejestracja 2026-11-25, przed jakimkolwiek testem tej rundy)
+
+Właściciel 2026-11-25 cofnął decyzję o zamknięciu i polecił szukać dalej: scalping, day trading, swing, SMC/ICT
+i ich kombinacje. „Do skutku” nie zmienia progów: każda runda jest prerejestrowana, wszystkie próby trafiają
+do rejestru, a holdout (od 2025-06-01) otwieram jeden raz, tylko dla kandydata, który przejdzie wszystkie kryteria.
+
+### Wspólne zasady rundy 3
+- Rynki: BTCUSDT i ETHUSDT perpetual. Koszty: prowizja taker 0,05% i poślizg 2 pb na stronę, funding rzeczywisty.
+- Świece: 15m z archiwum, 1h z archiwum, 4h agregowane z 1h (granice 00, 04, …, 20 UTC), dzień UTC.
+- Wykonanie: decyzja na zamknięciu świecy, wejście na otwarciu następnej. Stop działa w trakcie świecy (po cenie
+  stopu albo po gorszym otwarciu przy luce). Cel i wyjście czasowe sprawdzam na zamknięciu świecy, wyjście
+  następuje na otwarciu kolejnej. Jedna transakcja naraz na kontrakt; sygnały w trakcie transakcji są ignorowane,
+  chyba że wariant odwraca pozycję (R3D).
+- Rozmiar: ryzyko 0,5% kapitału do stopu, najwyżej 1× na kontrakt (razem najwyżej 2×). Strategie bez naturalnego
+  stopu mają stop ochronny 3× ATR(14): z interwału 1h dla strategii na 15m, z własnego interwału dla 1h i 4h.
+- ATR(14): średni true range 14 ostatnich świec, łącznie z bieżącą. Cel „2R” = cena decyzji ± 2 × (cena decyzji − stop).
+- Sesje w UTC: Azja 00:00–06:00, killzone Londynu 07:00–10:00, killzone Nowego Jorku 12:00–15:00. Otwarcie giełdy
+  w Nowym Jorku: 09:30 czasu nowojorskiego (z uwzględnieniem zmiany czasu).
+- Ocena jak w rundach 1–2: walk-forward 24/3 na dziennych zwrotach, PBO (CSCV, 16 bloków), koszty ×2, reżimy,
+  benchmarki. Kryterium stabilności doprecyzowuję: Sharpe OOS ≥ 0 w hossie, bessie i konsolidacji.
+- Korekta na wielokrotne testowanie (DSR): N = wszystkie próby w rejestrze z wszystkich rund (bez benchmarków).
+  Wariancję Sharpe liczę na próbach rundy 3, czyli w bieżącej przestrzeni poszukiwań. W rundzie 2 liczyłem ją na
+  całym rejestrze, ale kilka wariantów carry o dziennym Sharpe około 0,3 zawyża ją tak, że oczekiwany najlepszy
+  Sharpe przypadkowej strategii wynosi 4,7 rocznie, czego nie spełni żadna strategia kierunkowa. To przeczy
+  założeniu DSR o wspólnym rozkładzie prób. Dla przejrzystości podaję też DSR z wariancją całego rejestru.
+  Zmiana nie zmienia żadnego werdyktu rund 1–2: wszystkie odrzucone hipotezy odpadały także na innych kryteriach.
+
+### R3A — sweep maksimum lub minimum poprzedniego dnia (PDH/PDL), 15m
+- Short: high świecy > PDH, a ta świeca albo jedna z M−1 kolejnych zamyka się poniżej PDH. Stop: najwyższe high od
+  pierwszego przebicia. Long lustrzanie przy PDL. Najwyżej jedna transakcja na stronę dziennie.
+- Cel: 2R albo środek zakresu poprzedniego dnia (sygnał pomijam, gdy cel leży po złej stronie ceny). Wyjście
+  najpóźniej na zamknięciu dnia UTC.
+- Filtr czasu: cały dzień albo tylko gdy świeca powrotu zamyka się w killzone Londynu lub Nowego Jorku.
+- M ∈ {1, 4}, cel ∈ {2R, środek dnia poprzedniego}, filtr ∈ {cały dzień, killzones}. **8 wariantów.**
+
+### R3B — sweep zakresu azjatyckiego w killzone Londynu (Judas swing), 15m
+- Zakres azjatycki: high i low świec 00:00–05:45 UTC. Między 07:00 a 10:00 UTC przebicie high zakresu i zamknięcie
+  z powrotem poniżej w ciągu M świec → short; lustrzanie przy low → long. Stop za ekstremum sweepu.
+- Cel: przeciwna krawędź zakresu albo 2R. Wyjście najpóźniej o 16:00 UTC. Jedna transakcja dziennie na kontrakt.
+- M ∈ {1, 2}, cel ∈ {przeciwna krawędź, 2R}. **4 warianty.**
+
+### R3C — fair value gap z retestem
+- Byczy FVG na świecy t: low[t] > high[t−2], a korpus świecy t−1 przekracza 1× ATR(14) (przemieszczenie). Luka
+  jest ważna przez 24 świece. Pierwsza świeca, której low wchodzi w lukę (low ≤ low[t]), a zamknięcie zostaje
+  powyżej high[t−2] → long. Stop: niższe z high[t−2] i low świecy retestu. Cel 2R, wyjście czasowe po 24 świecach.
+  Niedźwiedzi FVG lustrzanie.
+- Filtr: brak albo zgodność z trendem dziennym (long tylko, gdy zamknięcie poprzedniego dnia > SMA(50) dziennej,
+  short tylko, gdy < SMA(50)).
+- Interwał ∈ {15m, 1h}, filtr ∈ {brak, trend dzienny}. **4 warianty.**
+
+### R3D — struktura rynku: BOS i CHoCH (swing)
+- Swing high na świecy i: high[i] jest maksimum świec i−k..i+k; znany dopiero na zamknięciu świecy i+k. Swing low
+  lustrzanie.
+- Zamknięcie powyżej ostatniego potwierdzonego swing high → long; poniżej ostatniego swing low → short. Przeciwny
+  sygnał odwraca pozycję. Stop: ostatni potwierdzony swing po przeciwnej stronie.
+- k ∈ {3, 5}, interwał ∈ {1h, 4h}. **4 warianty.**
+
+### R3E — wybicie zakresu otwarcia (ORB), 15m
+- Zakres otwarcia: high i low pierwszych N minut sesji. Pierwsze zamknięcie powyżej zakresu → long, poniżej →
+  short, jedna transakcja na sesję. Stop: przeciwna krawędź zakresu. Wyjście: koniec dnia UTC (sesja UTC) albo
+  16:00 czasu nowojorskiego (sesja NY).
+- Sesja ∈ {dzień UTC od 00:00, giełda NY od 09:30}, N ∈ {15, 30, 60}. **6 wariantów.**
+
+### R3F — momentum śróddzienne, 15m
+- O godzinie H UTC: znak zwrotu od otwarcia dnia UTC do tej chwili → pozycja w tym kierunku do końca dnia UTC.
+  Stop ochronny jak we wspólnych zasadach. H ∈ {12, 16, 20}. **3 warianty.**
+
+### R3G — powrót do VWAP, 15m
+- VWAP liczony od 00:00 UTC z ceny typowej (high+low+close)/3. Odchylenie d = close/VWAP − 1, z = d / odchylenie
+  standardowe d z poprzednich 30 dni. Między 02:00 a 22:00 UTC: z > K → short, z < −K → long. Wyjście, gdy
+  zamknięcie przetnie VWAP, najpóźniej na koniec dnia UTC. Stop ochronny jak we wspólnych zasadach.
+- K ∈ {2, 3}. **2 warianty.**
+
+### R3H — korekta w trendzie (swing), 4h
+- Trend: zamknięcie poprzedniego dnia > SMA(S) dziennej → tylko long; < SMA(S) → tylko short. Long, gdy RSI(2)
+  na 4h < T; short, gdy RSI(2) > 100 − T. Wyjście, gdy RSI(2) > 70 (short: < 30) albo po 30 świecach 4h.
+  Stop ochronny jak we wspólnych zasadach.
+- T ∈ {5, 10}, S ∈ {50, 200}. **4 warianty.**
+
+Razem 35 prób (rodziny R3A–R3H). Scalping prerejestruję osobno, gdy będzie gotowa symulacja wypełnień zleceń
+limit (scalping na zleceniach rynkowych przy koszcie ok. 0,14% za pełną transakcję nie ma sensu ekonomicznego).
