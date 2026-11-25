@@ -7,7 +7,9 @@ Timing contract (no look-ahead):
   A weight of 0 means flat. `rebalance_band` skips trades smaller than that fraction of equity.
 - `stops.iloc[i]` (optional) is the stop price for the position held during bar i+1. If the bar opens
   beyond the stop the fill is the open (gap), otherwise the stop price; slippage is added on top.
-  After a stop the asset stays flat until the strategy changes its target weight for that asset.
+  After a stop the asset stays flat until the strategy changes its target weight for that asset; with
+  `reenter_after_stop`, any explicit weight after the stop is a new decision (trade-based strategies that
+  emit each entry once, so a new trade may carry the same size as the stopped one).
 - Funding with settlement time in (open[i-1], open[i]] is charged at open[i] on the position held before
   the rebalance at open[i]: longs pay positive rates, shorts receive them.
 - An asset with no bar (NaN open/close) cannot be traded. An open position in it is closed at its last
@@ -63,6 +65,7 @@ def run(
     funding: pd.DataFrame | None = None,
     initial_equity: float = 1.0,
     rebalance_band: float = 0.0,
+    reenter_after_stop: bool = False,
 ) -> BacktestResult:
     """Simulate target weights on bar data. All frames: index = bar open times (UTC), columns = assets."""
     index = close.index
@@ -141,7 +144,8 @@ def run(
             # d) rebalance to the target decided at the previous close
             w = W[i - 1]
             hold = np.isnan(w)
-            keep_flat = ~np.isnan(stopped_target) & (hold | (w == stopped_target))
+            same = np.zeros(n, bool) if reenter_after_stop else (w == stopped_target)
+            keep_flat = ~np.isnan(stopped_target) & (hold | same)
             stopped_target[~keep_flat] = np.nan
             target = np.where(hold, p, np.nan_to_num(w) * E)
             target = np.where(keep_flat | ~live, 0.0, target)

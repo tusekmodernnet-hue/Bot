@@ -242,3 +242,22 @@ do rejestru, a holdout (od 2025-06-01) otwieram jeden raz, tylko dla kandydata, 
 
 Razem 35 prób (rodziny R3A–R3H). Scalping prerejestruję osobno, gdy będzie gotowa symulacja wypełnień zleceń
 limit (scalping na zleceniach rynkowych przy koszcie ok. 0,14% za pełną transakcję nie ma sensu ekonomicznego).
+
+### Doprecyzowania definicji rundy 3 (2026-11-25, przed uruchomieniem testów)
+Ustalone przy pisaniu kodu, przed jakimkolwiek wynikiem. Nie zmieniają siatki parametrów ani liczby prób.
+- Sesja NY (R3E): tylko dni robocze (pn–pt), 09:30–16:00 czasu nowojorskiego z uwzględnieniem zmiany czasu.
+  Święta giełdowe w USA nie są wyłączone (brak kalendarza świąt). Brak wejścia na ostatniej świecy sesji.
+- Limity transakcji w R3A (jedna na stronę dziennie) i R3B (jedna dziennie) liczę na faktycznie otwartych
+  transakcjach. Sygnał pominięty, bo trwa inna transakcja albo cel leży po złej stronie ceny, nie zużywa limitu.
+  Gdy na jednej świecy sweep występuje po obu stronach, sygnał pomijam jako niejednoznaczny.
+- R3D: BOS/CHoCH to pierwsze zamknięcie za potwierdzonym swingiem, który nie został jeszcze przebity. Każdy
+  poziom daje sygnał najwyżej raz; ponowne zamknięcie za tym samym poziomem po wyjściu ze stopu nie jest nowym BOS.
+- RSI(2) liczony metodą Wildera. Trend dzienny (R3C, R3H) z dziennych świec archiwum.
+- Decyzje z 1h i 4h umieszczam na ostatniej świecy 15m danej świecy 1h/4h; stop ustalony na jej zamknięciu
+  obowiązuje na wszystkich świecach 15m następnej świecy 1h/4h. Po stopie strategia jest płaska do następnego
+  sygnału. Każda decyzja jest wykonywana (bez progu rebalansowania).
+- Przed uruchomieniem zrobiłem test techniczny (bez zapisu do rejestru) na danych z 2021 r., żeby sprawdzić,
+  czy każda decyzja strategii trafia do silnika. Wykazał błąd: silnik blokował nowe wejście tuż po stopie, gdy
+  miało tę samą wielkość co zatrzymana pozycja. Dodałem do silnika opcję `reenter_after_stop` (domyślnie wyłączoną,
+  więc rundy 1–2 się nie zmieniają) i używam jej w rundzie 3. Po teście nie zmieniłem żadnej definicji ani
+  parametru. Wyniki tego testu (2021, bez kosztów ×2 i bez walk-forward) nie są wynikami rundy.

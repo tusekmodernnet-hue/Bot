@@ -46,18 +46,21 @@ def program_trials() -> tuple[int, float]:
 
 
 def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fingerprint, log=True,
-                  rebalance_band=0.0, costs: CostModel = COSTS, return_adjust=None, wf_start=None) -> dict:
+                  rebalance_band=0.0, costs: CostModel = COSTS, return_adjust=None, wf_start=None,
+                  keep_series: bool = False, engine_kwargs: dict | None = None) -> dict:
     """`return_adjust(res) -> daily series` is subtracted from each run's daily returns (R2A: the T-bill yield
-    on the capital tied up). `wf_start` overrides the first walk-forward window start."""
+    on the capital tied up). `wf_start` overrides the first walk-forward window start. With `keep_series`, the
+    stitched out-of-sample daily returns are returned under "_oos" (not JSON: the caller removes it)."""
     o, h, l, c = bars
     period = (str(c.index[0].date()), str(c.index[-1].date()))
     daily, daily_x2, per_variant = {}, {}, {}
     variants = runs
     for name, params, w, stops in runs:
         try:
-            res = engine.run(o, h, l, c, w, costs, stops=stops, funding=funding, rebalance_band=rebalance_band)
+            ek = engine_kwargs or {}
+            res = engine.run(o, h, l, c, w, costs, stops=stops, funding=funding, rebalance_band=rebalance_band, **ek)
             res2 = engine.run(o, h, l, c, w, costs.scaled(2), stops=stops, funding=funding,
-                              rebalance_band=rebalance_band)
+                              rebalance_band=rebalance_band, **ek)
         except RuntimeError as e:  # ruin is a result, not an error to hide
             m = {"ruined": str(e)}
             if log:
@@ -108,6 +111,8 @@ def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fi
         "n_trials_family": n_trials,
         "regimes_oos": walkforward.by_regime(oos, reg) if reg is not None and len(oos) else None,
     }
+    if keep_series:
+        out["_oos"] = oos
     if log:
         registry.log_event("family_evaluated", {"family": family, "market": market_label, "pbo": pbo,
                                                 "deflated_sharpe": dsr, "oos": out["walk_forward"]["oos"]})

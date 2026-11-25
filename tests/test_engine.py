@@ -77,6 +77,22 @@ def test_stop_fills_at_stop_or_gap_open_and_stays_flat_until_target_changes():
     assert res2.equity.iloc[-1] == pytest.approx(0.90)
 
 
+def test_reenter_after_stop_takes_a_new_entry_of_the_same_size():
+    lows = [100, 100, 94, 100, 100, 100]
+    o, h, l, c = make_bars([100] * 6, opens=[100] * 6, lows=lows)
+    # entry at close 1, stopped inside bar 2, a new entry of the same size decided at close 2
+    w = weights_like(c, [np.nan, 1, 1, np.nan, np.nan, np.nan])
+    stops = weights_like(c, [np.nan, 95, 95, 95, 95, 95])
+    held = engine.run(o, h, l, c, w, ZERO, stops=stops).positions["A"]
+    assert held.iloc[3] == 0  # default: the same target after a stop keeps the asset flat
+    held = engine.run(o, h, l, c, w, ZERO, stops=stops, reenter_after_stop=True).positions["A"]
+    assert held.iloc[2] == 0 and held.iloc[3] != 0
+    # a hold (NaN) after the stop still keeps it flat
+    w2 = weights_like(c, [np.nan, 1, np.nan, np.nan, np.nan, np.nan])
+    held = engine.run(o, h, l, c, w2, ZERO, stops=stops, reenter_after_stop=True).positions["A"]
+    assert (held.iloc[2:] == 0).all()
+
+
 def test_short_stop_and_costs_on_exit():
     o, h, l, c = make_bars([100, 100, 100], highs=[100, 100, 106])
     res = engine.run(o, h, l, c, weights_like(c, [-1, np.nan, np.nan]), C10, stops=weights_like(c, [105] * 3))
