@@ -1,4 +1,5 @@
-"""Off-exchange daily data: Fear & Greed (alternative.me), MVRV (Coin Metrics Community), VIX (FRED).
+"""Off-exchange daily data: Fear & Greed (alternative.me), MVRV (Coin Metrics Community), FRED series (VIX,
+3-month T-bill) and Deribit DVOL (30-day implied volatility index).
 
 Every series is returned with the date on which it may be used for a decision: the observation for day d is
 usable at the close of day d+1 (OFF_EXCHANGE_DAILY_DELAY). Coin Metrics values can be revised afterwards,
@@ -59,3 +60,23 @@ def fred(series_id: str = "VIXCLS") -> pd.Series:
     s = pd.Series(pd.to_numeric(df["value"], errors="coerce").to_numpy(),
                   index=pd.to_datetime(df["date"]).dt.tz_localize("UTC")).dropna()
     return _usable(_cache(f"fred_{series_id}", s))
+
+
+def deribit_dvol(currency: str = "BTC") -> pd.Series:
+    """Daily close of Deribit's DVOL (annualised 30-day implied volatility, in percent), from 2021-03-24.
+
+    The API pages backwards from end_timestamp; `continuation` is the next end_timestamp.
+    """
+    end, rows = int(pd.Timestamp("2100-01-01", tz="UTC").timestamp() * 1000), {}
+    start = int(pd.Timestamp("2021-01-01", tz="UTC").timestamp() * 1000)
+    while True:
+        url = ("https://www.deribit.com/api/v2/public/get_volatility_index_data?"
+               f"currency={currency}&start_timestamp={start}&end_timestamp={end}&resolution=1D")
+        res = json.loads(_http_get(url))["result"]
+        for ts, _o, _h, _l, c in res["data"]:
+            rows[pd.Timestamp(int(ts), unit="ms", tz="UTC").normalize()] = float(c)
+        nxt = res.get("continuation")
+        if not res["data"] or not nxt or nxt >= end:
+            break
+        end = int(nxt)
+    return _usable(_cache(f"deribit_dvol_{currency}", pd.Series(rows).sort_index()))

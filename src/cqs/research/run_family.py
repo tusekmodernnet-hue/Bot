@@ -37,8 +37,18 @@ def evaluate(family: str, p: panel_mod.Panel, market_label: str, fingerprint: st
                          market_label, fingerprint, log, rebalance_band=0.02)
 
 
+def program_trials() -> tuple[int, float]:
+    """Number of strategy trials in the whole registry (benchmarks excluded) and the variance of their
+    per-period Sharpe ratios: the multiple-testing correction for round 2."""
+    ex = [r for r in registry.read() if r.get("type") == "experiment" and r.get("family") != "BENCH"]
+    srs = [r["sharpe_per_period"] for r in ex if r.get("sharpe_per_period") is not None]
+    return len(ex), float(np.var(srs, ddof=1)) if len(srs) > 1 else float("nan")
+
+
 def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fingerprint, log=True,
-                  rebalance_band=0.0, costs: CostModel = COSTS) -> dict:
+                  rebalance_band=0.0, costs: CostModel = COSTS, return_adjust=None, wf_start=None) -> dict:
+    """`return_adjust(res) -> daily series` is subtracted from each run's daily returns (R2A: the T-bill yield
+    on the capital tied up). `wf_start` overrides the first walk-forward window start."""
     o, h, l, c = bars
     period = (str(c.index[0].date()), str(c.index[-1].date()))
     daily, daily_x2, per_variant = {}, {}, {}
@@ -54,9 +64,15 @@ def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fi
                 registry.log_experiment(family, name, params | {"market": market_label}, m, fingerprint, period)
             per_variant[name] = m
             continue
-        r = _daily_net(res)
+        r, r_x2 = _daily_net(res), _daily_net(res2)
+        if return_adjust is not None:
+            r = r - return_adjust(res).reindex(r.index).fillna(0.0)
+            r_x2 = r_x2 - return_adjust(res2).reindex(r_x2.index).fillna(0.0)
         m = metrics.compute(res)
-        daily[name], daily_x2[name] = r, _daily_net(res2)
+        if return_adjust is not None:
+            m["sharpe_excess"] = walkforward.ann_sharpe(r)
+            m["total_excess_return"] = float((1 + r).prod() - 1)
+        daily[name], daily_x2[name] = r, r_x2
         per_variant[name] = {k: m[k] for k in ("sharpe", "cagr", "max_drawdown", "n_trades", "win_rate",
                                                 "profit_factor", "exposure", "turnover_per_year",
                                                 "costs_paid", "funding_paid")}
@@ -68,7 +84,7 @@ def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fi
     # warm-up: drop leading days where no variant has any return
     active = (D != 0).any(axis=1)
     D, D2 = D.loc[active.idxmax():], D2.loc[active.idxmax():]
-    oos, choices = walkforward.select_oos(D, start=c.index[0].normalize())
+    oos, choices = walkforward.select_oos(D, start=wf_start if wf_start is not None else c.index[0].normalize())
     oos2 = pd.concat([D2.loc[(D2.index >= c["test_start"]) & (D2.index < c["test_end"]), c["variant"]]
                       for c in choices]) if choices else pd.Series(dtype=float)
     pbo, _ = stats.pbo_cscv(D.to_numpy(), n_blocks=16) if D.shape[1] >= 2 else (float("nan"), None)
@@ -86,6 +102,9 @@ def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fi
                          "choices": choices},
         "pbo": pbo,
         "deflated_sharpe": dsr,
+        "deflated_sharpe_program": (stats.deflated_sharpe(oos.to_numpy(), *program_trials())
+                                    if log and len(oos) > 30 else float("nan")),
+        "n_trials_program": program_trials()[0] if log else None,
         "n_trials_family": n_trials,
         "regimes_oos": walkforward.by_regime(oos, reg) if reg is not None and len(oos) else None,
     }

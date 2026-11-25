@@ -152,3 +152,43 @@ def test_ml_features_use_no_future_data_and_training_is_purged():
     te0 = days[200]
     keep = ml_meta.train_mask(days, days[0], te0)
     assert days[keep].max() == te0 - pd.Timedelta(days=ml_meta.HORIZON + 1 + ml_meta.EMBARGO_DAYS)
+
+
+def test_round2_families_use_no_future_data():
+    from cqs.strategies import families_ext
+    p = synthetic_panel()
+    cols = ["BTCUSDT", "ETHUSDT"]
+    pm = Panel(p.open[cols], p.high[cols], p.low[cols], p.close[cols], p.quote_volume[cols], p.funding[cols],
+               p.close[cols].notna())
+    t = p.close.index[300]
+    rng = np.random.default_rng(1)
+    spot = pm.close * 1.001
+    rf = pd.Series(0.03 + rng.normal(0, 0.002, len(pm.close)), index=pm.close.index)
+    dvol = pd.DataFrame(60 + rng.normal(0, 8, pm.close.shape), index=pm.close.index, columns=cols)
+    pm2 = cut_future(pm, t)
+    rf2, dvol2 = rf.copy(), dvol.copy()
+    rf2[rf2.index > t] += 0.5
+    dvol2[dvol2.index > t] *= 3
+    for margin in (0.0, 0.05):
+        w1 = families_ext.r2a_carry_rf(pm, spot, rf, margin)
+        w2 = families_ext.r2a_carry_rf(pm2, spot, rf2, margin)
+        pd.testing.assert_frame_equal(w1.loc[:t], w2.loc[:t])
+    for z, ls in ((0.0, True), (1.0, False)):
+        w1 = families_ext.r2c_vrp(pm, dvol, z, ls)
+        w2 = families_ext.r2c_vrp(pm2, dvol2, z, ls)
+        pd.testing.assert_frame_equal(w1.loc[:t], w2.loc[:t])
+        assert w1.abs().sum().sum() > 0
+    # R2A trades only when funding beats the risk-free rate by the margin
+    w_hi = families_ext.r2a_carry_rf(pm, spot, rf + 1.0, 0.0)
+    assert (w_hi == 0).all().all()
+
+
+def test_r2b_rebalances_on_schedule():
+    p = synthetic_panel()
+    w = families.h3a_funding_xs(p, 7, rebalance_every=7)
+    decided = w.notna().any(axis=1)
+    forced = w.loc[~decided.index.isin(decided.index[::7])].notna().any(axis=1)
+    # between scheduled rebalances only universe-forced exits (weight 0) may appear
+    off = w.loc[forced[forced].index]
+    assert ((off.fillna(0) == 0).all(axis=1)).all()
+    assert decided.iloc[::7].all()

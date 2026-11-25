@@ -79,9 +79,11 @@ def h2b_reversal(panel: Panel, lookback: int) -> pd.DataFrame:
 
 
 # H3a — cross-sectional funding crowding: long the cheapest-to-hold longs, short the most crowded
-def h3a_funding_xs(panel: Panel, window_days: int, vol_overlay: bool = True) -> pd.DataFrame:
+def h3a_funding_xs(panel: Panel, window_days: int, vol_overlay: bool = True, rebalance_every: int = 1) -> pd.DataFrame:
+    """H3a; R2B is the same ranking with rebalance_every in {7, 14}."""
     f = panel.daily_funding().rolling(window_days, min_periods=window_days).mean()
-    return finalize(_xs(f, panel, contrarian=True), panel, legs_neutral=True, vol_overlay=vol_overlay)
+    return finalize(_xs(f, panel, contrarian=True), panel, rebalance_every=rebalance_every, legs_neutral=True,
+                    vol_overlay=vol_overlay)
 
 
 GRIDS = {
