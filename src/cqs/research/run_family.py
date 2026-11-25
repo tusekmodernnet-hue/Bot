@@ -82,41 +82,8 @@ def evaluate_runs(family, runs, bars, funding, btc_daily_close, market_label, fi
         if log:
             registry.log_experiment(family, name, params | {"market": market_label}, m, fingerprint, period,
                                     sharpe_per_period=stats.sharpe_per_period(r.to_numpy()))
-    D = pd.DataFrame(daily).dropna(how="all").fillna(0.0)
-    D2 = pd.DataFrame(daily_x2).reindex_like(D).fillna(0.0)
-    # warm-up: drop leading days where no variant has any return
-    active = (D != 0).any(axis=1)
-    D, D2 = D.loc[active.idxmax():], D2.loc[active.idxmax():]
-    oos, choices = walkforward.select_oos(D, start=wf_start if wf_start is not None else c.index[0].normalize())
-    oos2 = pd.concat([D2.loc[(D2.index >= c["test_start"]) & (D2.index < c["test_end"]), c["variant"]]
-                      for c in choices]) if choices else pd.Series(dtype=float)
-    pbo, _ = stats.pbo_cscv(D.to_numpy(), n_blocks=16) if D.shape[1] >= 2 else (float("nan"), None)
-    n_trials = registry.trial_count(family) if log else len(variants)
-    var_sr = registry.sharpe_variance(family) if log else float(np.var([stats.sharpe_per_period(D[c]) for c in D], ddof=1))
-    dsr = stats.deflated_sharpe(oos.to_numpy(), n_trials, var_sr) if len(oos) > 30 else float("nan")
-    reg = walkforward.regimes(btc_daily_close) if btc_daily_close is not None else None
-    out = {
-        "family": family,
-        "market": market_label,
-        "data": fingerprint,
-        "variants": per_variant,
-        "walk_forward": {"oos": walkforward.summary(oos) if len(oos) else None,
-                         "oos_costs_x2": walkforward.summary(oos2) if len(oos2) else None,
-                         "choices": choices},
-        "pbo": pbo,
-        "deflated_sharpe": dsr,
-        "deflated_sharpe_program": (stats.deflated_sharpe(oos.to_numpy(), *program_trials())
-                                    if log and len(oos) > 30 else float("nan")),
-        "n_trials_program": program_trials()[0] if log else None,
-        "n_trials_family": n_trials,
-        "regimes_oos": walkforward.by_regime(oos, reg) if reg is not None and len(oos) else None,
-    }
-    if keep_series:
-        out["_oos"] = oos
-    if log:
-        registry.log_event("family_evaluated", {"family": family, "market": market_label, "pbo": pbo,
-                                                "deflated_sharpe": dsr, "oos": out["walk_forward"]["oos"]})
-    return out
+    return evaluate_daily(family, daily, daily_x2, per_variant, btc_daily_close, market_label, fingerprint, log,
+                          wf_start, keep_series, n_variants=len(variants), start=c.index[0].normalize())
 
 
 def evaluate_h6(symbols: list[str], log: bool = True) -> dict:
@@ -217,3 +184,45 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def evaluate_daily(family, daily: dict, daily_x2: dict, per_variant: dict, btc_daily_close, market_label, fingerprint,
+                   log=True, wf_start=None, keep_series: bool = False, n_variants: int | None = None,
+                   start=None) -> dict:
+    """Walk-forward, PBO, Deflated Sharpe, regimes and the 2x cost stress from each variant's daily net returns
+    (base and doubled costs). Trials must already be logged by the caller."""
+    D = pd.DataFrame(daily).dropna(how="all").fillna(0.0)
+    D2 = pd.DataFrame(daily_x2).reindex_like(D).fillna(0.0)
+    # warm-up: drop leading days where no variant has any return
+    active = (D != 0).any(axis=1)
+    D, D2 = D.loc[active.idxmax():], D2.loc[active.idxmax():]
+    oos, choices = walkforward.select_oos(D, start=wf_start if wf_start is not None else start)
+    oos2 = pd.concat([D2.loc[(D2.index >= ch["test_start"]) & (D2.index < ch["test_end"]), ch["variant"]]
+                      for ch in choices]) if choices else pd.Series(dtype=float)
+    pbo, _ = stats.pbo_cscv(D.to_numpy(), n_blocks=16) if D.shape[1] >= 2 else (float("nan"), None)
+    n_trials = registry.trial_count(family) if log else n_variants
+    var_sr = registry.sharpe_variance(family) if log else float(np.var([stats.sharpe_per_period(D[c]) for c in D], ddof=1))
+    dsr = stats.deflated_sharpe(oos.to_numpy(), n_trials, var_sr) if len(oos) > 30 else float("nan")
+    reg = walkforward.regimes(btc_daily_close) if btc_daily_close is not None else None
+    out = {
+        "family": family,
+        "market": market_label,
+        "data": fingerprint,
+        "variants": per_variant,
+        "walk_forward": {"oos": walkforward.summary(oos) if len(oos) else None,
+                         "oos_costs_x2": walkforward.summary(oos2) if len(oos2) else None,
+                         "choices": choices},
+        "pbo": pbo,
+        "deflated_sharpe": dsr,
+        "deflated_sharpe_program": (stats.deflated_sharpe(oos.to_numpy(), *program_trials())
+                                    if log and len(oos) > 30 else float("nan")),
+        "n_trials_program": program_trials()[0] if log else None,
+        "n_trials_family": n_trials,
+        "regimes_oos": walkforward.by_regime(oos, reg) if reg is not None and len(oos) else None,
+    }
+    if keep_series:
+        out["_oos"], out["_oos_x2"] = oos, oos2
+    if log:
+        registry.log_event("family_evaluated", {"family": family, "market": market_label, "pbo": pbo,
+                                                "deflated_sharpe": dsr, "oos": out["walk_forward"]["oos"]})
+    return out

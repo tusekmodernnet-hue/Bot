@@ -1,6 +1,6 @@
 """Round 3 (research/preregistration.md, "Runda 3"): families R3A..R3H on BTC and ETH perps, 15m execution bars.
 
-Run: python -m cqs.research.run_round3 [R3A ...]
+Run: python -m cqs.research.run_round3 [R3A ...]   (R3X: the pre-registered equal-weight combination)
   -> research/results/R3*.json and R3*_oos.csv (stitched out-of-sample daily returns) per family, and
      research/results/R3_summary.json (program-level Deflated Sharpe and the acceptance checklist) once all
      eight families are in the registry. A family already in the registry is never rerun.
@@ -130,6 +130,7 @@ def run_family(fam: str, d: Data, log: bool = True) -> tuple[dict, pd.Series]:
     out = evaluate_runs(fam, runs, d.bars, d.funding, d.dclose["BTCUSDT"], "BTC+ETH 15m", fingerprint(),
                         log=log, keep_series=True, engine_kwargs={"reenter_after_stop": True})
     oos = out.pop("_oos")
+    out.pop("_oos_x2", None)
     for name, n in entries.items():  # every decision of the strategy must reach the engine
         v = out["variants"][name]
         v["entries"] = n
@@ -189,6 +190,57 @@ def summarize(results: dict, oos: dict) -> dict:
             "families": fams, "candidates": [f for f, v in fams.items() if v["candidate"]]}
 
 
+# ------------------------------------------------------------------------------ R3X: equal-weight combination
+def run_r3x(d: Data | None = None, log: bool = True) -> dict:
+    """Pre-registered R3X: equal-weight mean of the eight families' stitched out-of-sample daily returns (each
+    family with the variants its own walk-forward chose). One trial. The 2x-cost series re-simulates the chosen
+    variants at doubled costs (the same trials, not logged again)."""
+    from cqs.backtest import engine, metrics
+    from cqs.research import walkforward
+
+    fams = list(GRIDS)
+    results = {f: json.loads((RESULTS_DIR / f"{f}.json").read_text()) for f in fams}
+    oos = {f: pd.read_csv(RESULTS_DIR / f"{f}_oos.csv", index_col=0, parse_dates=True).iloc[:, 0] for f in fams}
+    d = d or load_data()
+    oos2 = {}
+    for f in fams:
+        runs = {r[0]: r for r in build_runs(f, d)[0]}
+        cache, parts = {}, []
+        for ch in results[f]["walk_forward"]["choices"]:
+            v = ch["variant"]
+            if v not in cache:
+                _, _, W, S = runs[v]
+                res = engine.run(*d.bars, W, COSTS.scaled(2), stops=S, funding=d.funding, reenter_after_stop=True)
+                cache[v] = metrics.daily_returns(res.equity)
+            r = cache[v]
+            t0, t1 = pd.Timestamp(ch["test_start"]), pd.Timestamp(ch["test_end"])
+            parts.append(r[(r.index >= t0) & (r.index < t1)])
+        oos2[f] = pd.concat(parts)
+    X = pd.DataFrame(oos).sort_index().fillna(0.0).mean(axis=1)
+    X2 = pd.DataFrame(oos2).reindex(X.index).fillna(0.0).mean(axis=1)
+    reg = walkforward.regimes(d.dclose["BTCUSDT"])
+    out = {"family": "R3X", "components": fams,
+           "walk_forward": {"oos": walkforward.summary(X), "oos_costs_x2": walkforward.summary(X2)},
+           "component_pbo": {f: results[f]["pbo"] for f in fams},
+           "regimes_oos": walkforward.by_regime(X, reg),
+           "benchmarks_same_window": metrics_window.benchmarks_in_window(str(X.index[0].date()), DEV_END, COSTS)}
+    if log:
+        registry.log_experiment("R3X", "r3x_equal_weight(R3A..R3H)", {"families": fams, "market": "BTC+ETH 15m"},
+                                out["walk_forward"]["oos"], fingerprint(), (str(X.index[0].date()), str(X.index[-1].date())),
+                                notes="out-of-sample series only (walk-forward of each component)",
+                                sharpe_per_period=stats.sharpe_per_period(X.to_numpy()))
+    ex = [r for r in registry.read() if r.get("type") == "experiment" and r.get("family") != "BENCH"]
+    sr_r3 = [r["sharpe_per_period"] for r in ex if r.get("family", "") in GRIDS and r.get("sharpe_per_period") is not None]
+    dsr = stats.deflated_sharpe(X.to_numpy(), len(ex), float(np.var(sr_r3, ddof=1)))
+    checks = checklist(out | {"pbo": 0.0}, dsr)  # PBO is undefined for a single strategy: reported per component
+    checks.pop("pbo_le_0_25")
+    out.update({"dsr_program_round3_variance": dsr, "n_trials_program": len(ex), "checks": checks,
+                "candidate": all(checks.values())})
+    X.rename("R3X").to_csv(RESULTS_DIR / "R3X_oos.csv")
+    (RESULTS_DIR / "R3X.json").write_text(json.dumps(registry._clean(out), indent=1, ensure_ascii=False))
+    return out
+
+
 def _done(fam: str) -> bool:
     """A family whose trials are already in the registry is never run (or logged) again."""
     return registry.trial_count(fam) > 0
@@ -197,7 +249,14 @@ def _done(fam: str) -> bool:
 def main(argv=None) -> int:
     fams = (argv if argv is not None else sys.argv[1:]) or list(GRIDS)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    d = None
+    d, ran = None, False
+    if "R3X" in fams:  # the pre-registered combination, once all eight families are in the registry
+        fams = [f for f in fams if f != "R3X"]
+        if _done("R3X"):
+            print("R3X already in the registry: kept, not rerun", flush=True)
+        else:
+            x = run_r3x()
+            print("R3X", x["walk_forward"]["oos"], "candidate:", x["candidate"], flush=True)
     for fam in fams:
         if _done(fam):
             print(fam, "already in the registry: kept, not rerun", flush=True)
@@ -209,7 +268,9 @@ def main(argv=None) -> int:
         path = RESULTS_DIR / f"{fam}.json"
         path.write_text(json.dumps(registry._clean(out), indent=1, ensure_ascii=False))
         print(path, f"{time.time() - t:.0f}s", flush=True)
-    if all(_done(f) and (RESULTS_DIR / f"{f}_oos.csv").exists() for f in GRIDS):
+        ran = True
+    if (ran or not (RESULTS_DIR / "R3_summary.json").exists()) and \
+            all(_done(f) and (RESULTS_DIR / f"{f}_oos.csv").exists() for f in GRIDS):
         results = {f: json.loads((RESULTS_DIR / f"{f}.json").read_text()) for f in GRIDS}
         oos = {f: pd.read_csv(RESULTS_DIR / f"{f}_oos.csv", index_col=0, parse_dates=True).iloc[:, 0] for f in GRIDS}
         summ = summarize(results, oos)
