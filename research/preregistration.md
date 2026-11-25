@@ -386,3 +386,8 @@ archiwum Binance i rekomenduję nowe źródło danych (płatna księga zleceń) 
 - R5D z limitem: zlecenie aktywne od pierwszej świecy 1m po zamknięciu świecy 15m z sygnałem do świecy 11:59 czasu
   nowojorskiego włącznie; wyjście czasowe na otwarciu świecy 16:00.
 - Przed rundą 5 rejestr ma 164 próby (bez benchmarków), po niej 174.
+
+### Erratum (2026-11-25, po rundzie 5)
+- Uzasadnienie zmiany metody DSR było nieprecyzyjne: progu Sharpe OOS ≥ 1 nie spełniła żadna rodzina rund 3–4, ale
+  w rundach 1–2 spełniły go H4 (3,69) i R2A (3,04). Werdykty się nie zmieniają, bo obie odpadają na innych
+  kryteriach niezależnie od metody DSR: H4 na PBO 0,96, obie na Sharpe w bessie (−3,89 i −3,05).

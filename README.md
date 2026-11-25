@@ -2,9 +2,10 @@
 
 System bada, testuje i waliduje strategie na kontraktach perpetual. Handel realny jest wyłączony.
 
-**Stan na 2026-11-25: badania trwają.** Właściciel cofnął zamknięcie programu i polecił szukać dalej. Cztery
-prerejestrowane rundy (164 próby: dzienne, godzinowe, SMC/ICT i day trading na 15m, scalping na zleceniach limit
-na 1m) nie dały strategii, która przeszłaby walidację. Holdout (od 2025-06-01) nigdy nie został otwarty.
+**Stan na 2026-11-25: badania trwają.** Właściciel cofnął zamknięcie programu i polecił szukać dalej. Pięć
+prerejestrowanych rund (174 próby: dzienne, godzinowe, SMC/ICT i day trading na 15m, scalping na zleceniach limit
+na 1m, przepływ zleceń, likwidacje i otwarcie sesji NY) nie dało strategii, która przeszłaby walidację. Holdout
+(od 2025-06-01) nigdy nie został otwarty.
 Wyniki: `research/results/`, rejestr prób: `research/registry.jsonl`, prerejestracje: `research/preregistration.md`.
 Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajduje się w dokumencie projektu
 „System Quant Krypto — Etap 1”. Zasady, których kod nie może łamać, są w [CLAUDE.md](CLAUDE.md).
@@ -14,8 +15,8 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 62 testy przechodzą |
-| 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–4) | W toku: 164 próby w czterech rundach, brak kandydata |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 72 testy przechodzą |
+| 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–5) | W toku: 174 próby w pięciu rundach, brak kandydata |
 | 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
 ## Szybki start
@@ -49,8 +50,9 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.research.benchmarks` | Benchmarki, które musi pobić każda strategia |
 | `cqs.research.run_family`, `run_ext` | Pełna ocena rodziny: warianty, walk-forward, PBO, DSR, reżimy, koszty ×2 |
 | `cqs.research.ml_meta` | Meta-model LightGBM z purgingiem i embargo oraz jego punkt odniesienia |
-| `cqs.research.run_round3`, `run_round4`, `diag_gross` | Rundy 3–4 i diagnostyka wyników przed kosztami (nie jest próbą) |
-| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–4 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit) |
+| `cqs.research.run_round3`, `run_round4`, `run_round5` | Rundy 3–5 (runda 5: DSR z wariancją estymatora 1/T) |
+| `cqs.research.diag_gross`, `diag_gross_round5` | Diagnostyka wyników przed kosztami rund 3 i 5 (nie jest próbą) |
+| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–5 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit; `orderflow`: przepływ agresora, OI, ORB NY z filtrem) |
 
 ## Zasady czasu (brak look-ahead)
 

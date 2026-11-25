@@ -1,0 +1,120 @@
+{
+ "r5a_flow(L=1)": {
+  "family": "R5A",
+  "gross_sharpe_full": 0.17486703939973483,
+  "gross_sharpe_2022_2025": -0.02720079517530291,
+  "gross_total_return_2022_2025": -0.013268369620966336,
+  "gross_profit_factor": 1.0180876010256075,
+  "n_trades": 3489,
+  "turnover_per_year": 351.6510950139338
+ },
+ "r5a_flow(L=4)": {
+  "family": "R5A",
+  "gross_sharpe_full": 1.3830396366090363,
+  "gross_sharpe_2022_2025": 1.1070029410368845,
+  "gross_total_return_2022_2025": 0.27008930578533086,
+  "gross_profit_factor": 1.2250148116020751,
+  "n_trades": 2547,
+  "turnover_per_year": 334.0440349708309
+ },
+ "r5b_flush(k=3.0)": {
+  "family": "R5B",
+  "gross_sharpe_full": -0.5492958161908947,
+  "gross_sharpe_2022_2025": -0.6116149355817107,
+  "gross_total_return_2022_2025": -0.043669997738612576,
+  "gross_profit_factor": 0.7423983286645999,
+  "n_trades": 153,
+  "turnover_per_year": 12.230302668576316
+ },
+ "r5b_flush(k=4.0)": {
+  "family": "R5B",
+  "gross_sharpe_full": -0.5415642406522068,
+  "gross_sharpe_2022_2025": -0.48955289708889377,
+  "gross_total_return_2022_2025": -0.027419710506511596,
+  "gross_profit_factor": 0.6935538727923458,
+  "n_trades": 93,
+  "turnover_per_year": 7.374208453792013
+ },
+ "r5c_sweep_absorption(theta=0.0)": {
+  "family": "R5C",
+  "gross_sharpe_full": 0.9622051508653064,
+  "gross_sharpe_2022_2025": 1.0256285512605305,
+  "gross_total_return_2022_2025": 0.820623755102867,
+  "gross_profit_factor": 1.122431952469667,
+  "n_trades": 2676,
+  "turnover_per_year": 1474.5349612561747
+ },
+ "r5c_sweep_absorption(theta=0.1)": {
+  "family": "R5C",
+  "gross_sharpe_full": 0.3310734714159096,
+  "gross_sharpe_2022_2025": 0.10663967608606821,
+  "gross_total_return_2022_2025": 0.01934396790010684,
+  "gross_profit_factor": 1.0488811919663357,
+  "n_trades": 1660,
+  "turnover_per_year": 682.9711171067128
+ },
+ "r5d_orb_ny_filtered(minutes=15, execution=market)": {
+  "family": "R5D",
+  "gross_sharpe_full": 0.31701964877242284,
+  "gross_sharpe_2022_2025": 1.0579657151965471,
+  "gross_total_return_2022_2025": 0.6390697514197454,
+  "gross_profit_factor": 1.0651598593375056,
+  "n_trades": 1278,
+  "turnover_per_year": 214.8994841031745
+ },
+ "r5d_orb_ny_filtered(minutes=15, execution=limit)": {
+  "family": "R5D",
+  "gross_sharpe_full": -0.08259583665223305,
+  "gross_sharpe_2022_2025": 0.2469982780008958,
+  "gross_total_return_2022_2025": 0.08603135103467041,
+  "gross_profit_factor": 0.9802953746251718,
+  "n_trades": 963,
+  "turnover_per_year": null
+ },
+ "r5d_orb_ny_filtered(minutes=30, execution=market)": {
+  "family": "R5D",
+  "gross_sharpe_full": 0.6554246234605301,
+  "gross_sharpe_2022_2025": 1.3576145202567098,
+  "gross_total_return_2022_2025": 0.6657860605114176,
+  "gross_profit_factor": 1.1600036679590349,
+  "n_trades": 1246,
+  "turnover_per_year": 188.92447007771582
+ },
+ "r5d_orb_ny_filtered(minutes=30, execution=limit)": {
+  "family": "R5D",
+  "gross_sharpe_full": 0.23860168256682604,
+  "gross_sharpe_2022_2025": 0.4757102814957358,
+  "gross_total_return_2022_2025": 0.15119432047523973,
+  "gross_profit_factor": 1.0617374281105334,
+  "n_trades": 795,
+  "turnover_per_year": null
+ },
+ "_orb_breakdown": {
+  "orb30_pass_filter": {
+   "gross_sharpe_full": 0.6554246234605301,
+   "gross_sharpe_2022_2025": 1.3576145202567098,
+   "gross_total_return_2022_2025": 0.6657860605114176,
+   "gross_profit_factor": 1.1600036679590349,
+   "n_trades": 1246,
+   "turnover_per_year": null
+  },
+  "orb30_market_trades_limit_filled": {
+   "n": 795,
+   "mean_roe": -0.0006006617510975678,
+   "win_rate": 0.3421383647798742
+  },
+  "orb30_market_trades_limit_not_filled": {
+   "n": 451,
+   "mean_roe": 0.0019532966241079955,
+   "win_rate": 0.5942350332594235
+  },
+  "orb30_fail_filter": {
+   "gross_sharpe_full": 1.969129101662316,
+   "gross_sharpe_2022_2025": 1.975150189389218,
+   "gross_total_return_2022_2025": 1.7964962764037526,
+   "gross_profit_factor": 1.4958340671004904,
+   "n_trades": 1375,
+   "turnover_per_year": null
+  }
+ }
+}
