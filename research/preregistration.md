@@ -123,3 +123,40 @@ dodatni przy kosztach ×2, stabilność między reżimami i lepszy wynik niż ob
   - Doprecyzowanie przed uruchomieniem: cel zmienności portfela potrzebuje 60 dni własnych pozycji strategii.
     Dlatego model i punkt odniesienia dostają sygnały od początku pierwszego okna testowego, przez pierwsze 60 dni
     są płaskie, a wynik OOS obu liczę od 61. dnia. Obie strategie mają identyczne okno oceny.
+
+## Runda 2 (prerejestracja 2026-11-25, przed jakimkolwiek testem tej rundy)
+
+Runda 1 (111 prób) nie dała kandydata. Właściciel wybrał jedną, ostatnią rundę 2 z najwyżej trzema hipotezami.
+Dwie pierwsze wynikają z obserwacji rundy 1, więc są obciążone wiedzą o tych danych. Dlatego kryterium DSR
+w tej rundzie liczę z liczbą **wszystkich** prób w rejestrze (cały program badań), a nie tylko danej rodziny.
+Holdout pozostaje zablokowany. Jeśli runda 2 nie da kandydata, kończę szukanie strategii kierunkowych na tych
+danych. Wspólne zasady (koszty, rozmiar pozycji, walk-forward 24/3, PBO, reżimy, koszty ×2) bez zmian.
+
+### R2A — carry powyżej stopy wolnej od ryzyka
+- Uzasadnienie: carry ma sens tylko wtedy, gdy daje więcej niż bony skarbowe przy tym samym kapitale. H4 tego
+  nie sprawdzał i w OOS zarobił mniej niż bony.
+- Long spot i short perpetual na BTC i ETH (konstrukcja, wielkość i koszty jak w H4), gdy średni funding z 3 dni
+  w ujęciu rocznym przewyższa rentowność 3-miesięcznych bonów USA (FRED DTB3, opóźnienie 1 dnia) o więcej niż M.
+  Wyjście, gdy nadwyżka spadnie poniżej M/2. M ∈ {2,5%; 5%; 10%}. **3 warianty.**
+- Ocena na zwrocie ponad stopę wolną od ryzyka: od dziennego zwrotu odejmuję rentowność bonów naliczoną na
+  kapitale zaangażowanym w nogę spot (wolny kapitał leży w bonach). Wszystkie kryteria akceptacji, łącznie
+  z walk-forward i PBO, liczę na tej nadwyżce. Założenie: noga spot służy jako zabezpieczenie shorta perpetual.
+
+### R2B — funding przekrojowo z niskim obrotem
+- Uzasadnienie: H3a otrzymał funding równy 134% kapitału, ale koszty obrotu (93× rocznie) zjadły wynik.
+- Ranking średniego fundingu z W dni, long dolny kwintyl, short górny kwintyl, neutralność dolarowa, rebalans
+  co R dni (zamiast codziennie), wyjścia wymuszone przez uniwersum natychmiast. W ∈ {7, 14}, R ∈ {7, 14}.
+  **4 warianty.**
+
+### R2C — premia za ryzyko zmienności z rynku opcji
+- Uzasadnienie: gdy zmienność implikowana jest wysoka względem zrealizowanej, rynek płaci za przejęcie ryzyka,
+  co w literaturze dla akcji zapowiada wyższe zwroty (Bollerslev, Tauchen, Zhou 2009). Dla kryptowalut nie testowałem.
+- VRP = DVOL z Deribit (30-dniowa zmienność implikowana, zamknięcie dnia, opóźnienie 1 dnia jak dla danych spoza
+  gieł­dy wykonania) minus zmienność zrealizowana z 30 dni z dziennych zwrotów perpetual, oba w ujęciu rocznym.
+  Sygnał: z-score VRP z 90 dni. Long, gdy z > Z; w trybie long/short także short, gdy z < −Z; w pozostałych
+  dniach brak pozycji. Rozmiar jak w H1, rebalans dzienny z pasmem 2%. Z ∈ {0; 1}, tryb ∈ {tylko long,
+  long/short}. **4 warianty.** Rynki: BTC i ETH.
+- DVOL istnieje od 2021-03-24, więc okna walk-forward liczę od 2021-07-01: pierwszy test od 2023-07-01, OOS
+  około 23 miesięcy. Benchmarki porównuję w tym samym oknie.
+
+Razem 11 prób (rodziny R2A, R2B, R2C).
