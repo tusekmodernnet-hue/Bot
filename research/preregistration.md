@@ -152,7 +152,7 @@ danych. Wspólne zasady (koszty, rozmiar pozycji, walk-forward 24/3, PBO, reżim
 - Uzasadnienie: gdy zmienność implikowana jest wysoka względem zrealizowanej, rynek płaci za przejęcie ryzyka,
   co w literaturze dla akcji zapowiada wyższe zwroty (Bollerslev, Tauchen, Zhou 2009). Dla kryptowalut nie testowałem.
 - VRP = DVOL z Deribit (30-dniowa zmienność implikowana, zamknięcie dnia, opóźnienie 1 dnia jak dla danych spoza
-  gieł­dy wykonania) minus zmienność zrealizowana z 30 dni z dziennych zwrotów perpetual, oba w ujęciu rocznym.
+  giełdy wykonania) minus zmienność zrealizowana z 30 dni z dziennych zwrotów perpetual, oba w ujęciu rocznym.
   Sygnał: z-score VRP z 90 dni. Long, gdy z > Z; w trybie long/short także short, gdy z < −Z; w pozostałych
   dniach brak pozycji. Rozmiar jak w H1, rebalans dzienny z pasmem 2%. Z ∈ {0; 1}, tryb ∈ {tylko long,
   long/short}. **4 warianty.** Rynki: BTC i ETH.
