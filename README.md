@@ -2,9 +2,10 @@
 
 System bada, testuje i waliduje strategie na kontraktach perpetual. Handel realny jest wyłączony.
 
-**Stan na 2026-11-25: program badań zamknięty decyzją właściciela.** Dwie prerejestrowane rundy (122 próby) nie dały
-strategii, która przeszłaby walidację. Holdout (od 2025-06-01) nigdy nie został otwarty i może posłużyć tylko
-przyszłemu kandydatowi z nowych danych. Wyniki: `research/results/`, rejestr prób: `research/registry.jsonl`.
+**Stan na 2026-11-25: badania trwają.** Właściciel cofnął zamknięcie programu i polecił szukać dalej. Cztery
+prerejestrowane rundy (164 próby: dzienne, godzinowe, SMC/ICT i day trading na 15m, scalping na zleceniach limit
+na 1m) nie dały strategii, która przeszłaby walidację. Holdout (od 2025-06-01) nigdy nie został otwarty.
+Wyniki: `research/results/`, rejestr prób: `research/registry.jsonl`, prerejestracje: `research/preregistration.md`.
 Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajduje się w dokumencie projektu
 „System Quant Krypto — Etap 1”. Zasady, których kod nie może łamać, są w [CLAUDE.md](CLAUDE.md).
 
@@ -13,8 +14,8 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 48 testów przechodzi |
-| 3. Odkrywanie i walidacja strategii (H1–H7, ML, runda 2) | Zakończone: 122 próby w dwóch rundach, brak kandydata |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 62 testy przechodzą |
+| 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–4) | W toku: 164 próby w czterech rundach, brak kandydata |
 | 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
 ## Szybki start
@@ -40,6 +41,7 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.data.guard` | Blokada holdoutu (od 2025-06-01), otwierana tylko jawnie i z wpisem w rejestrze |
 | `cqs.data.universe` | Uniwersum point-in-time: wiek, aktywny obrót, płynność, kontrakty zdjęte z giełdy |
 | `cqs.backtest.engine` | Wykonanie na otwarciu następnej świecy, koszty, funding, stopy, wymuszone zamknięcia |
+| `cqs.backtest.limit_sim` | Konserwatywna symulacja zleceń limit na świecach 1m (wypełnienie tylko przy przejściu ceny) |
 | `cqs.backtest.costs` | Model kosztów: prowizja, slippage, test warunków skrajnych (koszty ×2) |
 | `cqs.backtest.metrics` | Sharpe, Sortino, Calmar, obsunięcia i ich czas, CAGR, metryki transakcji, ryzyko ogona |
 | `cqs.research.stats` | Probabilistic i Deflated Sharpe Ratio, PBO metodą CSCV |
@@ -47,7 +49,8 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.research.benchmarks` | Benchmarki, które musi pobić każda strategia |
 | `cqs.research.run_family`, `run_ext` | Pełna ocena rodziny: warianty, walk-forward, PBO, DSR, reżimy, koszty ×2 |
 | `cqs.research.ml_meta` | Meta-model LightGBM z purgingiem i embargo oraz jego punkt odniesienia |
-| `cqs.strategies` | Prerejestrowane rodziny H1–H7 |
+| `cqs.research.run_round3`, `run_round4`, `diag_gross` | Rundy 3–4 i diagnostyka wyników przed kosztami (nie jest próbą) |
+| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–4 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit) |
 
 ## Zasady czasu (brak look-ahead)
 
