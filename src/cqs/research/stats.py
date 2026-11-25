@@ -70,6 +70,8 @@ def pbo_cscv(returns: np.ndarray, n_blocks: int = 16) -> tuple[float, np.ndarray
         oos_idx = np.concatenate([blocks[k] for k in range(n_blocks) if k not in combo])
         sr_is = np.array([sharpe_per_period(m[is_idx, j]) for j in range(n)])
         sr_oos = np.array([sharpe_per_period(m[oos_idx, j]) for j in range(n)])
+        if np.isnan(sr_is).all():
+            continue  # no variant has returns in this half: there is no in-sample winner to locate
         best = int(np.nanargmax(sr_is))
         # relative rank of the IS winner out of sample, in (0, 1)
         rank = (stats.rankdata(sr_oos)[best]) / (n + 1)

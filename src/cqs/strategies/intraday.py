@@ -161,9 +161,10 @@ def to_15m(w: np.ndarray, st: np.ndarray, index: pd.DatetimeIndex, bar: pd.Timed
 
 
 # ------------------------------------------------------------------------------------------------- R3A / R3B
-def _sweeps(c, h, l, hi_lvl, lo_lvl, M, allowed, days):
+def _sweeps(c, h, l, hi_lvl, lo_lvl, M, allowed, days, starts=None):
     """Sweep-and-reclaim signals against per-bar levels: a bar trades beyond the level and that bar or one of the
-    next M-1 bars closes back inside. Stop = the extreme since the first breach. Returns entry, stop arrays."""
+    next M-1 bars closes back inside. Stop = the extreme since the first breach. Returns entry, stop arrays; when
+    `starts` (an int array) is given, the position of each signal's first breach is written into it."""
     T = len(c)
     entry, stop = np.zeros(T), np.full(T, np.nan)
     st_hi = st_lo = None  # [start index, extreme]
@@ -178,12 +179,13 @@ def _sweeps(c, h, l, hi_lvl, lo_lvl, M, allowed, days):
             continue
         sig_s = sig_l = False
         s_ext = l_ext = np.nan
+        s_start = l_start = -1
         if st_hi is None and armed_hi and h[i] > H:
             st_hi, armed_hi = [i, h[i]], False
         if st_hi is not None:
             st_hi[1] = max(st_hi[1], h[i])
             if c[i] < H:
-                sig_s, s_ext = True, st_hi[1]
+                sig_s, s_ext, s_start = True, st_hi[1], st_hi[0]
                 st_hi, armed_hi = None, True
             elif i - st_hi[0] >= M - 1:
                 st_hi = None  # expired: re-armed only after a close back below the level
@@ -194,7 +196,7 @@ def _sweeps(c, h, l, hi_lvl, lo_lvl, M, allowed, days):
         if st_lo is not None:
             st_lo[1] = min(st_lo[1], l[i])
             if c[i] > L:
-                sig_l, l_ext = True, st_lo[1]
+                sig_l, l_ext, l_start = True, st_lo[1], st_lo[0]
                 st_lo, armed_lo = None, True
             elif i - st_lo[0] >= M - 1:
                 st_lo = None
@@ -204,8 +206,12 @@ def _sweeps(c, h, l, hi_lvl, lo_lvl, M, allowed, days):
             continue  # both sides at once is ambiguous
         if sig_s:
             entry[i], stop[i] = -1, s_ext
+            if starts is not None:
+                starts[i] = s_start
         elif sig_l:
             entry[i], stop[i] = 1, l_ext
+            if starts is not None:
+                starts[i] = l_start
     return entry, stop
 
 

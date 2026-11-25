@@ -62,3 +62,12 @@ def test_registry_counts_trials_and_variance():
     assert registry.trial_count("H1") == 3 and registry.trial_count("H2") == 1
     assert registry.sharpe_variance("H1") == pytest.approx(np.var([0.01, 0.03, 0.05], ddof=1))
     assert registry.read()[-1]["sharpe_per_period"] is None  # NaN stored as null, not dropped
+
+
+def test_pbo_skips_splits_where_no_variant_has_returns():
+    rng = np.random.default_rng(4)
+    m = np.zeros((160, 2))
+    m[120:, 0] = rng.normal(0.001, 0.01, 40)  # both variants trade only in the last quarter
+    m[120:, 1] = rng.normal(0.0, 0.01, 40)
+    pbo, logits = stats.pbo_cscv(m, n_blocks=8)
+    assert 0 < len(logits) < 70 and np.isfinite(pbo)  # C(8, 4) = 70 splits, those without returns in-sample skipped

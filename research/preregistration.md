@@ -372,3 +372,17 @@ obserwacji nie widział i rozstrzyga o każdym kandydacie.
 
 Razem 10 prób (N w programie wzrośnie do ok. 174). Jeśli runda 5 nie da kandydata, kończę reguły na świecach z
 archiwum Binance i rekomenduję nowe źródło danych (płatna księga zleceń) albo inny rynek.
+
+### Doprecyzowania rundy 5 przed uruchomieniem (2026-11-25, przed jakimkolwiek wynikiem)
+- Open interest: rekordy z zerowym OI w archiwum Binance (463 dla BTC, 198 dla ETH, m.in. 7–8.03.2022 dla obu
+  kontraktów) to puste odczyty, nie stan rynku. Pomijam je, jak pominąłby je system działający na żywo, i używam
+  ostatniego niezerowego odczytu dostępnego na zamknięciu świecy.
+- T w nowej metodzie DSR = 1978 dni (01.01.2020–31.05.2025): na tylu dniach liczony jest Sharpe każdej próby w rejestrze.
+- PBO: podział CSCV, w którym żaden wariant nie ma zwrotów w części in-sample, pomijam, bo nie ma w nim zwycięzcy do
+  oceny (R5B handluje rzadko). W rundach 1–4 taki podział nie wystąpił (obliczenie by się przerwało), więc ich wyniki
+  się nie zmieniają.
+- R5A liczy sygnał na świecach 1h, a silnik wykonuje decyzje na świecach 15m (jak R3D na 1h): wejście na otwarciu
+  następnej godziny, stop sprawdzany na świecach 15m.
+- R5D z limitem: zlecenie aktywne od pierwszej świecy 1m po zamknięciu świecy 15m z sygnałem do świecy 11:59 czasu
+  nowojorskiego włącznie; wyjście czasowe na otwarciu świecy 16:00.
+- Przed rundą 5 rejestr ma 164 próby (bez benchmarków), po niej 174.
