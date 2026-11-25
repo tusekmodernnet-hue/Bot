@@ -1,6 +1,10 @@
 # Bot — system badawczy dla kontraktów perpetual na kryptowaluty
 
 System bada, testuje i waliduje strategie na kontraktach perpetual. Handel realny jest wyłączony.
+
+**Stan na 2026-11-25: program badań zamknięty decyzją właściciela.** Dwie prerejestrowane rundy (122 próby) nie dały
+strategii, która przeszłaby walidację. Holdout (od 2025-06-01) nigdy nie został otwarty i może posłużyć tylko
+przyszłemu kandydatowi z nowych danych. Wyniki: `research/results/`, rejestr prób: `research/registry.jsonl`.
 Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajduje się w dokumencie projektu
 „System Quant Krypto — Etap 1”. Zasady, których kod nie może łamać, są w [CLAUDE.md](CLAUDE.md).
 
