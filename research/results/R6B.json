@@ -1,0 +1,509 @@
+{
+ "family": "R6B",
+ "market": "binance BTC+ETH perpetual vs quarterly, 1h",
+ "data": "63a7d8a9e98ea150",
+ "variants": {
+  "r6b_basis_vs_funding(theta=0.02)": {
+   "sharpe": -0.17152332190954706,
+   "sharpe_excess": -0.7077402779653005,
+   "cagr": -0.0085200525179715,
+   "total_excess_return": -0.13285670523143833,
+   "max_drawdown": -0.1851836238913389,
+   "n_trades": 218,
+   "exposure": 0.8765508684863523,
+   "avg_gross_leverage": 1.5752663000306029,
+   "turnover_per_year": 52.40779374811624,
+   "costs_paid": 0.17392588103931494,
+   "funding_paid": -0.22679201971446386,
+   "tbill_forgone": 0.10477175987170338,
+   "decisions": {
+    "BTCUSDT": {
+     "decisions": 1612,
+     "share_in_position": 0.7630272952853598,
+     "share_short_basis": 0.3387096774193548,
+     "share_long_basis": 0.42431761786600497,
+     "changes": 102,
+     "rolls_in_position": 4,
+     "days_without_front": 60
+    },
+    "ETHUSDT": {
+     "decisions": 1612,
+     "share_in_position": 0.7351116625310173,
+     "share_short_basis": 0.27419354838709675,
+     "share_long_basis": 0.4609181141439206,
+     "changes": 100,
+     "rolls_in_position": 6,
+     "days_without_front": 61
+    }
+   }
+  },
+  "r6b_basis_vs_funding(theta=0.05)": {
+   "sharpe": 0.018697423611877977,
+   "sharpe_excess": -0.24230090324503714,
+   "cagr": -0.0001046731257849931,
+   "total_excess_return": -0.04819346462737839,
+   "max_drawdown": -0.14275732608092928,
+   "n_trades": 93,
+   "exposure": 0.5204714640198511,
+   "avg_gross_leverage": 0.8413145977549747,
+   "turnover_per_year": 23.365219300532758,
+   "costs_paid": 0.07757068539709193,
+   "funding_paid": -0.2321320852558922,
+   "tbill_forgone": 0.04891891730623851,
+   "decisions": {
+    "BTCUSDT": {
+     "decisions": 1612,
+     "share_in_position": 0.41873449131513646,
+     "share_short_basis": 0.18424317617866004,
+     "share_long_basis": 0.23449131513647642,
+     "changes": 44,
+     "rolls_in_position": 3,
+     "days_without_front": 60
+    },
+    "ETHUSDT": {
+     "decisions": 1612,
+     "share_in_position": 0.369727047146402,
+     "share_short_basis": 0.05893300248138958,
+     "share_long_basis": 0.3107940446650124,
+     "changes": 45,
+     "rolls_in_position": 2,
+     "days_without_front": 61
+    }
+   }
+  }
+ },
+ "walk_forward": {
+  "oos": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -2.0329111298955467,
+   "sortino": -2.58030108065939,
+   "cagr": -0.04293121533063626,
+   "max_drawdown": -0.13921745346629266,
+   "calmar": -0.3083752378866115,
+   "total_return": -0.13921745346629266
+  },
+  "oos_costs_x2": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": -2.5247307425135253,
+   "sortino": -3.11039223463742,
+   "cagr": -0.0553201812529035,
+   "max_drawdown": -0.17669360669594802,
+   "calmar": -0.31308535881605337,
+   "total_return": -0.17669360669594802
+  },
+  "choices": [
+   {
+    "test_start": "2022-01-01",
+    "test_end": "2022-04-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": 1.368851759556787
+   },
+   {
+    "test_start": "2022-04-01",
+    "test_end": "2022-07-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": 1.2130834097971384
+   },
+   {
+    "test_start": "2022-07-01",
+    "test_end": "2022-10-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": 1.0177545564902992
+   },
+   {
+    "test_start": "2022-10-01",
+    "test_end": "2023-01-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": 0.8026915488804898
+   },
+   {
+    "test_start": "2023-01-01",
+    "test_end": "2023-04-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": 0.7036402450151021
+   },
+   {
+    "test_start": "2023-04-01",
+    "test_end": "2023-07-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -0.16128098592647605
+   },
+   {
+    "test_start": "2023-07-01",
+    "test_end": "2023-10-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -0.8731708649685671
+   },
+   {
+    "test_start": "2023-10-01",
+    "test_end": "2024-01-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -1.0127547013238636
+   },
+   {
+    "test_start": "2024-01-01",
+    "test_end": "2024-04-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -2.1897190503730255
+   },
+   {
+    "test_start": "2024-04-01",
+    "test_end": "2024-07-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -1.7111470754260614
+   },
+   {
+    "test_start": "2024-07-01",
+    "test_end": "2024-10-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -2.201824526661354
+   },
+   {
+    "test_start": "2024-10-01",
+    "test_end": "2025-01-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -1.9628323867655777
+   },
+   {
+    "test_start": "2025-01-01",
+    "test_end": "2025-04-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -2.2108931223936197
+   },
+   {
+    "test_start": "2025-04-01",
+    "test_end": "2025-07-01",
+    "variant": "r6b_basis_vs_funding(theta=0.05)",
+    "train_sharpe": -2.277063777893433
+   }
+  ]
+ },
+ "pbo": 0.02470862470862471,
+ "deflated_sharpe": 0.00023328364561715483,
+ "deflated_sharpe_program": 1.6714521181230571e-34,
+ "n_trials_program": 177,
+ "n_trials_family": 2,
+ "regimes_oos": {
+  "bull": {
+   "days": 403,
+   "sharpe": -2.834247980528922,
+   "total_return": -0.10677923074629592
+  },
+  "bear": {
+   "days": 208,
+   "sharpe": -2.347263212146934,
+   "total_return": -0.012156803415726669
+  },
+  "range": {
+   "days": 636,
+   "sharpe": -1.9142306975167354,
+   "total_return": -0.024456529128684346
+  },
+  "high_vol": {
+   "days": 83,
+   "sharpe": 1.75361994058535,
+   "total_return": 0.004399443554238713
+  }
+ },
+ "benchmarks_same_window": {
+  "BTCUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.571577391939223,
+   "sortino": 0.8418997137568539,
+   "cagr": 0.17693809347662848,
+   "max_drawdown": -0.6812659366305567,
+   "calmar": 0.2597195661238236,
+   "total_return": 0.7447185566817172
+  },
+  "BTCUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.9145860702292894,
+   "sortino": 1.4563999109469283,
+   "cagr": 0.30951008164586624,
+   "max_drawdown": -0.325409618659281,
+   "calmar": 0.9511399291793452,
+   "total_return": 1.5124368489150952
+  },
+  "BTCUSDT+ETHUSDT/buy_and_hold": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.311232459025787,
+   "sortino": 0.44940459030876795,
+   "cagr": 0.007877663840527571,
+   "max_drawdown": -0.6902472655681413,
+   "calmar": 0.011412814267425572,
+   "total_return": 0.027170668156070166
+  },
+  "BTCUSDT+ETHUSDT/trend_sma200": {
+   "start": "2022-01-01",
+   "end": "2025-05-31",
+   "days": 1247,
+   "sharpe": 0.7280025863369605,
+   "sortino": 1.1311347039540787,
+   "cagr": 0.21504481950494014,
+   "max_drawdown": -0.3022513552910251,
+   "calmar": 0.7114767750102644,
+   "total_return": 0.9453796649081758
+  }
+ },
+ "deribit_confirmation": {
+  "venue": "deribit",
+  "data": "194702c667e4a399",
+  "BTC+ETH": {
+   "oos": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -1.5281094741239403,
+    "sortino": -1.9931365599160533,
+    "cagr": -0.029580740513540205,
+    "max_drawdown": -0.10928919985304009,
+    "calmar": -0.2706648100024255,
+    "total_return": -0.0974991521797407
+   },
+   "oos_costs_x2": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -2.5500663965468946,
+    "sortino": -3.1134857880875866,
+    "cagr": -0.052966666739759805,
+    "max_drawdown": -0.1762012098948883,
+    "calmar": -0.3006033089747609,
+    "total_return": -0.16966492055194082
+   },
+   "variants": {
+    "r6b_basis_vs_funding(theta=0.02)": {
+     "sharpe": 0.1374737312991099,
+     "sharpe_excess": -0.3823793991005856,
+     "cagr": 0.005602808949275007,
+     "total_excess_return": -0.08516468247167319,
+     "max_drawdown": -0.14379576577820896,
+     "n_trades": 284,
+     "exposure": 0.9770471464019851,
+     "avg_gross_leverage": 1.8103557898678395,
+     "turnover_per_year": 69.28240913067309,
+     "costs_paid": 0.2301860997816083,
+     "funding_paid": -0.23508215035189475,
+     "tbill_forgone": 0.11366282627573382,
+     "decisions": {
+      "BTC-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.826302729528536,
+       "share_short_basis": 0.5037220843672456,
+       "share_long_basis": 0.3225806451612903,
+       "changes": 134,
+       "rolls_in_position": 8,
+       "days_without_front": 0
+      },
+      "ETH-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.9069478908188585,
+       "share_short_basis": 0.5173697270471465,
+       "share_long_basis": 0.38957816377171217,
+       "changes": 104,
+       "rolls_in_position": 10,
+       "days_without_front": 0
+      }
+     }
+    },
+    "r6b_basis_vs_funding(theta=0.05)": {
+     "sharpe": 0.3604311966417603,
+     "sharpe_excess": -0.04027167324573398,
+     "cagr": 0.016253816304542035,
+     "total_excess_return": -0.013479889131214451,
+     "max_drawdown": -0.10507657533251102,
+     "n_trades": 161,
+     "exposure": 0.8523573200992556,
+     "avg_gross_leverage": 1.4147915945509455,
+     "turnover_per_year": 40.90233424397358,
+     "costs_paid": 0.13601888853743416,
+     "funding_paid": -0.2271885460247323,
+     "tbill_forgone": 0.08472107350781309,
+     "decisions": {
+      "BTC-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.5905707196029777,
+       "share_short_basis": 0.3442928039702233,
+       "share_long_basis": 0.24627791563275434,
+       "changes": 82,
+       "rolls_in_position": 5,
+       "days_without_front": 0
+      },
+      "ETH-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.7518610421836228,
+       "share_short_basis": 0.46153846153846156,
+       "share_long_basis": 0.2903225806451613,
+       "changes": 70,
+       "rolls_in_position": 8,
+       "days_without_front": 0
+      }
+     }
+    }
+   }
+  },
+  "BTC": {
+   "oos": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -2.1274043082616543,
+    "sortino": -2.619314072034709,
+    "cagr": -0.02396905212562528,
+    "max_drawdown": -0.08281170753382083,
+    "calmar": -0.2894403803452086,
+    "total_return": -0.07954407121079154
+   },
+   "oos_costs_x2": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -2.8948542448876657,
+    "sortino": -3.3791906801488705,
+    "cagr": -0.03572688248723721,
+    "max_drawdown": -0.11888717032685381,
+    "calmar": -0.30051083215299096,
+    "total_return": -0.11687846117621226
+   },
+   "variants": {
+    "r6b_basis_vs_funding(theta=0.02)": {
+     "sharpe": -0.2042923973195443,
+     "sharpe_excess": -0.7685810889140868,
+     "cagr": -0.004963088704779239,
+     "total_excess_return": -0.07634753729665944,
+     "max_drawdown": -0.0944938859986757,
+     "n_trades": 150,
+     "exposure": 0.826302729528536,
+     "avg_gross_leverage": 0.8480023216901921,
+     "turnover_per_year": 35.16237336427345,
+     "costs_paid": 0.1167725614061369,
+     "funding_paid": -0.052937103864040394,
+     "tbill_forgone": 0.05745830383567305,
+     "decisions": {
+      "BTC-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.826302729528536,
+       "share_short_basis": 0.5037220843672456,
+       "share_long_basis": 0.3225806451612903,
+       "changes": 134,
+       "rolls_in_position": 8,
+       "days_without_front": 0
+      }
+     }
+    },
+    "r6b_basis_vs_funding(theta=0.05)": {
+     "sharpe": 0.02549426821089102,
+     "sharpe_excess": -0.37342761997291196,
+     "cagr": 0.0003173017981170645,
+     "total_excess_return": -0.035659578378643086,
+     "max_drawdown": -0.0768556244771289,
+     "n_trades": 87,
+     "exposure": 0.5905707196029777,
+     "avg_gross_leverage": 0.6103035946600756,
+     "turnover_per_year": 20.915530333255933,
+     "costs_paid": 0.06947686270068458,
+     "funding_paid": -0.053928580528834806,
+     "tbill_forgone": 0.03770825138264914,
+     "decisions": {
+      "BTC-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.5905707196029777,
+       "share_short_basis": 0.3442928039702233,
+       "share_long_basis": 0.24627791563275434,
+       "changes": 82,
+       "rolls_in_position": 5,
+       "days_without_front": 0
+      }
+     }
+    }
+   }
+  },
+  "ETH": {
+   "oos": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -0.45886194129566843,
+    "sortino": -0.6593106914383979,
+    "cagr": -0.006379979349449338,
+    "max_drawdown": -0.03499362008352602,
+    "calmar": -0.18231835786697723,
+    "total_return": -0.021629293151823936
+   },
+   "oos_costs_x2": {
+    "start": "2022-01-01",
+    "end": "2025-05-31",
+    "days": 1247,
+    "sharpe": -1.2693170512133072,
+    "sortino": -1.695241489465906,
+    "cagr": -0.01846791514521451,
+    "max_drawdown": -0.072508097127985,
+    "calmar": -0.2547014178653254,
+    "total_return": -0.061698900106408106
+   },
+   "variants": {
+    "r6b_basis_vs_funding(theta=0.02)": {
+     "sharpe": 0.3241188342341736,
+     "sharpe_excess": -0.05568402911553569,
+     "cagr": 0.011207700497604778,
+     "total_excess_return": -0.01180148229367406,
+     "max_drawdown": -0.08821686222561775,
+     "n_trades": 134,
+     "exposure": 0.9063275434243176,
+     "avg_gross_leverage": 0.9669032999437828,
+     "turnover_per_year": 31.983277464561024,
+     "costs_paid": 0.10632061706552327,
+     "funding_paid": -0.17971575069955162,
+     "tbill_forgone": 0.06106054511393151,
+     "decisions": {
+      "ETH-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.9069478908188585,
+       "share_short_basis": 0.5173697270471465,
+       "share_long_basis": 0.38957816377171217,
+       "changes": 104,
+       "rolls_in_position": 10,
+       "days_without_front": 0
+      }
+     }
+    },
+    "r6b_basis_vs_funding(theta=0.05)": {
+     "sharpe": 0.4790147508409959,
+     "sharpe_excess": 0.16296617243365477,
+     "cagr": 0.016490279354318016,
+     "total_excess_return": 0.022995413834304257,
+     "max_drawdown": -0.07658364170622534,
+     "n_trades": 74,
+     "exposure": 0.7512406947890818,
+     "avg_gross_leverage": 0.808323082460838,
+     "turnover_per_year": 18.168221944993824,
+     "costs_paid": 0.060499784285893844,
+     "funding_paid": -0.16970380431549115,
+     "tbill_forgone": 0.04944905224847085,
+     "decisions": {
+      "ETH-PERPETUAL": {
+       "decisions": 1612,
+       "share_in_position": 0.7518610421836228,
+       "share_short_basis": 0.46153846153846156,
+       "share_long_basis": 0.2903225806451613,
+       "changes": 70,
+       "rolls_in_position": 8,
+       "days_without_front": 0
+      }
+     }
+    }
+   }
+  },
+  "passed": false
+ }
+}
