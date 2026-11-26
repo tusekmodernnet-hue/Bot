@@ -1,0 +1,142 @@
+{
+ "diagnostic": "R9A capacity (not a trial; research data only, holdout closed)",
+ "fingerprint": "451659f653d2c1ad",
+ "model": "impact = 0.7 x sigma(Parkinson, trade day) x sqrt(Q / quote volume of the trade day)",
+ "charged_slippage_bp": 10.0,
+ "dropped_no_volume_or_range": 1,
+ "by_kind": {
+  "entry": {
+   "n": 363,
+   "median_w": 0.05000191428534038,
+   "median_quote_volume": 120820632.6215,
+   "p10_quote_volume": 23558956.523716,
+   "median_sigma": 0.11484204302534635
+  },
+  "exit": {
+   "n": 342,
+   "median_w": 0.047853639859528604,
+   "median_quote_volume": 37539811.024865,
+   "p10_quote_volume": 6138184.889452001,
+   "median_sigma": 0.06378182511908775
+  },
+  "rebalance": {
+   "n": 1243,
+   "median_w": 0.012372437478227997,
+   "median_quote_volume": 108642716.39941,
+   "p10_quote_volume": 16510042.821360001,
+   "median_sigma": 0.1077570145927665
+  }
+ },
+ "full": {
+  "start": "2020-05-29",
+  "years": 5.007529089664613,
+  "n_trades": 1948,
+  "short_leg_turnover_per_year": 10.482091508646446,
+  "by_equity": {
+   "10000": {
+    "weighted_mean_impact_bp": 1.5581058982203289,
+    "drag_above_charged_per_year": -0.008848870648115723,
+    "entries_exits_median_bp": 1.593007493752645,
+    "entries_exits_p90_bp": 3.139446450518498
+   },
+   "50000": {
+    "weighted_mean_impact_bp": 3.484030704564025,
+    "drag_above_charged_per_year": -0.006830098642229043,
+    "entries_exits_median_bp": 3.562073044697486,
+    "entries_exits_p90_bp": 7.020015675079793
+   },
+   "100000": {
+    "weighted_mean_impact_bp": 4.927163474118734,
+    "drag_above_charged_per_year": -0.005317393667269158,
+    "entries_exits_median_bp": 5.037532009974808,
+    "entries_exits_p90_bp": 9.92780137576956
+   },
+   "250000": {
+    "weighted_mean_impact_bp": 7.790529491101645,
+    "drag_above_charged_per_year": -0.00231598720599282,
+    "entries_exits_median_bp": 7.965037468763224,
+    "entries_exits_p90_bp": 15.697232252592492
+   },
+   "500000": {
+    "weighted_mean_impact_bp": 11.017472464383514,
+    "drag_above_charged_per_year": 0.0010665239479195985,
+    "entries_exits_median_bp": 11.264264013134818,
+    "entries_exits_p90_bp": 22.19923874333667
+   },
+   "1000000": {
+    "weighted_mean_impact_bp": 15.58105898220329,
+    "drag_above_charged_per_year": 0.005850117096660808,
+    "entries_exits_median_bp": 15.930074937526449,
+    "entries_exits_p90_bp": 31.394464505184985
+   },
+   "2000000": {
+    "weighted_mean_impact_bp": 22.03494492876703,
+    "drag_above_charged_per_year": 0.012615139404485646,
+    "entries_exits_median_bp": 22.528528026269637,
+    "entries_exits_p90_bp": 44.39847748667334
+   },
+   "5000000": {
+    "weighted_mean_impact_bp": 34.840307045640245,
+    "drag_above_charged_per_year": 0.02603783715552761,
+    "entries_exits_median_bp": 35.620730446974854,
+    "entries_exits_p90_bp": 70.20015675079793
+   }
+  }
+ },
+ "oos": {
+  "start": "2022-01-01",
+  "years": 3.4140999315537304,
+  "n_trades": 1572,
+  "short_leg_turnover_per_year": 12.603465562235698,
+  "by_equity": {
+   "10000": {
+    "weighted_mean_impact_bp": 1.454813031252526,
+    "drag_above_charged_per_year": -0.010769896968347405,
+    "entries_exits_median_bp": 1.5240568923816495,
+    "entries_exits_p90_bp": 2.946532310972452
+   },
+   "50000": {
+    "weighted_mean_impact_bp": 3.2530608324331745,
+    "drag_above_charged_per_year": -0.008503481544892768,
+    "entries_exits_median_bp": 3.40789481294245,
+    "entries_exits_p90_bp": 6.588646545233952
+   },
+   "100000": {
+    "weighted_mean_impact_bp": 4.600522748451705,
+    "drag_above_charged_per_year": -0.006805212559396399,
+    "entries_exits_median_bp": 4.819491063604134,
+    "entries_exits_p90_bp": 9.317753301952493
+   },
+   "250000": {
+    "weighted_mean_impact_bp": 7.274065156262631,
+    "drag_above_charged_per_year": -0.0034356225927942292,
+    "entries_exits_median_bp": 7.620284461908247,
+    "entries_exits_p90_bp": 14.732661554862261
+   },
+   "500000": {
+    "weighted_mean_impact_bp": 10.287081597572177,
+    "drag_above_charged_per_year": 0.0003618223028552555,
+    "entries_exits_median_bp": 10.776709635171608,
+    "entries_exits_p90_bp": 20.835129780738896
+   },
+   "1000000": {
+    "weighted_mean_impact_bp": 14.548130312525261,
+    "drag_above_charged_per_year": 0.005732220376647239,
+    "entries_exits_median_bp": 15.240568923816493,
+    "entries_exits_p90_bp": 29.465323109724523
+   },
+   "2000000": {
+    "weighted_mean_impact_bp": 20.574163195144354,
+    "drag_above_charged_per_year": 0.013327110167946209,
+    "entries_exits_median_bp": 21.553419270343216,
+    "entries_exits_p90_bp": 41.67025956147779
+   },
+   "5000000": {
+    "weighted_mean_impact_bp": 32.530608324331745,
+    "drag_above_charged_per_year": 0.028396374611193608,
+    "entries_exits_median_bp": 34.0789481294245,
+    "entries_exits_p90_bp": 65.88646545233952
+   }
+  }
+ }
+}
