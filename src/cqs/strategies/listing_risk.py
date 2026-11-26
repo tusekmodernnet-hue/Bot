@@ -37,12 +37,14 @@ def pooled_events(*sets: pd.Series) -> pd.Series:
 
 def shorts_with_stop(open_: pd.DataFrame, close: pd.DataFrame, quote_volume: pd.DataFrame, events: pd.Series,
                      delay: int, hold: int, max_shorts: int = MAX_SHORTS, min_qv: float = listings.MIN_QUOTE_VOLUME,
-                     stop_k: float | None = None) -> tuple[pd.DataFrame, list[dict]]:
+                     stop_k: float | None = None, liq_from: int = 1) -> tuple[pd.DataFrame, list[dict]]:
     """Bool day x contract of the shorts held after each decision, as in `listings.shorts`, plus a close-based stop.
 
     A short decided at the close of row i0 is entered at the open of row i0 + 1. From row i0 + 1 on, a close at or
     above (1 + stop_k) x that open ends it at that row, so the engine covers at the next open; the freed slot can take
     an event decided at the same close. Every input used at row i is known at the close of row i.
+    The volume filter averages days D0 + liq_from .. D0 + delay (default: from the first full day after the listing
+    day; round 12 decides at the close of D0 itself, so it uses liq_from = 0, the listing day's own volume).
     Returns the held frame and one record per stop.
     """
     idx = close.index
@@ -56,7 +58,7 @@ def shorts_with_stop(open_: pd.DataFrame, close: pd.DataFrame, quote_volume: pd.
         d0 = events[p]
         t = pd.Timestamp(d0) + pd.Timedelta(days=delay)
         if t in row:
-            liq = Q[p].loc[pd.Timestamp(d0) + pd.Timedelta(days=1):t].mean()
+            liq = Q[p].loc[pd.Timestamp(d0) + pd.Timedelta(days=liq_from):t].mean()
             by_row.setdefault(row[t], []).append((liq, p))
     out = np.zeros((len(idx), len(cols)), dtype=bool)
     col = {p: j for j, p in enumerate(cols)}
@@ -87,8 +89,9 @@ def shorts_with_stop(open_: pd.DataFrame, close: pd.DataFrame, quote_volume: pd.
 
 
 def r9a(open_, close, quote_volume, events, basket, stop_k, size: float = SIZE, max_shorts: int = MAX_SHORTS,
-        delay: int = DELAY, hold: int = HOLD):
-    held, stops = shorts_with_stop(open_, close, quote_volume, events, delay, hold, max_shorts, stop_k=stop_k)
+        delay: int = DELAY, hold: int = HOLD, liq_from: int = 1):
+    held, stops = shorts_with_stop(open_, close, quote_volume, events, delay, hold, max_shorts, stop_k=stop_k,
+                                   liq_from=liq_from)
     return supply.basket_weights(held, basket, close, size), held, stops
 
 

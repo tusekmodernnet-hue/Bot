@@ -857,3 +857,53 @@ Razem 4 próby, więc N w programie wzrośnie z 204 do 208. Jeśli R11A da Sharp
 przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi, jak w rundzie 9. Jeśli
 R11A i R9A okażą się trafami, wspólny portfel będzie osobną próbą z własną prerejestracją. W przeciwnym razie przejdę
 do kolejnej rundy z nową prerejestracją, bez strojenia progów i okien tej rundy.
+
+## Runda 12 — short nowego kontraktu już na zamknięciu dnia debiutu (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Rundy 10 i 11 wykluczyły dwa ogólne wyjaśnienia przewagi R9A: przecenę gwałtownych wzrostów (R10A: Sharpe OOS −0,90)
+i koszt krótkiej sprzedaży starszych tokenów (R11A: −0,83). Zostaje mechanizm samego debiutu: podaż tokenów, które
+trafiają na rynek od pierwszych godzin notowań (airdropy, odblokowane przydziały, zapasy animatorów rynku,
+zabezpieczanie zablokowanych tokenów). R9A decyduje dopiero na zamknięciu dnia D0 + 1, a wchodzi na otwarciu D0 + 2,
+bo tę regułę przejęła z R7C, gdzie dzień debiutu jest niepełny. Jeśli podaż działa od razu, decyzja na zamknięciu
+samego dnia D0 (wejście na otwarciu D0 + 1) powinna złapać dodatkowy dzień spadku. Ryzyko: pierwsze dni po debiucie
+mają też najsilniejsze squeezy.
+
+To hipoteza inspirowana danymi: R7C dała lepszy wynik przy d = 1 niż przy d = 7, a przesunięcie wejścia jeszcze
+wcześniej jest ekstrapolacją tego wyniku, wspartą publiczną wiedzą o spadkach nowych tokenów w latach 2024–2025.
+DSR liczę z liczbą wszystkich prób programu. R12A nie zastępuje R9A w prerejestrowanym teście końcowym na holdoucie,
+który zostaje bez zmian. Jeśli R12A okaże się trafem, o jej potwierdzeniu zdecyduje właściciel osobno (handel
+papierowy albo, jeśli holdout nie zostanie użyty dla R9A, osobny test końcowy z własną prerejestracją).
+
+Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i zajętość miejsc bez stopu, bez zwrotów po zdarzeniu:
+- Z 470 zdarzeń R9A filtr obrotu 20 mln USDT w dniu debiutu przechodzi 361 (w R9A, w dniu D0 + 1: 383). Mediana obrotu
+  w dniu debiutu to 66,9 mln USDT, w dniu D0 + 1 100,5 mln USDT.
+- Bez stopu weszłoby 344 shortów, średnio 5,1 naraz (6,7 w oknie OOS), limit pełny w 2,9% dni. Reguła R9A daje 366
+  shortów, średnio 5,4 naraz (7,0 w OOS) i limit pełny w 2,5% dni.
+
+### Wspólne zasady rundy 12
+- Jak w rundzie 9: zdarzenia to wspólna pula R7C i R8B z ich definicjami i wyłączeniami, dane badawcze do 31.05.2025,
+  holdout zablokowany, świece dzienne perpetual USDⓈ-M z archiwum Binance, decyzja na zamknięciu dnia UTC i wykonanie
+  na otwarciu następnego dnia. Taker 0,05% za stronę, poślizg 2 pb dla BTC i ETH i 10 pb dla pozostałych, rzeczywisty
+  funding, test z kosztami ×2. Brak świecy wymusza wyjście (poślizg 2%), a kontrakty wycofane zostają w danych.
+- Rebalans z pasmem 20% wagi docelowej każdego kontraktu. Wejścia i wyjścia zawsze się wykonują.
+- Miara: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał.
+- Ocena jak w rundach 5–11: walk-forward 24/3 od 01.2020 (OOS 01.2022–05.2025), PBO (CSCV, 16 bloków), koszty ×2,
+  obsunięcie ≤ 25%, Sharpe ≥ 0 w hossie, bessie i konsolidacji (reżim bez pozycji liczę jako Sharpe 0), Sharpe OOS
+  ≥ 1 i wyższy niż benchmarki, DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 210), co
+  wymaga Sharpe OOS ok. 2,1 rocznie.
+- Koszyk altcoinów jak w R8A–R11A. Runner odmawia przebiegu, gdy któryś kontrakt nie ma danych o fundingu.
+
+### R12A — wejście na zamknięciu dnia debiutu
+- Zdarzenia: 470 zdarzeń R9A bez zmian.
+- Wejście: na zamknięciu dnia D0, gdy obrót z dnia debiutu (od pierwszego notowania do 24:00 UTC) wynosi co najmniej
+  20 mln USDT, z wykonaniem na otwarciu dnia D0 + 1.
+- Rozmiar i limity jak w R9A: −0,05 kapitału na short, najwyżej 20 naraz; wśród zdarzeń z tego samego dnia
+  pierwszeństwo ma większy obrót, a zdarzenie bez wolnego miejsca przepada.
+- Wyjście: po 30 dniach w pozycji, gdy kontrakt przestaje być notowany, albo na stopie z R9A, gdy zamknięcie dnia
+  wynosi co najmniej (1 + k) × cenę wejścia (zamknięcie na następnym otwarciu); kontrakt nie wraca do shortu.
+- k ∈ {bez stopu, 1,0}. **2 warianty.**
+- Raportuję też liczbę stopów, podział wyniku na lata i porównanie z wariantami R9A o tym samym k (tylko diagnostyka).
+
+Razem 2 próby, więc N w programie wzrośnie z 208 do 210. Jeśli R12A da Sharpe OOS ≥ 1 i obsunięcie do 25%, ale nie
+przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi. W przeciwnym razie
+przejdę do kolejnej rundy z nową prerejestracją, bez strojenia dnia wejścia i stopu tej rundy.
