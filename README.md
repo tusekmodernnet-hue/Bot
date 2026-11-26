@@ -2,13 +2,15 @@
 
 System bada, testuje i waliduje strategie na kontraktach perpetual. Handel realny jest wyłączony.
 
-**Stan na 2026-11-26: badania trwają.** Właściciel polecił szukać dalej, aż do skutku. Dziewięć prerejestrowanych rund
-(200 prób: dzienne, godzinowe, SMC/ICT i day trading na 15m, scalping na zleceniach limit na 1m, przepływ zleceń,
+**Stan na 2026-11-26: badania trwają.** Właściciel polecił szukać dalej, aż do skutku. Dziesięć prerejestrowanych rund
+(204 próby: dzienne, godzinowe, SMC/ICT i day trading na 15m, scalping na zleceniach limit na 1m, przepływ zleceń,
 likwidacje, otwarcie sesji NY, baza kontraktów kwartalnych wobec fundingu, carry spot–perpetual na wielu monetach,
-arbitraż statystyczny Avellanedy i Lee, short nowych tokenów i nowych kontraktów, wiek tokena oraz kontrola ryzyka
-tych shortów) nie dało strategii, która przeszłaby walidację. Najlepszy trop to R9A (wspólna pula shortów nowych
+arbitraż statystyczny Avellanedy i Lee, short nowych tokenów i nowych kontraktów, wiek tokena, kontrola ryzyka
+tych shortów i short po gwałtownym wzroście) nie dało strategii, która przeszłaby walidację. Najlepszy trop to R9A (wspólna pula shortów nowych
 kontraktów z koszykiem altcoinów): Sharpe OOS 1,30 i obsunięcie −24,5%, ale DSR 0,59 i PBO 0,51 nie spełniają
 kryteriów, a większość zysku OOS przypada na styczeń–maj 2025 (Sharpe OOS bez 2025: 0,67).
+Short po gwałtownym wzroście płynnych tokenów (R10A) traci (Sharpe OOS −0,90), więc przewaga R9A nie przenosi się
+na gwałtowne wzrosty starszych tokenów.
 Holdout (od 2025-06-01) nigdy nie został otwarty.
 Wyniki: `research/results/`, rejestr prób: `research/registry.jsonl`, prerejestracje: `research/preregistration.md`.
 Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajduje się w dokumencie projektu
@@ -20,7 +22,7 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
 | 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 136 testów przechodzi |
-| 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–9) | W toku: 200 prób w dziewięciu rundach, brak kandydata |
+| 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–10) | W toku: 204 próby w dziesięciu rundach, brak kandydata |
 | 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
 ## Szybki start
