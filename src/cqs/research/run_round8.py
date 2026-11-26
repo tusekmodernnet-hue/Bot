@@ -57,8 +57,10 @@ def _paths(syms) -> list:
 
 
 # ---------------------------------------------------------------- R8A, R8B
-def _event_family(events: pd.Series, extra: dict | None = None) -> dict:
-    top = R7._top50()
+def _event_family(events: pd.Series, extra: dict | None = None, universe: list | None = None) -> dict:
+    """`universe`: contracts ranked for the point-in-time top 20 (default: every contract ever in the top 50 of
+    the research data, which gives the same basket as ranking all contracts there)."""
+    top = R7._top50() if universe is None else universe
     basket = eligible(daily_panel(top), UniverseRules(top_n=20))
     basket = basket[[c for c in basket.columns if c != listings.HEDGE and c not in listings.INDEX
                      and c not in listings.STABLE and bool(basket[c].any())]]
@@ -82,13 +84,15 @@ def load_r8b() -> dict:
     return _event_family(events, {"checked": checked, "inconsistent": inconsistent})
 
 
-def r8b_events(first_perp: dict, first_spot: dict) -> tuple[pd.Series, int, list]:
-    """The R8B events (also pooled in round 9), the number of price checks and the pairs that failed them."""
+def r8b_events(first_perp: dict, first_spot: dict, until: pd.Timestamp | None = None) -> tuple[pd.Series, int, list]:
+    """The R8B events (also pooled in round 9), the number of price checks and the pairs that failed them.
+    `until`: last event day (default: the end of the research data)."""
+    until = _until() if until is None else until
     spot_set = spotmap.spot_symbols()
     consistent, checked = {}, 0
     for p, d0 in first_perp.items():
         sp = first_spot.get(p)
-        if d0 is None or sp is None or not (R7.LISTINGS_AFTER < d0 <= _until()) or not sp < d0 - listings.SPOT_LEAD:
+        if d0 is None or sp is None or not (R7.LISTINGS_AFTER < d0 <= until) or not sp < d0 - listings.SPOT_LEAD:
             continue
         m = spotmap.match(p, spot_set)
         if m is None:
@@ -97,7 +101,7 @@ def r8b_events(first_perp: dict, first_spot: dict) -> tuple[pd.Series, int, list
         spot = store.load_klines(m[0], "1d", market="spot").set_index("open_time")["close"]
         consistent[p] = supply.listing_consistent(perp, spot, m[1], d0)
         checked += 1
-    events = supply.old_token_events(first_perp, first_spot, consistent, R7.LISTINGS_AFTER, _until())
+    events = supply.old_token_events(first_perp, first_spot, consistent, R7.LISTINGS_AFTER, until)
     return events, checked, sorted(k for k, v in consistent.items() if not v)
 
 

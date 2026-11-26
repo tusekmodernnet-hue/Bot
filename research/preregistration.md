@@ -706,3 +706,36 @@ Razem 3 próby, więc N w programie wzrośnie ze 197 do 200. Jeśli R9A da Sharp
 przejdzie DSR, nie nazwę jej kandydatem: przedstawię właścicielowi decyzję, czy potwierdzić ją na holdoucie, czy na
 danych z handlu papierowego. W przeciwnym razie przejdę do kolejnej rundy z nową prerejestracją, bez strojenia progów
 i okien tej rundy i z tą samą korektą na wszystkie próby programu.
+
+## Test końcowy R9A na holdoucie (prerejestracja 2026-11-26, przed jakimkolwiek otwarciem holdoutu; tylko za zgodą właściciela)
+
+R9A nie jest kandydatem: spełnia pięć z siedmiu kryteriów, ale ma DSR 0,59 i PBO 0,51. Zasada z rundy 3 otwiera
+holdout tylko dla kandydata, więc ten test jest wyjątkiem. Odbędzie się wyłącznie po wyraźnej zgodzie właściciela,
+której treść zapisuję w rejestrze razem z wynikiem. Bez tej zgody holdout pozostaje zamknięty. Kryteria ustalam teraz,
+przed decyzją właściciela i przed jakimkolwiek wglądem w dane holdoutu.
+
+- Strategia: R9A ze stopem przy k = 1,0, czyli short zamykany, gdy zamknięcie dnia wynosi co najmniej dwukrotność ceny
+  wejścia. Wybrałem ten wariant na danych badawczych: walk-forward wybrał go w 8 z 14 okien, a na całym okresie
+  2020 – 05.2025 ma najwyższy Sharpe (1,56) i najmniejsze obsunięcie (−22%) z trzech wariantów. Pozostałe reguły bez
+  zmian: zdarzenia R7C i R8B z ich definicjami, filtr 20 mln USDT, −0,05 kapitału na short, najwyżej 20 naraz,
+  30 dni, koszyk top 20 bez BTC, pasmo rebalansu 20% wagi, koszty i funding jak w rundzie 9.
+- Dane: wszystkie zapisane dane do 23.11.2026, czyli świece dzienne perpetual i spot, funding i bony 3M. Zdarzenia
+  obejmują też kontrakty notowane po raz pierwszy od 01.06.2025. Koszyk to point-in-time top 20 ze wszystkich
+  kontraktów. Na danych badawczych daje dokładnie ten sam koszyk co w R9A (0 różnic, sprawdzone przed tym zapisem bez
+  danych holdoutu).
+- Przebieg: jedna ciągła symulacja od 01.2020 do 23.11.2026, więc pozycje otwarte w maju 2025 przechodzą na holdout
+  jak w prawdziwym handlu. Ocena obejmuje tylko dni od 01.06.2025.
+- Miara: dzienny zwrot ponad bony od depozytu 50% nominału brutto, jak w rundzie 9.
+- Kryteria zaliczenia, wszystkie naraz: Sharpe na holdoucie ≥ 1,0, maksymalne obsunięcie na holdoucie nie gorsze niż
+  −25% i Sharpe przy kosztach ×2 > 0.
+- Raportuję też, bez wpływu na werdykt: zwrot i Sharpe w każdym półroczu, PSR wobec Sharpe 0, liczbę zdarzeń, shortów
+  i stopów, udział 10 najlepszych dni, wynik shortów z obu zbiorów zdarzeń oraz BTC buy and hold i SMA200 w tym samym
+  oknie. Sprawdzam też, czy część symulacji do 31.05.2025 odtwarza zarejestrowany Sharpe tego wariantu.
+- Skutki: zaliczenie pozwala przejść do handlu papierowego (krok 4), nadal bez prawdziwych pieniędzy. Niezaliczenie
+  kończy rodzinę shortów nowych kontraktów. W obu przypadkach holdout przestaje być ślepym testem dla tej rodziny,
+  a wynik trafia do rejestru i dokumentu bez względu na to, jaki będzie. Testu nie powtarzam.
+- Wiarygodność: moja wiedza o rynku sięga połowy 2026 roku i obejmuje część holdoutu, a wybór hipotezy mógł być nią
+  obciążony. Dobry wynik będzie więc słabszym dowodem niż zły. W pełni niezależne będą dopiero dane z handlu
+  papierowego.
+- Kod: `cqs.research.final_r9a`. Uruchomienie wymaga zatwierdzonego kodu, `CQS_ALLOW_HOLDOUT=1`, cytatu zgody
+  właściciela i braku wcześniejszego testu końcowego R9A w rejestrze.
