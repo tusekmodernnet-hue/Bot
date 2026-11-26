@@ -467,3 +467,108 @@ Razem 3 próby, więc N w programie wzrośnie ze 174 do 177. Jeśli runda 6 nie 
 kalendarzowej na tych danych bez strojenia progów i okien. Właściciel polecił szukać dalej, także inspiracji w
 otwartych repozytoriach na GitHubie, więc przejdę do kolejnej rundy z własną prerejestracją i z tą samą korektą na
 wszystkie próby programu.
+
+## Runda 7 — carry na wielu monetach, arbitraż statystyczny i short nowych tokenów (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Runda 6 nie dała kandydata, a program liczy 177 prób. Właściciel polecił szukać dalej, także inspiracji w otwartych
+repozytoriach na GitHubie. Przejrzałem nazwy i opisy najpopularniejszych repozytoriów ze strategiami na kryptowaluty,
+bez ich wyników i bez kodu. Dominują trzy typy:
+- arbitraż fundingu w pozycji neutralnej rynkowo, np. aoki-h-jp/funding-rate-arbitrage, IrakliXYZ/ARBOT i
+  50shadesofgwei/funding-rate-arbitrage;
+- arbitraż statystyczny na resztach modelu czynnikowego, np. repozytoria oparte na pracy Avellanedy i Lee;
+- strategie freqtrade na wskaźnikach technicznych, np. freqtrade/freqtrade-strategies i NostalgiaForInfinity.
+
+Reguły w stylu freqtrade odpowiadają rodzinom testowanym w rundach 1, 3 i 4. NostalgiaForInfinity dokupuje przy
+spadkach, czego zasady programu zabraniają. Dlatego testuję dwa pierwsze typy i jedną hipotezę zdarzeniową.
+
+Przed tym zapisem sprawdziłem tylko liczbę nowych kontraktów i ich obroty w pierwszych dniach (do filtra płynności)
+oraz dostępność par spot w archiwum. Kompletność pobranych danych sprawdzę przed uruchomieniem, bez oglądania zwrotów.
+Zwrotów altcoinów, ich fundingu ani wyników nowych kontraktów nie oglądałem. Funding BTC i ETH znam z rund 1–6, a
+wyniki H2b, H3a, R2A i R2B z rund 1–2. R7B nie potrzebuje nowych danych, więc uruchomię ją pierwszą; R7A i R7C po
+pobraniu dziennych świec spot i fundingu nowych kontraktów.
+
+### Wspólne zasady rundy 7
+- Dane badawcze do 31.05.2025, holdout zablokowany. Świece dzienne z archiwum Binance (perpetual USDⓈ-M i spot).
+  Decyzja zapada na zamknięciu dnia UTC, a wykonanie na otwarciu następnego dnia.
+- Koszty: prowizja taker 0,05% za stronę. Poślizg na perpetualu wynosi 2 pb dla BTC i ETH oraz 10 pb dla pozostałych.
+  Noga spot ma dodatkowe 5 pb za wyższą prowizję spot (0,1%): 7 pb dla BTC i ETH, 15 pb dla pozostałych. Funding
+  jest rzeczywisty. Test warunków skrajnych liczy koszty ×2.
+- Funding jest znany w chwili t, gdy rozliczenie + 5 min ≤ t, jak w rundzie 6.
+- Brak świecy wymusza wyjście (silnik, poślizg 2%). Kontrakty wycofane zostają w danych do ostatniej transakcji.
+- Miara: zwrot ponad bony 3M (FRED DTB3, opóźnienie 1 dnia) od kapitału związanego. W R7A jest to kapitał w nodze
+  spot, jak w R2A. W R7B i R7C jest to depozyt równy 50% nominału brutto, najwyżej cały kapitał, jak w R6.
+- Ocena jak w rundach 5–6:
+  - walk-forward 24/3 od 01.2020, więc OOS to 01.2022–05.2025;
+  - PBO (CSCV, 16 bloków), koszty ×2, obsunięcie ≤ 25%;
+  - Sharpe ≥ 0 w hossie, bessie i konsolidacji; reżim bez żadnej pozycji (zerowa zmienność zwrotu) liczę jako
+    Sharpe 0, czyli warunek spełniony;
+  - Sharpe OOS ≥ 1 i wyższy niż benchmarki w tym samym oknie;
+  - DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 187), co wymaga Sharpe OOS
+    ok. 2,1 rocznie.
+- Giełda: dane Binance są najlepszym publicznym przybliżeniem, ale Binance nie obsługuje już większości klientów z
+  Polski. Kandydat musiałby przejść paper trading na giełdzie dostępnej z Polski, gdzie funding i obroty mogą się
+  różnić.
+
+### R7A — carry spot–perpetual na wielu monetach
+- Uzasadnienie: najczęstszy typ otwartych strategii to zbieranie fundingu w parze long spot / short perpetual. R2A
+  dało nadwyżkę nad bonami tylko na BTC i ETH i tylko epizodycznie. H3a otrzymał funding równy 134% kapitału, ale
+  bez zabezpieczenia ceny. R7A łączy oba wnioski, więc jest hipotezą inspirowaną danymi.
+- Rynek: monety z universe point-in-time top 50, które mają parę spot USDT na Binance.
+  - Para spot ma ten sam symbol albo symbol bez przedrostka wielkości kontraktu (1000PEPEUSDT i PEPEUSDT,
+    mnożnik 1000).
+  - Para jest dostępna w dniu t, gdy obie świece istnieją, spot ma co najmniej 30 dni notowań, a mediana
+    P_perp / (mnożnik · P_spot) z ostatnich 7 dni mieści się w ±10%. Ten warunek chroni przed błędnym
+    dopasowaniem nazw.
+- Sygnał: e = funding z 3 dni przed t w ujęciu rocznym (suma stawek × 365/3) minus rentowność bonów.
+- Wejście, gdy e > M i moneta jest w universe. Wyjście, gdy e < M/2, para przestaje być dostępna albo kontrakt
+  przestaje spełniać warunki wieku, obrotu i płynności universe (bez warunku top 50).
+- K miejsc. Każda para to +1/K kapitału w spot i −1/K w perpetual, więc przy pełnych miejscach 1× long spot i
+  1× short perpetual. Wolne miejsca wypełniam monetami o najwyższym e, a trzymanej pary nie wymieniam na lepszą.
+  Na każdej decyzji najpierw wyjścia, potem wejścia.
+- Rebalans do wag docelowych z pasmem 2% kapitału, jak w R2A.
+- M ∈ {10%, 20%} rocznie, K ∈ {4, 8}. **4 warianty.**
+
+### R7B — powrót reszt do średniej (arbitraż statystyczny, Avellaneda i Lee 2010)
+- Uzasadnienie: to drugi najczęstszy typ otwartych strategii. H2b handlował surowymi zwrotami, bez usunięcia
+  ekspozycji na rynek i bez warunku szybkiego powrotu do średniej. R7B handluje odchyleniem reszty od modelu z BTC
+  tylko wtedy, gdy reszta szybko wraca do średniej.
+- Rynek: point-in-time top 20 universe bez BTC, który służy jako zabezpieczenie.
+- Model w t z 60 dziennych zwrotów logarytmicznych:
+  - regresja r_i = α + β·r_BTC + ε; X to skumulowana suma reszt w oknie;
+  - regresja AR(1) X_{k+1} = a + b·X_k + ζ; model jest ważny, gdy 0 < b < e^(−1/30), czyli czas powrotu jest
+    krótszy niż 30 dni;
+  - m = a/(1 − b), σ_eq = √(Var(ζ)/(1 − b²)) z wariancją próbkową, s = (X_60 − m)/σ_eq. Reszty MNK sumują się
+    do zera, więc X_60 = 0 i s = −m/σ_eq, jak u autorów.
+  - Uwaga z testów na danych syntetycznych: przy oknie 60 dni estymator b jest obciążony w dół, więc filtr
+    przepuszcza także błądzenie losowe w większości okien. Zostawiam go w wersji autorów.
+- Bez pozycji: s < −s_in otwiera long monety i short β·BTC, a s > s_in otwiera short monety i long β·BTC. Long
+  zamykam, gdy s > −0,5, a short, gdy s < 0,75. Pozycja zamyka się też, gdy moneta wypada z universe albo model
+  przestaje być ważny.
+- Rozmiar: 0,1× kapitału na monetę i zabezpieczenie BTC równe β·0,1, z β liczonym na bieżąco i obciętym do [0, 3].
+  Najwyżej 10 pozycji; przy nadmiarze sygnałów pierwszeństwo ma większe |s|. Rebalans z pasmem 2% kapitału.
+- s_in ∈ {1,25; 2,0}. **2 warianty.**
+
+### R7C — short nowych tokenów (podaż po debiucie), neutralnie dolarowo
+- Uzasadnienie: nowe tokeny debiutują z małą podażą w obiegu i wysoką wyceną w pełni rozwodnioną, a odblokowania
+  dla zespołu i inwestorów tworzą stałą podaż po debiucie. Hipoteza jest obciążona wiedzą publiczną o latach
+  2024–2025 (głośne spadki nowych tokenów), więc dane badawcze ją faworyzują. Rozstrzygnąć może dopiero holdout.
+- Zdarzenie: pierwszy dzień z wolumenem (D0) kontraktu USDT perpetual, którego token jest nowy na Binance: para spot
+  USDT tego tokenu nie istnieje albo nie miała notowań wcześniej niż 30 dni przed D0.
+- Wyłączenia:
+  - kontrakty indeksowe: BTCDOMUSDT, DEFIUSDT, FOOTBALLUSDT, BLUEBIRDUSDT;
+  - stablecoiny: USDCUSDT, BUSDUSDT, TUSDUSDT, FDUSDUSDT, USDPUSDT;
+  - znane zmiany nazwy lub denominacji istniejących tokenów: POLUSDT (MATIC), SUSDT (FTM), RENDERUSDT (RNDR),
+    KAIAUSDT (KLAY), BEAMXUSDT (MC), VICUSDT (TOMO), GUSDT (GAL), EGLDUSDT (ERD), AAVEUSDT (LEND),
+    1000LUNCUSDT (LUNA), 1000XECUSDT i XECUSDT (BCHA), 1000BTTCUSDT (BTT), HIFIUSDT (MFT), STRAXUSDT (STRAT).
+    Zmiana nazwy, której nie znam, zostaje w próbie jako szum.
+- Wejście: decyzja na zamknięciu dnia D0 + d, gdy średni obrót z dni D0+1 … D0+d wynosi co najmniej 20 mln USDT.
+  Short otwieram na otwarciu następnego dnia. Wyjście po H dniach w pozycji albo przy wycofaniu kontraktu.
+- Warunek wieku universe (90 dni) tu nie obowiązuje, bo chodzi właśnie o nowe kontrakty.
+- Rozmiar: −0,1× kapitału na kontrakt, najwyżej 10 kontraktów jednocześnie; zdarzenia przy pełnych miejscach pomijam,
+  a przy kilku zdarzeniach tego samego dnia pierwszeństwo ma większy obrót.
+  Long BTC perpetual równy sumie shortów daje neutralność dolarową. Rebalans do wag docelowych z pasmem 2% kapitału:
+  short, który rośnie, zmniejszam do wagi docelowej, więc ryzyko po stracie maleje.
+- d ∈ {1, 7} dni, H ∈ {30, 90} dni. **4 warianty.**
+
+Razem 10 prób, więc N w programie wzrośnie ze 177 do 187. Jeśli runda 7 nie da kandydata, przejdę do kolejnej rundy z
+nową prerejestracją, bez strojenia progów i okien tej rundy i z tą samą korektą na wszystkie próby programu.
