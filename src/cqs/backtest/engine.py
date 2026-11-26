@@ -5,6 +5,8 @@ Timing contract (no look-ahead):
 - It is executed at the OPEN of bar i+1, at that price plus fees and slippage.
 - A NaN weight means "no new decision": the position is kept as it is (it drifts with the price).
   A weight of 0 means flat. `rebalance_band` skips trades smaller than that fraction of equity.
+  `rebalance_band_rel` also skips trades smaller than that fraction of the asset's target notional, so small
+  positions in a wide basket can be opened (an entry or an exit to 0 always passes the relative band).
 - `stops.iloc[i]` (optional) is the stop price for the position held during bar i+1. If the bar opens
   beyond the stop the fill is the open (gap), otherwise the stop price; slippage is added on top.
   After a stop the asset stays flat until the strategy changes its target weight for that asset; with
@@ -66,6 +68,7 @@ def run(
     initial_equity: float = 1.0,
     rebalance_band: float = 0.0,
     reenter_after_stop: bool = False,
+    rebalance_band_rel: float = 0.0,
 ) -> BacktestResult:
     """Simulate target weights on bar data. All frames: index = bar open times (UTC), columns = assets."""
     index = close.index
@@ -150,7 +153,8 @@ def run(
             target = np.where(hold, p, np.nan_to_num(w) * E)
             target = np.where(keep_flat | ~live, 0.0, target)
             trade = target - p
-            moved = np.abs(trade) > max(rebalance_band * E, 1e-12 * max(E, 1e-12))
+            moved = np.abs(trade) > np.maximum(max(rebalance_band * E, 1e-12 * max(E, 1e-12)),
+                                               rebalance_band_rel * np.abs(target))
             moved &= ~(hold & ~keep_flat)  # a hold never trades
             if moved.any():
                 c_vec = np.abs(trade) * rates

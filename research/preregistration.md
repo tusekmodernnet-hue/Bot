@@ -572,3 +572,81 @@ pobraniu dziennych świec spot i fundingu nowych kontraktów.
 
 Razem 10 prób, więc N w programie wzrośnie ze 177 do 187. Jeśli runda 7 nie da kandydata, przejdę do kolejnej rundy z
 nową prerejestracją, bez strojenia progów i okien tej rundy i z tą samą korektą na wszystkie próby programu.
+
+## Runda 8 — mechanizm podaży nowych kontraktów: koszyk altcoinów, nowe kontrakty starych tokenów i wiek tokena (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Runda 7 nie dała kandydata, a program liczy 187 prób. Najsilniejszy sygnał spoza carry dał short nowych tokenów z
+longiem BTC (R7C): Sharpe OOS 1,01, ale obsunięcie −60%, DSR 0,38 i zysk skupiony w I kwartale 2025. Taka para łączy
+dwa źródła wyniku: słabość nowych tokenów i słabość altcoinów wobec BTC w latach 2022–2025. Runda 8 rozdziela te
+źródła i sprawdza mechanizm podaży na zdarzeniach i okresach, których zwrotów nie oglądałem. Wszystkie trzy rodziny
+wynikają z wyników R7C, więc są hipotezami inspirowanymi danymi, a DSR liczę z liczbą wszystkich prób programu.
+
+Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i koszyków, bez zwrotów:
+- 213 nowych kontraktów USDT perpetual na tokeny, których para spot USDT na Binance miała notowania wcześniej niż 30
+  dni przed debiutem kontraktu (2020: 50, 2021: 41, 2022: 15, 2023: 58, 2024: 37, 2025: 12). We wszystkich ceny
+  perpetual i spot z dni D0 i D0+1 zgadzają się w granicach ±10%, a 147 spełnia filtr płynności przy d = 1.
+- W płynnym universe bez limitu liczby kontraktów (wiek kontraktu ≥ 90 dni, średni obrót ≥ 20 mln USDT) tokenów w
+  wieku do 365 dni jest średnio od 2 (2020) do 41 (2025), a starszych niż 730 dni od 6 do 97. Co najmniej 3 nazwy w
+  obu koszykach ma 84% tygodni przy progu 365 dni i 67% przy progu 180 dni.
+
+Wyniki R7C i ich atrybucję po teście znam z rundy 7. Hipotezy tej rundy są też obciążone wiedzą publiczną o spadkach
+nowych tokenów, a moja wiedza o rynku sięga połowy 2026 roku, więc obejmuje część holdoutu. Dla tych hipotez holdout
+nie jest w pełni ślepy, a w pełni niezależne będą dopiero dane z handlu papierowego.
+
+### Wspólne zasady rundy 8
+- Jak w rundzie 7: dane badawcze do 31.05.2025, holdout zablokowany, świece dzienne perpetual USDⓈ-M z archiwum
+  Binance, decyzja na zamknięciu dnia UTC i wykonanie na otwarciu następnego dnia.
+- Koszty jak w rundzie 7: taker 0,05% za stronę, poślizg 2 pb dla BTC i ETH i 10 pb dla pozostałych, rzeczywisty
+  funding (znany 5 min po rozliczeniu), test warunków skrajnych z kosztami ×2. Brak świecy wymusza wyjście (poślizg
+  2%), a kontrakty wycofane zostają w danych.
+- Rebalans do wag docelowych z pasmem 20% wagi docelowej każdego kontraktu. Dla shortu −0,1 to te same 2% kapitału co
+  w R7C, a mniejsze pozycje koszyka mają pasmo proporcjonalne. Wejścia i wyjścia zawsze się wykonują. Silnik dostał do
+  tego nowy parametr, przetestowany przed rundą; wcześniejsze wyniki go nie używają.
+- Miara: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał, jak w R7B i R7C.
+- Ocena jak w rundach 5–7: walk-forward 24/3 od 01.2020 (OOS 01.2022–05.2025), PBO (CSCV, 16 bloków), koszty ×2,
+  obsunięcie ≤ 25%, Sharpe ≥ 0 w hossie, bessie i konsolidacji (reżim bez pozycji liczę jako Sharpe 0), Sharpe OOS
+  ≥ 1 i wyższy niż benchmarki, DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 197), co
+  wymaga Sharpe OOS ok. 2,1 rocznie.
+- Koszyk altcoinów, zabezpieczenie w R8A i R8B: point-in-time top 20 universe bez BTC (jak w R7B), kontraktów
+  indeksowych i stablecoinów, w równych wagach, bez kontraktów shortowanych tego dnia i bez kontraktów bez świecy.
+  Nominał koszyka równa się sumie shortów, więc pozycja jest neutralna dolarowo. Gdy koszyk jest pusty, nie trzymam
+  też shortów.
+- Runner odmawia przebiegu rodziny, której kontrakty nie mają danych o fundingu.
+
+### R8A — short nowych tokenów z koszykiem altcoinów zamiast BTC
+- Uzasadnienie: jeśli przewaga R7C wynika z podaży nowych tokenów, przetrwa zabezpieczenie altcoinami. Jeśli wynikała
+  ze słabości altcoinów wobec BTC, zniknie.
+- Zdarzenia, wejście, wyjście, rozmiar i pierwszeństwo jak w R7C: te same 257 zdarzeń, filtr 20 mln USDT, −0,1
+  kapitału na short, najwyżej 10 jednocześnie. Jedyna zmiana to long koszyka altcoinów zamiast longu BTC.
+- d ∈ {1, 7} dni, H ∈ {30, 90} dni. **4 warianty.**
+
+### R8B — short nowego kontraktu na token, który już był na Binance (Miller 1977)
+- Uzasadnienie: gdy krótka sprzedaż jest utrudniona, cena odzwierciedla opinie optymistów (Miller 1977). Nowy kontrakt
+  perpetual na Binance ułatwia shortowanie, a jego zapowiedź przyciąga kupujących, więc po debiucie kontraktu token
+  powinien słabnąć względem rynku. Efekt osłabia to, że część tokenów miała już kontrakty na innych giełdach albo
+  margin na Binance.
+- Zdarzenie: pierwszy dzień z wolumenem (D0) kontraktu USDT perpetual, którego token miał parę spot USDT na Binance z
+  notowaniami wcześniej niż 30 dni przed D0, czyli zdarzenia, które R7C wyłączyła jako stare tokeny. Ceny muszą się
+  zgadzać: mediana P_perp / (mnożnik · P_spot) z dni D0 i D0+1 mieści się w ±10%. Wyłączenia jak w R7C (indeksy,
+  stablecoiny, zmiany nazwy).
+- Wejście, wyjście, rozmiar, pierwszeństwo i zabezpieczenie jak w R8A.
+- d ∈ {1, 7} dni, H ∈ {30, 90} dni. **4 warianty.**
+
+### R8C — wiek tokena: short młodych, long starych
+- Uzasadnienie: odblokowania dla zespołu i inwestorów zaczynają się zwykle po 6–12 miesiącach i trwają 2–4 lata, więc
+  podaż młodych tokenów rośnie także po pierwszych tygodniach od debiutu. Portfel przekrojowy trzyma naraz więcej
+  tokenów niż R7C, a obejmuje inny okres życia tokena (od 90 dni zamiast pierwszych 30–90 dni).
+- Rynek: płynne universe point-in-time bez limitu liczby kontraktów (wiek kontraktu ≥ 90 dni, średni obrót z 30 dni
+  ≥ 20 mln USDT), z kontraktami wycofanymi, bez BTC, indeksów, stablecoinów i znanych zmian nazwy (ich wiek liczony od
+  nowej nazwy byłby błędny).
+- Wiek tokena: dni od pierwszego notowania na Binance, czyli wcześniejszej z dat: pierwszy dzień kontraktu perpetual
+  albo pierwszy dzień pary spot dopasowanej po nazwie.
+- Skład koszyków ustalam na zamknięciu każdej niedzieli i trzymam do następnej: młode to wiek ≤ A dni, stare to wiek
+  powyżej 730 dni.
+- Wagi: młode −0,1 na kontrakt, razem najwyżej −0,5 (przy ponad 5 nazwach równe wagi sumujące się do −0,5), stare w
+  równych wagach o łącznym nominale równym shortom. Kontrakt bez świecy w danym dniu ma wagę 0, a reszta jego koszyka
+  przejmuje nominał. Gdy którykolwiek koszyk ma mniej niż 3 nazwy ze świecą, nie mam pozycji.
+- A ∈ {180, 365} dni. **2 warianty.**
+
+Razem 10 prób, więc N w programie wzrośnie ze 187 do 197. Jeśli runda 8 nie da kandydata, przejdę do kolejnej rundy z
+nową prerejestracją, bez strojenia progów i okien tej rundy i z tą samą korektą na wszystkie próby programu.
