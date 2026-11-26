@@ -794,3 +794,66 @@ Razem 4 próby, więc N w programie wzrośnie z 200 do 204. Jeśli R10A da Sharp
 przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi, jak w rundzie 9. Jeśli
 obie rodziny, R9A i R10A, okażą się trafami, wspólny portfel będzie osobną próbą z własną prerejestracją. W przeciwnym
 razie przejdę do kolejnej rundy z nową prerejestracją, bez strojenia progów i okien tej rundy.
+
+## Runda 11 — short przy skrajnie ujemnym fundingu starszych tokenów (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Runda 10 wykluczyła jedno z wyjaśnień przewagi R9A: po gwałtownym wzroście płynnych, starszych tokenów short traci
+(R10A: Sharpe OOS −0,90), więc nie chodzi o ogólną przecenę aktywów o profilu loterii. Drugie wyjaśnienie dotyczy
+kosztu krótkiej sprzedaży. Na nowych kontraktach shorty zwykle płacą funding (funding ujemny), a cena spada bardziej,
+niż wynosi ta opłata. Teoria Millera (1977) mówi, że przy ograniczonej krótkiej sprzedaży cenę wyznaczają optymiści,
+więc aktywo jest przewartościowane. W akcjach spółki drogie do shortowania wypadają gorzej o więcej niż opłata za
+pożyczkę (Jones i Lamont 2002; Cohen, Diether i Malloy 2007; Boehmer, Jones i Zhang 2008; Drechsler i Drechsler
+2014). W kontraktach perpetual ujemny funding jest ceną shortu: shorty płacą longom, gdy kontrakt notowany jest poniżej
+indeksu, a arbitraż wymagałby pożyczenia tokena na rynku spot, co dla altcoinów bywa trudne.
+
+Jeśli to wyjaśnienie jest trafne, efekt powinien wystąpić także na starszych tokenach (wiek kontraktu co najmniej 90
+dni, więc zdarzenia są rozłączne z R9A), gdy ich funding staje się skrajnie ujemny. Hipoteza: takie kontrakty wypadają
+gorzej od koszyka altcoinów o więcej, niż shorty płacą w fundingu. Scenariusz przeciwny to squeeze zatłoczonych shortów
+(np. ALPACA w kwietniu 2025 w R7B i R10A); test rozstrzyga, który przeważa. Hipoteza wynika z wyniku R9A, a konstrukcja
+portfela (rozmiar, limit, stop, koszyk) pochodzi z R9A, więc to hipoteza inspirowana danymi, a DSR liczę z liczbą
+wszystkich prób programu.
+
+Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i zajętość miejsc bez stopu, bez zwrotów po zdarzeniu:
+- Funding dnia ≤ −0,3% (ok. −0,1% na 8 godzin, rocznie ok. −110%): 2292 dni zdarzeń na 237 kontraktach (2020: 79,
+  2021: 298, 2022: 519, 2023: 433, 2024: 418, 2025 do maja: 545), z tego 1915 w oknie OOS. Przy progu −0,6%: 1087 dni
+  zdarzeń na 186 kontraktach (21, 112, 203, 249, 202, 300), 954 w oknie OOS. Wszystkie 366 kontraktów płynnego
+  universe ma dane o fundingu.
+- Bez stopu przy progu 0,3% weszłoby 736 shortów przy H = 10 (średnio 4,0 naraz) i 570 przy H = 30 (8,7 naraz, limit
+  pełny w 8% dni). Przy progu 0,6%: 420 i 359 shortów (2,2 i 5,3 naraz).
+
+### Wspólne zasady rundy 11
+- Jak w rundzie 10: dane badawcze do 31.05.2025, holdout zablokowany, świece dzienne perpetual USDⓈ-M z archiwum
+  Binance, decyzja na zamknięciu dnia UTC i wykonanie na otwarciu następnego dnia. Taker 0,05% za stronę, poślizg 2 pb
+  dla BTC i ETH i 10 pb dla pozostałych, rzeczywisty funding, test z kosztami ×2. Brak świecy wymusza wyjście
+  (poślizg 2%), a kontrakty wycofane zostają w danych.
+- Rebalans z pasmem 20% wagi docelowej każdego kontraktu. Wejścia i wyjścia zawsze się wykonują.
+- Miara: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał.
+- Ocena jak w rundach 5–10: walk-forward 24/3 od 01.2020 (OOS 01.2022–05.2025), PBO (CSCV, 16 bloków), koszty ×2,
+  obsunięcie ≤ 25%, Sharpe ≥ 0 w hossie, bessie i konsolidacji (reżim bez pozycji liczę jako Sharpe 0), Sharpe OOS
+  ≥ 1 i wyższy niż benchmarki, DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 208), co
+  wymaga Sharpe OOS ok. 2,1 rocznie.
+- Koszyk altcoinów jak w R8A–R10A: point-in-time top 20 bez BTC, kontraktów indeksowych i stablecoinów, w równych
+  wagach, bez kontraktów shortowanych tego dnia i bez kontraktów bez świecy, o nominale równym sumie shortów.
+- Runner odmawia przebiegu, gdy któryś kontrakt płynnego universe nie ma danych o fundingu.
+
+### R11A — short po dniu z fundingiem nie wyższym niż −X
+- Rynek: płynne universe jak w R10A (wiek kontraktu ≥ 90 dni, średni obrót z 30 dni ≥ 20 mln USDT), z kontraktami
+  wycofanymi, bez BTC, kontraktów indeksowych, stablecoinów, znanych zmian nazwy i kontraktów z datą wygaśnięcia.
+- Funding dnia t: suma stawek rozliczonych od 00:00 dnia t do 00:00 dnia t + 1 UTC (bez tej godziny), czyli koszt
+  shortu trzymanego przez cały dzień, niezależnie od tego, czy kontrakt rozlicza funding co 8, 4 czy 1 godzinę.
+- Zdarzenie: dzień t, w którym kontrakt należący do universe na zamknięciu dnia t − 1 ma funding dnia t ≤ −X.
+- Wejście: na zamknięciu dnia t + 1, gdy obrót z tego dnia wynosi co najmniej 20 mln USDT, z wykonaniem na otwarciu
+  dnia t + 2.
+- Rozmiar i limity jak w R9A i R10A: −0,05 kapitału na short, najwyżej 20 naraz i jeden short na kontrakt. Zdarzenie
+  na kontrakcie, który jest już shortowany, przepada. Wśród zdarzeń z tego samego dnia pierwszeństwo ma większy obrót.
+- Wyjście: po H dniach w pozycji, gdy kontrakt przestaje być notowany, albo na stopie z R9A, gdy zamknięcie dnia
+  wynosi co najmniej dwukrotność ceny wejścia (zamknięcie na następnym otwarciu). Po stopie kontrakt nie wraca do
+  shortu przez H dni. Kolejne zdarzenie po zamknięciu pozycji otwiera nowy short, więc przy trwale skrajnym fundingu
+  pozycja może zostać odnowiona.
+- X ∈ {0,3%, 0,6%} dziennie, H ∈ {10, 30} dni. **4 warianty.**
+- Raportuję też liczbę stopów, funding zapłacony przez shorty i podział wyniku na lata (tylko diagnostyka).
+
+Razem 4 próby, więc N w programie wzrośnie z 204 do 208. Jeśli R11A da Sharpe OOS ≥ 1 i obsunięcie do 25%, ale nie
+przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi, jak w rundzie 9. Jeśli
+R11A i R9A okażą się trafami, wspólny portfel będzie osobną próbą z własną prerejestracją. W przeciwnym razie przejdę
+do kolejnej rundy z nową prerejestracją, bez strojenia progów i okien tej rundy.
