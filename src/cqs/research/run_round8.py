@@ -78,7 +78,12 @@ def load_r8a() -> dict:
 
 
 def load_r8b() -> dict:
-    first_perp, first_spot = R7.listing_dates()
+    events, checked, inconsistent = r8b_events(*R7.listing_dates())
+    return _event_family(events, {"checked": checked, "inconsistent": inconsistent})
+
+
+def r8b_events(first_perp: dict, first_spot: dict) -> tuple[pd.Series, int, list]:
+    """The R8B events (also pooled in round 9), the number of price checks and the pairs that failed them."""
     spot_set = spotmap.spot_symbols()
     consistent, checked = {}, 0
     for p, d0 in first_perp.items():
@@ -93,7 +98,7 @@ def load_r8b() -> dict:
         consistent[p] = supply.listing_consistent(perp, spot, m[1], d0)
         checked += 1
     events = supply.old_token_events(first_perp, first_spot, consistent, R7.LISTINGS_AFTER, _until())
-    return _event_family(events, {"checked": checked, "inconsistent": sorted(k for k, v in consistent.items() if not v)})
+    return events, checked, sorted(k for k, v in consistent.items() if not v)
 
 
 def event_runs(fam: str):

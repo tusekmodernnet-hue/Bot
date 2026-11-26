@@ -650,3 +650,59 @@ nie jest w pełni ślepy, a w pełni niezależne będą dopiero dane z handlu pa
 
 Razem 10 prób, więc N w programie wzrośnie ze 187 do 197. Jeśli runda 8 nie da kandydata, przejdę do kolejnej rundy z
 nową prerejestracją, bez strojenia progów i okien tej rundy i z tą samą korektą na wszystkie próby programu.
+
+## Runda 9 — kontrola ryzyka shortów nowych kontraktów: wspólna pula zdarzeń, mniejsze pozycje i stop (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Runda 8 nie dała kandydata, a program liczy 197 prób. Short nowych kontraktów powtórzył się na zdarzeniach, których
+zwrotów wcześniej nie oglądałem (R8B: Sharpe OOS 0,57, dodatni w każdym roku OOS, obsunięcie −27%), ale koszyk
+altcoinów zamiast BTC nie zmniejszył obsunięcia R7C (R8A: −61%). Ryzyko leży więc w samych shortach. Runda 9
+sprawdza, czy da się je ograniczyć bez utraty przewagi: jedna pula zdarzeń R7C i R8B, dwa razy mniejsze pozycje i stop
+na zamknięciu dnia. To hipoteza inspirowana danymi: d = 1 i H = 30 wybrałem po wynikach R7C (walk-forward wybrał ten
+wariant w 13 z 14 okien) i R8A (efekt tylko w pierwszych 30 dniach), a stop po obsunięciach R7C i R8A. DSR liczę z
+liczbą wszystkich prób programu.
+
+Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i zajętość miejsc, bez zwrotów:
+- Pula ma 470 zdarzeń: 257 z R7C i 213 z R8B, bez wspólnych kontraktów (2020: 75, 2021: 57, 2022: 22, 2023: 95,
+  2024: 127, 2025 do maja: 94). Wszystkie kontrakty mają dane o fundingu.
+- 383 zdarzenia spełniają filtr płynności przy d = 1. Bez stopu i przy limicie 20 shortów weszłoby 366, średnio 5,4
+  shorta naraz (2025: 15,3), a limit byłby pełny w 2,5% dni.
+
+Zastrzeżenia jak w rundzie 8: wyniki R7C i R8 znam, hipoteza jest obciążona wiedzą publiczną o spadkach nowych
+tokenów, a moja wiedza o rynku obejmuje część holdoutu. W pełni niezależne będą dopiero dane z handlu papierowego.
+
+### Wspólne zasady rundy 9
+- Jak w rundzie 8: dane badawcze do 31.05.2025, holdout zablokowany, świece dzienne perpetual USDⓈ-M z archiwum
+  Binance, decyzja na zamknięciu dnia UTC i wykonanie na otwarciu następnego dnia. Taker 0,05% za stronę, poślizg 2 pb
+  dla BTC i ETH i 10 pb dla pozostałych, rzeczywisty funding, test z kosztami ×2. Brak świecy wymusza wyjście
+  (poślizg 2%), a kontrakty wycofane zostają w danych.
+- Rebalans z pasmem 20% wagi docelowej każdego kontraktu (dla shortu −0,05 to 1% kapitału). Wejścia i wyjścia zawsze
+  się wykonują.
+- Miara: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał.
+- Ocena jak w rundach 5–8: walk-forward 24/3 od 01.2020 (OOS 01.2022–05.2025), PBO (CSCV, 16 bloków), koszty ×2,
+  obsunięcie ≤ 25%, Sharpe ≥ 0 w hossie, bessie i konsolidacji (reżim bez pozycji liczę jako Sharpe 0), Sharpe OOS
+  ≥ 1 i wyższy niż benchmarki, DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 200), co
+  wymaga Sharpe OOS ok. 2,1 rocznie.
+- Koszyk altcoinów jak w R8A i R8B: point-in-time top 20 bez BTC, kontraktów indeksowych i stablecoinów, w równych
+  wagach, bez kontraktów shortowanych tego dnia i bez kontraktów bez świecy, o nominale równym sumie shortów. Gdy
+  koszyk jest pusty, nie trzymam też shortów.
+- Runner odmawia przebiegu, gdy któryś kontrakt nie ma danych o fundingu.
+
+### R9A — wspólna pula shortów nowych kontraktów ze stopem
+- Zdarzenia: suma zdarzeń R7C (nowe tokeny) i R8B (nowe kontrakty tokenów z historią na spocie Binance) z ich
+  definicjami, wyłączeniami i kontrolą zgodności cen, czyli prawie każdy nowy kontrakt USDT perpetual po 01.01.2020.
+- Wejście: na zamknięciu dnia D0 + 1, gdy obrót z tego dnia wynosi co najmniej 20 mln USDT, z wykonaniem na otwarciu
+  dnia D0 + 2.
+- Rozmiar: −0,05 kapitału na short, najwyżej 20 naraz, więc łączny short wynosi najwyżej −1,0 kapitału, jak w R7C.
+  Wśród zdarzeń z tego samego dnia pierwszeństwo ma większy obrót, a zdarzenie bez wolnego miejsca przepada.
+- Wyjście: po 30 dniach w pozycji, gdy kontrakt przestaje być notowany, albo na stopie. Stop: gdy zamknięcie dnia w
+  pozycji wynosi co najmniej (1 + k) × cena otwarcia, po której short wszedł, short zamykam na następnym otwarciu.
+  Zdarzenia nie shortuję ponownie, a jego miejsce się zwalnia i może je zająć zdarzenie z tego samego zamknięcia.
+  Stop działa tylko na zamknięciu dnia, więc ruch powyżej poziomu w trakcie dnia go nie uruchamia, a wyjście może
+  wypaść dużo powyżej poziomu.
+- k ∈ {bez stopu, 0,5, 1,0}. **3 warianty.**
+- Raportuję też liczbę stopów i stosunek ceny wyjścia do ceny wejścia przy stopie (tylko diagnostyka).
+
+Razem 3 próby, więc N w programie wzrośnie ze 197 do 200. Jeśli R9A da Sharpe OOS ≥ 1 i obsunięcie do 25%, ale nie
+przejdzie DSR, nie nazwę jej kandydatem: przedstawię właścicielowi decyzję, czy potwierdzić ją na holdoucie, czy na
+danych z handlu papierowego. W przeciwnym razie przejdę do kolejnej rundy z nową prerejestracją, bez strojenia progów
+i okien tej rundy i z tą samą korektą na wszystkie próby programu.

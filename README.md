@@ -18,7 +18,7 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 115 testów przechodzi |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 124 testy przechodzą |
 | 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–8) | W toku: 197 prób w ośmiu rundach, brak kandydata |
 | 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
@@ -55,9 +55,9 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.research.benchmarks` | Benchmarki, które musi pobić każda strategia |
 | `cqs.research.run_family`, `run_ext` | Pełna ocena rodziny: warianty, walk-forward, PBO, DSR, reżimy, koszty ×2 |
 | `cqs.research.ml_meta` | Meta-model LightGBM z purgingiem i embargo oraz jego punkt odniesienia |
-| `cqs.research.run_round3` … `run_round8` | Rundy 3–8 (od rundy 5: DSR z wariancją estymatora 1/T; od rundy 6: zwrot ponad bony od depozytu; runda 6: potwierdzenie na Deribit) |
+| `cqs.research.run_round3` … `run_round9` | Rundy 3–9 (od rundy 5: DSR z wariancją estymatora 1/T; od rundy 6: zwrot ponad bony od depozytu; runda 6: potwierdzenie na Deribit) |
 | `cqs.research.diag_gross`, `diag_gross_round5` | Diagnostyka wyników przed kosztami rund 3 i 5 (nie jest próbą) |
-| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–6 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit; `orderflow`: przepływ agresora, OI, ORB NY z filtrem; `basis`: kontrakt frontowy, baza, funding; `carry_multi`, `statarb`, `listings`: runda 7; `supply`: runda 8) |
+| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–6 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit; `orderflow`: przepływ agresora, OI, ORB NY z filtrem; `basis`: kontrakt frontowy, baza, funding; `carry_multi`, `statarb`, `listings`: runda 7; `supply`: runda 8; `listing_risk`: runda 9) |
 
 ## Zasady czasu (brak look-ahead)
 
