@@ -391,3 +391,79 @@ archiwum Binance i rekomenduję nowe źródło danych (płatna księga zleceń) 
 - Uzasadnienie zmiany metody DSR było nieprecyzyjne: progu Sharpe OOS ≥ 1 nie spełniła żadna rodzina rund 3–4, ale
   w rundach 1–2 spełniły go H4 (3,69) i R2A (3,04). Werdykty się nie zmieniają, bo obie odpadają na innych
   kryteriach niezależnie od metody DSR: H4 na PBO 0,96, obie na Sharpe w bessie (−3,89 i −3,05).
+
+## Runda 6 — baza kalendarzowa kontraktów kwartalnych wobec fundingu, neutralnie rynkowo (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Właściciel wybrał kierunek rundy 6 na karcie decyzji 26.11.2026. Kontrakt kwartalny wycenia z góry koszt dźwigni do dnia dostawy
+(bazę), a perpetual płaci stopę zmienną (funding). Jeśli baza systematycznie różni się od późniejszego fundingu, para
+long perpetual / short kwartalny (albo odwrotnie) zarabia bez ekspozycji na kierunek rynku. W rundach 1–2 jedyny
+stabilny zwrot po kosztach dało carry (H4, R2A), ale oba odpadły w bessie; bazy kwartalnej nie testowałem. Przed tym
+zapisem sprawdziłem tylko kompletność danych, daty notowania kontraktów i spread kontraktów kwartalnych (do modelu
+kosztów). Statystyk bazy nie oglądałem. Poziom fundingu BTC i ETH znam z rund 1–2. Kod rundy (commit d447658)
+powstał przed tym zapisem i był uruchamiany tylko na danych syntetycznych w testach.
+
+### Wspólne zasady rundy 6
+- Rynek prób: Binance USDⓈ-M, BTCUSDT i ETHUSDT perpetual oraz ich kontrakty kwartalne (od BTCUSDT_210326 i
+  ETHUSDT_210326), świece 1h z archiwum, dane badawcze do 31.05.2025. Dostawa jest o 08:00 UTC w dniu z symbolu.
+  Rekordy archiwum po dostawie (np. BTCUSDT_230929 do 14.11.2023) nie są transakcjami, więc je odcinam.
+- Decyzja raz dziennie na zamknięciu świecy 23:00 UTC (t = 00:00 UTC), wykonanie obu nóg na otwarciu następnej świecy.
+- Kontrakt frontowy w t: spośród kontraktów notowanych co najmniej 24 h przed t (od pierwszej świecy z wolumenem), ze
+  świecą w t i z co najmniej 7 dniami do dostawy, ten z najbliższą dostawą. Trzymany kontrakt roluję na pierwszej
+  decyzji, w której przestaje spełniać warunek (6 dni i 8 godzin przed dostawą). Do 08.2023 Binance wystawiał następny
+  kontrakt 2–10 dni przed dostawą bieżącego. Gdy żaden kontrakt nie spełnia warunku, moneta jest bez pozycji: według
+  harmonogramu 26 dni na monetę w latach 2021–2023, z tego 18 w okresie OOS.
+- Baza roczna b = (F/P − 1) · 365/D, gdzie F i P to zamknięcia świecy decyzji, a D to dni od t do dostawy.
+- Funding f = suma stawek perpetuala rozliczonych w ciągu 30 dni przed t i znanych w t (rozliczenie + 5 min ≤ t),
+  pomnożona przez 365/30. Suma, a nie średnia, działa tak samo przy rozliczeniu co 8 h (Binance) i co godzinę
+  (Deribit).
+- Stan na monetę: +1 = short baza (long perpetual, short kwartalny), −1 = long baza, 0 = bez pozycji. Każda noga ma
+  0,5× kapitału: przy obu monetach łącznie 1× long i 1× short, czyli dźwignia 2:1, jak limit dla klienta detalicznego
+  w UE. Wagi ustawiam tylko przy wejściu, wyjściu, zmianie kierunku i rollu. Między nimi silnik trzyma liczbę
+  kontraktów, więc obie nogi dryfują z ceną, a zabezpieczenie zostaje moneta za monetę.
+- Koszty: taker 0,05% od każdej transakcji, poślizg 2 pb na perpetualu i 3 pb na kontrakcie kwartalnym, funding
+  rzeczywisty na nodze perpetual. Roll to zamknięcie starego i otwarcie nowego kontraktu po pełnym koszcie.
+  Uzasadnienie 3 pb: w próbie 4 dni z lat 2023–2024 (bookTicker Binance) mediana połowy spreadu kontraktów
+  kwartalnych wynosiła 0,02–0,67 pb, a o pełnych godzinach najwyżej 1,35 pb. Szczyt księgi miał jednak tylko
+  500–1500 USD, więc większe zlecenie zejdzie głębiej w księgę.
+- Każda decyzja musi mieć świecę wykonania na obu nogach. W danych nie ma luk (sprawdzone), a runner przerywa, gdyby
+  jedna noga nie mogła zostać wykonana.
+- Miara: zwrot ponad bony 3M (FRED DTB3, opóźnienie 1 dnia) od kapitału związanego jako depozyt. Depozyt to 50%
+  nominału brutto, najwyżej cały kapitał; przy obu monetach w pozycji jest to cały kapitał. Reszta leży w bonach, jak
+  w R2A. Wszystkie kryteria liczę na tej mierze. Sharpe bez odejmowania bonów podaję tylko informacyjnie.
+- Ocena jak w rundzie 5:
+  - walk-forward 24/3 z pierwszym oknem testowym 01.2022, więc OOS to 2022-01..2025-05; pierwszy wybór w R6B
+    ma ok. 11 miesięcy danych;
+  - PBO, koszty ×2, reżimy (Sharpe ≥ 0 w hossie, bessie i konsolidacji), obsunięcie ≤ 25%;
+  - Sharpe OOS ≥ 1 i wyższy niż benchmarki w tym samym oknie;
+  - DSR ≥ 0,95 z wariancją zerową 1/T (T = 1978 dni) i N = wszystkie próby programu (177). Wymaga to Sharpe OOS
+    ok. 2,1 rocznie.
+- R6A ma jeden wariant, więc nie ma w niej wyboru: PBO nie ma zastosowania i ten warunek uznaję za spełniony. Wpływ
+  wielu prób ujmuje DSR liczony dla całego programu.
+- Warunek dodatkowy kandydata: dodatni łączny zwrot ponad bony w OOS przy kosztach bazowych na Deribit.
+  - Te same reguły: BTC i ETH, perpetual i kontrakty kwartalne (dostawa 08:00 UTC w ostatni piątek marca, czerwca,
+    września i grudnia), świece 1h, funding godzinowy.
+  - W każdym oknie walk-forward używam wariantu wybranego na Binance, bez strojenia.
+  - Kontrakty Deribit są odwrotne (nominał w USD, rozliczenie w monecie); P&L traktuję liniowo w USD, co jest
+    przybliżeniem.
+  - Dane Deribit (sprawdzone pod kątem kompletności): świece 1h bez brakujących godzin, znaczniki czasu zgodne z
+    Binance, funding co godzinę od 11.2020, 19 kontraktów kwartalnych na monetę. W 0–15% godzin kontraktu kwartalnego
+    nie było transakcji, głównie przy dalekich terminach; cena takiej świecy to ostatnia transakcja.
+  - Ten przebieg jest potwierdzeniem, nie nową próbą: zapisuję go w rejestrze jako zdarzenie i nie wliczam do N.
+
+### R6A — premia terminowa bezwarunkowo
+- Zawsze short baza: long perpetual, short kontrakt frontowy. **1 wariant.**
+- Uzasadnienie: jeśli kontrakty kwartalne są systematycznie droższe niż późniejszy funding (popyt na ekspozycję
+  bez zmiennego fundingu, ograniczony kapitał arbitrażystów), sprzedaż bazy zarabia tę premię.
+
+### R6B — spread bazy i fundingu
+- s = b − f. Bez pozycji: s > θ → short baza, s < −θ → long baza.
+- Wyjście, gdy s osiąga przeciwny znak (s ≤ 0 przy short bazie, s ≥ 0 przy long bazie), albo przy rollu. Po wyjściu
+  reguła wejścia działa od razu na tej samej decyzji, także na nowym kontrakcie frontowym.
+- θ ∈ {2%, 5%} rocznie. **2 warianty.**
+- Uzasadnienie: baza wycenia oczekiwany funding. Gdy odbiega od niedawnego fundingu bardziej niż koszty, różnica
+  powinna się zamykać przez zbieżność bazy albo przez funding.
+
+Razem 3 próby, więc N w programie wzrośnie ze 174 do 177. Jeśli runda 6 nie da kandydata, kończę badania bazy
+kalendarzowej na tych danych bez strojenia progów i okien. Właściciel polecił szukać dalej, także inspiracji w
+otwartych repozytoriach na GitHubie, więc przejdę do kolejnej rundy z własną prerejestracją i z tą samą korektą na
+wszystkie próby programu.
