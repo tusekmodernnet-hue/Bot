@@ -739,3 +739,58 @@ przed decyzją właściciela i przed jakimkolwiek wglądem w dane holdoutu.
   papierowego.
 - Kod: `cqs.research.final_r9a`. Uruchomienie wymaga zatwierdzonego kodu, `CQS_ALLOW_HOLDOUT=1`, cytatu zgody
   właściciela i braku wcześniejszego testu końcowego R9A w rejestrze.
+
+## Runda 10 — short po gwałtownym wzroście płynnych tokenów (prerejestracja 2026-11-26, przed jakimkolwiek testem tej rundy)
+
+Runda 9 dała pierwszy trop (R9A: Sharpe OOS 1,30, obsunięcie −24,5%, bez DSR i PBO), a program liczy 200 prób. Po
+teście sprawdziłem, bez nowych prób, że zwrot R9A nie wynika z ekspozycji na rynek: beta do BTC wynosi 0,00, do
+koszyka altcoinów 0,03, a alfa ok. 44% rocznie ma t = 2,4 (błędy Neweya-Westa). Jedno z wyjaśnień tej przewagi to
+przecena aktywów o profilu loterii przy ograniczonej krótkiej sprzedaży (Miller 1977; efekt MAX w akcjach: Bali, Cakici
+i Whitelaw 2011; w kryptowalutach wyniki badań są mieszane). Jeśli to wyjaśnienie jest trafne, podobny efekt powinien
+wystąpić po gwałtownych wzrostach płynnych tokenów, które nie są nowe. Runda 10 sprawdza to na zdarzeniach rozłącznych
+z R9A, bo wymaga wieku kontraktu co najmniej 90 dni. Po takich wzrostach longi często płacą wysoki funding, więc short
+może też na nim zarabiać; tego przed testem nie sprawdzałem. Konstrukcja portfela (rozmiar, limit, stop, koszyk)
+pochodzi z R9A, więc to hipoteza inspirowana danymi, a DSR liczę z liczbą wszystkich prób programu.
+
+Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i zajętość miejsc bez stopu, bez zwrotów po zdarzeniu:
+- Wzrost o co najmniej 30% w jeden dzień: 647 zdarzeń na 225 kontraktach (2020: 6, 2021: 251, 2022: 82, 2023: 61,
+  2024: 158, 2025 do maja: 89), z tego 390 w oknie OOS. Przy progu 50%: 154 zdarzenia na 99 kontraktach, 105 w oknie
+  OOS. Wszystkie kontrakty mają dane o fundingu.
+- Bez stopu przy progu 30% weszłoby 485 shortów przy H = 10 (średnio 2,5 naraz) i 406 przy H = 30 (6,1 naraz, limit
+  pełny w 3% dni). Przy progu 50%: 136 i 130 shortów (0,7 i 1,9 naraz).
+
+### Wspólne zasady rundy 10
+- Jak w rundzie 9: dane badawcze do 31.05.2025, holdout zablokowany, świece dzienne perpetual USDⓈ-M z archiwum
+  Binance, decyzja na zamknięciu dnia UTC i wykonanie na otwarciu następnego dnia. Taker 0,05% za stronę, poślizg 2 pb
+  dla BTC i ETH i 10 pb dla pozostałych, rzeczywisty funding, test z kosztami ×2. Brak świecy wymusza wyjście
+  (poślizg 2%), a kontrakty wycofane zostają w danych.
+- Rebalans z pasmem 20% wagi docelowej każdego kontraktu. Wejścia i wyjścia zawsze się wykonują.
+- Miara: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał.
+- Ocena jak w rundach 5–9: walk-forward 24/3 od 01.2020 (OOS 01.2022–05.2025), PBO (CSCV, 16 bloków), koszty ×2,
+  obsunięcie ≤ 25%, Sharpe ≥ 0 w hossie, bessie i konsolidacji (reżim bez pozycji liczę jako Sharpe 0), Sharpe OOS
+  ≥ 1 i wyższy niż benchmarki, DSR ≥ 0,95 z wariancją 1/T i N = wszystkie próby programu (po tej rundzie 204), co
+  wymaga Sharpe OOS ok. 2,1 rocznie.
+- Koszyk altcoinów jak w R8A–R9A: point-in-time top 20 bez BTC, kontraktów indeksowych i stablecoinów, w równych
+  wagach, bez kontraktów shortowanych tego dnia i bez kontraktów bez świecy, o nominale równym sumie shortów.
+- Runner odmawia przebiegu, gdy któryś kontrakt nie ma danych o fundingu.
+
+### R10A — short po wzroście o co najmniej X w jeden dzień
+- Rynek: płynne universe point-in-time bez limitu liczby kontraktów (wiek kontraktu ≥ 90 dni, średni obrót z 30 dni
+  ≥ 20 mln USDT), z kontraktami wycofanymi, bez BTC, kontraktów indeksowych, stablecoinów, znanych zmian nazwy i
+  kontraktów z datą wygaśnięcia.
+- Zdarzenie: dzień t, w którym kontrakt należący do universe na zamknięciu dnia t − 1 zamknął się co najmniej o X
+  wyżej niż w dniu t − 1.
+- Wejście: na zamknięciu dnia t + 1, gdy obrót z tego dnia wynosi co najmniej 20 mln USDT, z wykonaniem na otwarciu
+  dnia t + 2.
+- Rozmiar i limity jak w R9A: −0,05 kapitału na short, najwyżej 20 naraz i jeden short na kontrakt. Zdarzenie na
+  kontrakcie, który jest już shortowany, przepada. Wśród zdarzeń z tego samego dnia pierwszeństwo ma większy obrót.
+- Wyjście: po H dniach w pozycji, gdy kontrakt przestaje być notowany, albo na stopie z R9A, gdy zamknięcie dnia
+  wynosi co najmniej dwukrotność ceny wejścia (zamknięcie na następnym otwarciu). Po stopie kontrakt nie wraca do
+  shortu przez H dni. Kolejny wzrost tego samego kontraktu po zamknięciu pozycji jest nowym zdarzeniem.
+- X ∈ {30%, 50%}, H ∈ {10, 30} dni. **4 warianty.**
+- Raportuję też liczbę stopów, łączny funding i podział wyniku na lata (tylko diagnostyka).
+
+Razem 4 próby, więc N w programie wzrośnie z 200 do 204. Jeśli R10A da Sharpe OOS ≥ 1 i obsunięcie do 25%, ale nie
+przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi, jak w rundzie 9. Jeśli
+obie rodziny, R9A i R10A, okażą się trafami, wspólny portfel będzie osobną próbą z własną prerejestracją. W przeciwnym
+razie przejdę do kolejnej rundy z nową prerejestracją, bez strojenia progów i okien tej rundy.
