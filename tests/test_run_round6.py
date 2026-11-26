@@ -105,3 +105,31 @@ def test_execution_check_refuses_a_one_legged_trade(setup):
     broken = R6.Venue(v.name, (O, *v.bars[1:]), v.funding, v.legs, v.fingerprint)
     with pytest.raises(RuntimeError, match="no execution bar"):
         R6.check_execution(broken, W)
+
+
+def test_main_runs_every_family_logs_three_trials_and_writes_the_summary(setup, monkeypatch, tmp_path):
+    """The command-line path, start to finish, on synthetic venues with a throwaway registry and results folder."""
+    from cqs import config
+    v, vd, _, dclose = setup
+    monkeypatch.setattr(config, "REGISTRY_PATH", tmp_path / "registry.jsonl")
+    monkeypatch.setattr(R6, "RESULTS_DIR", tmp_path / "results")
+    monkeypatch.setattr(R6, "preregistered", lambda: True)
+    monkeypatch.setattr(R6, "load_binance", lambda: v)
+    monkeypatch.setattr(R6, "load_deribit", lambda: vd)
+    monkeypatch.setattr(R6, "rf_daily", lambda index: pd.Series(0.02, index=index))
+    daily = pd.DataFrame({"open_time": dclose.index, "close": dclose.to_numpy()})
+    monkeypatch.setattr(R6.store, "load_klines", lambda *a, **k: daily)
+    assert R6.main([]) == 0
+    for f in ("R6A.json", "R6B.json", "R6A_oos.csv", "R6B_oos.csv", "R6_summary.json"):
+        assert (tmp_path / "results" / f).exists(), f
+    from cqs.research import registry
+    ex = [r for r in registry.read() if r.get("type") == "experiment"]
+    assert sorted(r["family"] for r in ex) == ["R6A", "R6B", "R6B"]
+    events = [r["event"] for r in registry.read() if r.get("type") == "event"]
+    assert events.count("round6_confirmation") == 2 and "round6_summary" in events
+    import json
+    summ = json.loads((tmp_path / "results" / "R6_summary.json").read_text())
+    assert summ["n_trials_program"] == 3 and set(summ["families"]) == {"R6A", "R6B"}
+    assert "deribit_confirmation" in summ["families"]["R6A"]["checks"]
+    assert R6.main([]) == 0  # a second call reruns nothing
+    assert len([r for r in registry.read() if r.get("type") == "experiment"]) == 3

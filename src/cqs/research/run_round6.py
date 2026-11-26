@@ -330,7 +330,7 @@ def main(argv=None) -> int:
             continue
         if v is None:
             v, vd = load_binance(), load_deribit()
-            rf = rf_daily(pd.date_range(FUNDING_FROM, DEV_END, freq="1D", tz="UTC"))
+            rf = rf_daily(pd.date_range(FUNDING_FROM, pd.Timestamp(DEV_END, tz="UTC"), freq="1D"))
             dclose = store.load_klines("BTCUSDT", "1d").set_index("open_time")["close"]
         t0 = time.time()
         out, o = run_family(fam, v, rf, dclose)
