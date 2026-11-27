@@ -24,7 +24,7 @@ Pełny opis danych, architektury, protokołu badawczego i limitów ryzyka znajdu
 | Etap | Stan |
 | --- | --- |
 | 1. Research danych, architektura, protokół | Gotowe |
-| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 153 testy przechodzą |
+| 2. Fundament: dane, magazyn, backtest, statystyka, rejestr | Gotowe, 169 testów przechodzi |
 | 3. Odkrywanie i walidacja strategii (H1–H7, ML, rundy 2–12) | W toku: 210 prób w dwunastu rundach, brak kandydata |
 | 4. Paper trading i raport końcowy | Nie startuje: brak strategii, która przeszła walidację |
 
@@ -52,6 +52,7 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.data.universe` | Uniwersum point-in-time: wiek, aktywny obrót, płynność, kontrakty zdjęte z giełdy |
 | `cqs.data.spotmap` | Dopasowanie perpetual → para spot (z mnożnikiem kontraktu), daty pierwszych notowań, pobranie danych rundy 7 |
 | `cqs.data.quarterly`, `cqs.data.deribit` | Kontrakty kwartalne Binance (dostawa, odcięcie rekordów po dostawie) i dane Deribit (świece 1h, funding godzinowy) |
+| `cqs.data.hyperliquid` | Publiczne API Hyperliquid dla rundy 13: lista kontraktów z wycofanymi, świece 1d, funding godzinowy, tylko dane sprzed holdoutu |
 | `cqs.backtest.engine` | Wykonanie na otwarciu następnej świecy, koszty, funding, stopy, wymuszone zamknięcia, pasmo rebalansu od kapitału albo od wagi docelowej |
 | `cqs.backtest.limit_sim` | Konserwatywna symulacja zleceń limit na świecach 1m (wypełnienie tylko przy przejściu ceny) |
 | `cqs.backtest.costs` | Model kosztów: prowizja, slippage, test warunków skrajnych (koszty ×2) |
@@ -61,11 +62,11 @@ Dane trafiają do `data/` i nie są commitowane. Każdy plik z archiwum jest wer
 | `cqs.research.benchmarks` | Benchmarki, które musi pobić każda strategia |
 | `cqs.research.run_family`, `run_ext` | Pełna ocena rodziny: warianty, walk-forward, PBO, DSR, reżimy, koszty ×2 |
 | `cqs.research.ml_meta` | Meta-model LightGBM z purgingiem i embargo oraz jego punkt odniesienia |
-| `cqs.research.run_round3` … `run_round12` | Rundy 3–12 (od rundy 5: DSR z wariancją estymatora 1/T; od rundy 6: zwrot ponad bony od depozytu; runda 6: potwierdzenie na Deribit) |
+| `cqs.research.run_round3` … `run_round13` | Rundy 3–13 (od rundy 5: DSR z wariancją estymatora 1/T; od rundy 6: zwrot ponad bony od depozytu; runda 6: potwierdzenie na Deribit; runda 13: replikacja R9A na Hyperliquid) |
 | `cqs.research.final_r9a` | Test końcowy R9A na holdoucie: gotowy, uruchamiany tylko za zgodą właściciela (blokada holdoutu, cytat zgody, jednorazowo) |
 | `cqs.research.diag_gross`, `diag_gross_round5` | Diagnostyka wyników przed kosztami rund 3 i 5 (nie jest próbą) |
 | `cqs.research.diag_capacity_r9a` | Diagnostyka pojemności R9A: wpływ na cenę z modelu pierwiastkowego wobec poślizgu z backtestu (nie jest próbą) |
-| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–6 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit; `orderflow`: przepływ agresora, OI, ORB NY z filtrem; `basis`: kontrakt frontowy, baza, funding; `carry_multi`, `statarb`, `listings`: runda 7; `supply`: runda 8; `listing_risk`: rundy 9 i 12; `pumps`: runda 10; `short_demand`: runda 11) |
+| `cqs.strategies` | Prerejestrowane rodziny H1–H7, rundy 2–6 (`intraday`: SMC/ICT, ORB, VWAP; `scalping`: plany zleceń limit; `orderflow`: przepływ agresora, OI, ORB NY z filtrem; `basis`: kontrakt frontowy, baza, funding; `carry_multi`, `statarb`, `listings`: runda 7; `supply`: runda 8; `listing_risk`: rundy 9, 12 i 13; `pumps`: runda 10; `short_demand`: runda 11; `hl_listings`: runda 13) |
 
 ## Zasady czasu (brak look-ahead)
 

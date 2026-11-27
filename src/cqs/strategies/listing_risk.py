@@ -89,9 +89,10 @@ def shorts_with_stop(open_: pd.DataFrame, close: pd.DataFrame, quote_volume: pd.
 
 
 def r9a(open_, close, quote_volume, events, basket, stop_k, size: float = SIZE, max_shorts: int = MAX_SHORTS,
-        delay: int = DELAY, hold: int = HOLD, liq_from: int = 1):
-    held, stops = shorts_with_stop(open_, close, quote_volume, events, delay, hold, max_shorts, stop_k=stop_k,
-                                   liq_from=liq_from)
+        delay: int = DELAY, hold: int = HOLD, liq_from: int = 1, min_qv: float = listings.MIN_QUOTE_VOLUME):
+    """`min_qv`: the entry volume filter (default 20M USDT, R9A; round 13 uses 2M USD on Hyperliquid)."""
+    held, stops = shorts_with_stop(open_, close, quote_volume, events, delay, hold, max_shorts, min_qv=min_qv,
+                                   stop_k=stop_k, liq_from=liq_from)
     return supply.basket_weights(held, basket, close, size), held, stops
 
 

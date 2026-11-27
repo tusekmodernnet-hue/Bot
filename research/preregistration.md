@@ -907,3 +907,77 @@ Przed tym zapisem sprawdziłem tylko liczebność zdarzeń i zajętość miejsc 
 Razem 2 próby, więc N w programie wzrośnie z 208 do 210. Jeśli R12A da Sharpe OOS ≥ 1 i obsunięcie do 25%, ale nie
 przejdzie DSR, nie nazwę jej kandydatem, a decyzję o potwierdzeniu przedstawię właścicielowi. W przeciwnym razie
 przejdę do kolejnej rundy z nową prerejestracją, bez strojenia dnia wejścia i stopu tej rundy.
+
+## Runda 13 — replikacja R9A na Hyperliquid: ta sama reguła na nowych kontraktach innej giełdy (prerejestracja 2026-11-27, przed pobraniem jakichkolwiek danych Hyperliquid)
+
+R9A to jedyny trop programu (Sharpe OOS 1,30, obsunięcie −24,5%), ale nie przechodzi DSR ani PBO, a runda 12
+pokazała, że inny dzień wejścia daje tę samą strategię (korelacja 0,93). Kolejne warianty na tych samych zdarzeniach
+Binance niczego nie rozstrzygną. Rozstrzygnąć może reguła ustalona w rundzie 9, sprawdzona bez zmian na zdarzeniach
+z innej giełdy. Hyperliquid notuje nowe kontrakty perpetual, często wcześniej niż Binance albo takie, których Binance
+nie notuje, ma publiczne API z historią świec i fundingu i jest dostępny z Polski, w przeciwieństwie do Binance.
+To runda potwierdzająca, nie szukanie kandydata: jedna próba, reguła R9A przeniesiona bez strojenia, z dwiema
+zmianami wymuszonymi przez rynek (próg obrotu i koszty), ustalonymi przed obejrzeniem danych.
+
+Przed tym zapisem nie pobrałem żadnych danych Hyperliquid, bo proxy środowiska blokowało api.hyperliquid.xyz. Z danych
+badawczych Binance zapisałem tylko pierwszy dzień notowań każdego kontraktu USDT (research/data/
+binance_perp_first_day.csv, 492 kontrakty, ostatni 30.05.2025), bez cen po zdarzeniach.
+
+### Wspólne zasady rundy 13
+- Dane: publiczne API Hyperliquid (api.hyperliquid.xyz/info): lista kontraktów perpetual z `meta` (z wycofanymi),
+  świece dzienne UTC (`candleSnapshot`, 1d) i godzinowy funding (`fundingHistory`). Pobieram wyłącznie dane sprzed
+  01.06.2025: zapytania kończą się 31.05.2025 23:59:59,999 UTC, a późniejsze wiersze odrzucam, więc holdout zostaje
+  zamknięty także dla Hyperliquid. Każda odpowiedź API ma w manifeście sumę SHA-256, jak dane Deribit w rundzie 6.
+  Klient: `cqs.data.hyperliquid`.
+- Hyperliquid podaje wolumen w jednostkach tokena, więc obrót w USD przybliżam jako wolumen × (O + H + L + C) / 4
+  świecy dziennej. Funding rozliczany co godzinę przypisuję do pełnej godziny (znaczniki czasu API odbiegają o kilka
+  milisekund), a silnik nalicza go pozycjom trzymanym w chwili rozliczenia, jak na Binance.
+- Wycofane kontrakty: `meta` zachowuje je z flagą isDelisted, a numer kontraktu rośnie z kolejnością dodania.
+  Kontrakt bez świec sprzed 01.06.2025, którego numer jest niższy niż najwyższy numer kontraktu ze świecami z tego
+  okresu, liczę jako brak danych. Jeśli braki przekroczą 10% takich kontraktów, wynik oznaczam jako narażony na błąd
+  przeżywalności i nie wyciągam z niego wniosków. Płaskie świece bez obrotu przed pierwszym i po ostatnim handlu
+  pomijam.
+- Decyzja na zamknięciu dnia UTC, wykonanie na otwarciu następnego dnia, silnik jak w rundach 7–12 (pasmo rebalansu
+  20% wagi docelowej, wejścia i wyjścia zawsze się wykonują). Brak świecy wymusza wyjście z poślizgiem 2%.
+- Koszty: taker 0,045% za stronę (podstawowy próg Hyperliquid w 2025 r.; w latach 2023–2024 opłata była niższa, więc
+  założenie jest ostrożne), poślizg 20 pb na każdym kontrakcie Hyperliquid (dwa razy więcej niż dla altcoinów na
+  Binance, bo arkusze zleceń są płytsze), rzeczywisty godzinowy funding Hyperliquid i test z kosztami ×2. Runner
+  odmawia przebiegu, gdy któryś handlowany kontrakt nie ma danych o fundingu.
+- Miara jak w rundach 7–12: zwrot ponad bony 3M od depozytu równego 50% nominału brutto, najwyżej cały kapitał.
+
+### R13A — reguła R9A na nowych kontraktach Hyperliquid
+- Zdarzenie: pierwszy dzień D0 ze świecą dzienną o niezerowym wolumenie dla kontraktu z `meta`, D0 najpóźniej
+  29.05.2025.
+- Wyłączenia: BTC oraz stare tokeny, czyli kontrakty, których kontrakt USDⓈ-M USDT na Binance był notowany wcześniej
+  niż 30 dni przed D0 na Hyperliquid. Wtedy rynek perpetual na ten token już istniał, a mechanizm R9A (nowa podaż
+  i zniesienie ograniczeń krótkiej sprzedaży przy debiucie rynku) nie działa. Mapowanie nazw: nazwa + USDT; przedrostek
+  k oznacza 1000 jednostek (kPEPE → 1000PEPEUSDT, a jeśli takiego kontraktu nie ma, PEPEUSDT). Kontrakty Binance
+  będące nową nazwą starego tokena (lista RENAMES z rundy 7, np. RENDERUSDT, POLUSDT) oznaczają stary token. Nazwy bez
+  dokładnego odpowiednika, dla których Binance ma kontrakt o innym mnożniku (np. 1000000MOGUSDT), wypisuję w raporcie,
+  ale reguły nie zmieniam.
+- Wejście: na zamknięciu D0 + 1, gdy obrót z dnia D0 + 1 wynosi co najmniej 2 mln USD, z wykonaniem na otwarciu
+  D0 + 2. To próg R9A (20 mln USDT) podzielony przez 10, bo obrót perpetual na Hyperliquid był w latach 2023–2025 rzędu
+  kilku do kilkunastu procent obrotu Binance; zlecenie 5% kapitału 100 tys. USD to przy nim najwyżej 0,25% obrotu dnia.
+- Rozmiar, limity i wyjście jak w wariancie R9A z testu końcowego: −0,05 kapitału na short, najwyżej 20 naraz
+  (pierwszeństwo ma większy obrót, zdarzenie bez wolnego miejsca przepada), 30 dni w pozycji, stop przy zamknięciu dnia
+  co najmniej 2 × cena wejścia (k = 1,0) z zamknięciem na następnym otwarciu, bez ponownego shortu tego kontraktu.
+- Zabezpieczenie jak w R8A–R12A, ale z kontraktów Hyperliquid: koszyk równoważony o tym samym nominale co shorty,
+  z 20 największych kontraktów według średniego obrotu z 30 dni (co najmniej 2 mln USD, co najmniej 90 dni notowań),
+  z których usuwam BTC; członek koszyka shortowany danego dnia z niego wypada, a bez członków koszyka nie ma shortów.
+- **1 wariant**, bez walk-forward: reguła została ustalona w rundzie 9 na danych Binance, więc cały okres Hyperliquid
+  jest dla niej poza próbą. Kod: `cqs.strategies.hl_listings`, `cqs.research.run_round13`.
+
+### Ocena rundy 13
+- Najpierw podaję liczbę kontraktów, zdarzeń, wyłączeń, przejść filtra obrotu i braków danych.
+- Potem: Sharpe zwrotu ponad bony od pierwszego dnia z pozycją, CAGR, maksymalne obsunięcie, wynik przy kosztach ×2,
+  wyniki roczne, reżimy z dziennego zamknięcia BTC na Hyperliquid (definicje jak w poprzednich rundach), PSR względem
+  zera, DSR z wariancją 1/T i N = wszystkie próby programu (dla porządku), korelację dziennych zwrotów z R9A
+  (research/results/R9A_oos.csv) we wspólnym okresie, liczbę stopów oraz podział transakcji na zdarzenia, przy których
+  kontrakt Binance był już notowany w chwili decyzji, i pozostałe (diagnostyka tego samego przebiegu).
+- Reguła rozstrzygnięcia, w tej kolejności: przy brakach danych powyżej 10% wynik jest narażony na błąd przeżywalności;
+  przy mniej niż 30 shortach jest za mały na wniosek; Sharpe ponad bony ≤ 0 oznacza brak replikacji; Sharpe > 0
+  z PSR(0) ≥ 0,90 i dodatnim Sharpe przy kosztach ×2 oznacza replikację; pozostałe przypadki są nierozstrzygnięte.
+- R13A nie jest kandydatem, niezależnie od wyniku. Replikacja wzmocni argument za testem końcowym R9A i za handlem
+  papierowym tej reguły na Hyperliquid, a jej brak osłabi trop R9A; w obu przypadkach decyzję o R9A podejmuje
+  właściciel. Wspólna strategia Binance + Hyperliquid wymagałaby osobnej prerejestracji.
+
+Razem 1 próba, więc N w programie wzrośnie z 210 do 211.
